@@ -10,15 +10,11 @@ const app = new Application({
     width: Math.max(document.documentElement.clientHeight, window.innerWidth || 0),
     height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 });
-//  Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-// const viewport = new Viewport({
-//     worldWidth: 2000,
-//     worldHeight: 2000,
 
-//     interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
-// })
+app.view.oncontextmenu = (e) => {
+    e.preventDefault();
+}
 
-// pass in the screen size to avoid "asking up"
 const viewportSettings:IViewportOptions = {
     screenWidth:app.screen.width,
     screenHeight:app.screen.height,
@@ -29,3 +25,4 @@ const viewportSettings:IViewportOptions = {
 const main: Main = new Main(viewportSettings);
 
 app.stage.addChild(main)
+
