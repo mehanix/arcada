@@ -1,0 +1,116 @@
+import { Container, Graphics, Point, Sprite } from "pixi.js";
+import { Coord } from "../constants";
+import { Handle, HandleType } from "./Handle";
+
+export class TransformLayer extends Container {
+    private target: Sprite;
+    private points: Point[];
+    private handles: Handle[];
+    private border:Graphics;
+    private borderOffset:number;
+    public static dragging:boolean;
+    private static instance: TransformLayer;
+
+    private constructor() {
+        super();
+        this.points = [];
+        this.handles = [];
+
+        this.visible = false;
+        this.target = null;
+        this.border = new Graphics();
+        this.borderOffset = 2;
+
+        this.addChild(this.border);
+
+        // handles
+        this.addHandle(HandleType.Rotate); 
+        this.addHandle(HandleType.Horizontal); 
+        this.addHandle(HandleType.FreeTransform); 
+        this.addHandle(HandleType.Vertical);         
+
+     
+        for (let i=0;i<4; i++) {
+            this.points[i] = new Point();
+        }
+
+    }
+
+    public static get Instance()
+    {
+        return this.instance || (this.instance = new this()); // TODO obfuscate
+    }
+
+    private computePoints() {
+        let x = this.target.position.x;
+        let y = this.target.position.y;
+        console.log(x,y);
+        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [x + this.target.width, y];
+        [this.points[Coord.E].x, this.points[Coord.E].y] = [x + this.target.width, y + (this.target.height / 2)];
+        [this.points[Coord.SE].x, this.points[Coord.SE].y] = [x + this.target.width, y + this.target.height];
+        [this.points[Coord.S].x, this.points[Coord.S].y] = [x + (this.target.width / 2), y +this.target.height];
+
+    }
+    private addHandle(type: HandleType) {
+        let handle = new Handle({type: type, target: null, pos: new Point(0,0)});
+        this.addChild(handle);
+        this.handles.push(handle);
+    }
+
+    public select(t:Sprite) {
+        if (this.target != null) {
+            this.deselect();
+            return;
+        }
+        console.log("t")
+        this.target = t;
+        this.visible = true;
+        this.interactive = true;
+
+        this.computePoints();
+        this.set();
+    }
+
+    private set() {
+        
+       this.drawBorder();
+
+        for (let i = 0; i < this.handles.length; i++) { // wtf??
+            console.log(this.points[i])
+            this.handles[i].setTarget(this.target)
+
+            this.handles[i].update(this.points[i])
+        }
+        
+    }
+
+    private drawBorder() {
+        this.border.clear();
+        const x = this.target.position.x - this.borderOffset;
+        const y = this.target.position.y - this.borderOffset;
+        const w = this.points[Coord.SE].x - x + 2*this.borderOffset;
+        const h = this.points[Coord.SE].y - y + 2*this.borderOffset;
+        this.border
+        .lineStyle(3, 0,1,0,true)
+        .drawRect(x,y,w,h)
+
+    }
+    
+    private deselect() {
+        this.target = null;
+        this.visible = false;
+        this.interactive = false;
+    }
+
+    public update() {
+        if (!this.target)
+            return;
+
+        this.computePoints();
+        this.drawBorder();
+
+        for (let i = 0; i < this.handles.length; i++) { 
+            this.handles[i].update(this.points[i])
+        }
+    }
+}

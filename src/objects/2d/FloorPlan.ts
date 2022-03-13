@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
-import { Furniture } from "./objects/2d/Furniture";
-import { FurnitureFactory } from "./objects/2d/FurnitureFactory";
+import { Furniture } from "../2d/Furniture";
+import { FurnitureFactory } from "../2d/FurnitureFactory";
 
 export class FloorPlan extends Container {
 
@@ -19,7 +19,6 @@ export class FloorPlan extends Container {
 
     public static get Instance()
     {
-        // Do you need arguments? Make it a regular static method instead.
         return this.instance || (this.instance = new this());
     }
 
@@ -29,11 +28,11 @@ export class FloorPlan extends Container {
         let object = FurnitureFactory.create(type, this.furnitureId);
         this.furnitureArray[this.furnitureId] = object;
         this.addChild(object)
+        object.position.set(150,150)
         console.log(this.furnitureArray)
     }
-    public removeFurniture(id:number) {
 
-        console.log("arivederci")
+    public removeFurniture(id:number) {
 
         this.removeChild(this.furnitureArray[id]);
         delete this.furnitureArray[id];

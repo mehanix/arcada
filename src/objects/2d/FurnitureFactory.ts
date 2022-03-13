@@ -7,7 +7,7 @@ export class FurnitureFactory {
     public static create(furnitureId:string, index:number):Furniture {
 
         console.log(furnitureId);
-        let newFurniture = new Furniture("sofa.svg", index);
+        let newFurniture = new Furniture("sofa", index);
         return newFurniture;
     }
 }
