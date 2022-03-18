@@ -41,6 +41,7 @@ export class Main extends Viewport {
         this.floorPlan.addFurniture("sofa");
 
 
+
     }
 
 }

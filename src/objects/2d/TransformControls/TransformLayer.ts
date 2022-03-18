@@ -11,6 +11,8 @@ export class TransformLayer extends Container {
     public static dragging:boolean;
     private static instance: TransformLayer;
 
+    // private dragging:boolean;
+    // private dragStartCoord:Point;
     private constructor() {
         super();
         this.points = [];
@@ -20,6 +22,8 @@ export class TransformLayer extends Container {
         this.target = null;
         this.border = new Graphics();
         this.borderOffset = 2;
+        // this.dragging = false;
+
 
         this.addChild(this.border);
 
@@ -27,13 +31,21 @@ export class TransformLayer extends Container {
         this.addHandle(HandleType.Rotate); 
         this.addHandle(HandleType.Horizontal); 
         this.addHandle(HandleType.FreeTransform); 
-        this.addHandle(HandleType.Vertical);         
+        this.addHandle(HandleType.Vertical);
+        this.addHandle(HandleType.Move);       
 
      
-        for (let i=0;i<4; i++) {
+        for (let i=0;i<5; i++) {
             this.points[i] = new Point();
         }
 
+        this.on("mousedown",this.onMouseDown)
+    }
+
+    private onMouseDown() {
+        console.log(
+            "cleck"
+        )
     }
 
     public static get Instance()
@@ -44,11 +56,13 @@ export class TransformLayer extends Container {
     private computePoints() {
         let x = this.target.position.x;
         let y = this.target.position.y;
-        console.log(x,y);
+
         [this.points[Coord.NE].x, this.points[Coord.NE].y] = [x + this.target.width, y];
         [this.points[Coord.E].x, this.points[Coord.E].y] = [x + this.target.width, y + (this.target.height / 2)];
         [this.points[Coord.SE].x, this.points[Coord.SE].y] = [x + this.target.width, y + this.target.height];
         [this.points[Coord.S].x, this.points[Coord.S].y] = [x + (this.target.width / 2), y +this.target.height];
+        [this.points[Coord.C].x, this.points[Coord.C].y] = [x + (this.target.width / 2), y +(this.target.height / 2)];
+
 
     }
     private addHandle(type: HandleType) {
@@ -75,7 +89,7 @@ export class TransformLayer extends Container {
         
        this.drawBorder();
 
-        for (let i = 0; i < this.handles.length; i++) { // wtf??
+        for (let i = 0; i < this.handles.length; i++) { 
             console.log(this.points[i])
             this.handles[i].setTarget(this.target)
 

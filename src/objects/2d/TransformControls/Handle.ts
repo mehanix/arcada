@@ -5,7 +5,8 @@ export enum HandleType {
     Horizontal,
     Vertical,
     FreeTransform,
-    Rotate
+    Rotate,
+    Move
 }
 
 export interface IHandleConfig {
@@ -22,16 +23,16 @@ export class Handle extends Graphics {
     private type: HandleType;
     private target: Sprite;
     private color: number = 0xffffff;
-    private size: number = 15;
+    private size: number = 7;
     
     private active: boolean = false;
     private startPoint: Point;
     private startDimensions: Point;
-
+    private offset: Point;
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
-
+        this.offset = new Point();
         if (handleConfig.color) {
             this.color = handleConfig.color;
         }
@@ -100,6 +101,17 @@ export class Handle extends Graphics {
             case HandleType.FreeTransform:
                 this.target.width= this.startDimensions.x + distance.x;
                 this.target.height= this.startDimensions.y + distance.y;
+                break;
+            case HandleType.Move:
+                // distanta dintre mouse si punct start
+                // let deltaX = currentPoint.x - this.startPoint.x;
+                // let deltaY = currentPoint.y - this.startPoint.y;
+                console.log(this.startPoint.x, this.startPoint.y, currentPoint.x, currentPoint.y)
+
+                // distanta dintre punct start si colt stanga sus
+                this.target.x = currentPoint.x - this.offset.x
+                this.target.y = currentPoint.y - this.offset.y
+                break;
         }
 
         // this.target.update();
@@ -124,6 +136,7 @@ export class Handle extends Graphics {
     /* sets scale and transform */
     public update(pos:Point) {
         this.position.set(pos.x, pos.y)
-
+        this.offset.x = pos.x - this.target.x;
+        this.offset.y = pos.y - this.target.y;
     }
 }

@@ -10,4 +10,5 @@ export class FurnitureFactory {
         let newFurniture = new Furniture("sofa", index);
         return newFurniture;
     }
+    
 }
