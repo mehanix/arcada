@@ -12,7 +12,7 @@ export class WallNode extends Graphics {
         this.drawCircle(0,0,10)
         this.position.set(x,y)
         this.endFill();
-
+        this.zIndex = 999;
         this.on("mousedown", this.mousedown)
         this.on("mousemove", this.onMouseMove)
         this.on("mouseup",this.onMouseUp);
