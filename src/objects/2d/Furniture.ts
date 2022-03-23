@@ -1,5 +1,5 @@
 import { Sprite, Texture } from "pixi.js";
-import { METER } from "./constants";
+import { METER } from "../../constants";
 import { TransformLayer } from "./TransformControls/TransformLayer";
 
 export class Furniture extends Sprite {

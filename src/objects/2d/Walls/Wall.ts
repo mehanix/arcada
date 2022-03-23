@@ -1,5 +1,5 @@
-import { Graphics, Point } from "pixi.js";
-import { WALL_THICKNESS } from "../constants";
+import { Graphics, InteractionEvent, Point } from "pixi.js";
+import { WALL_THICKNESS } from "../../../constants";
 
 export interface IAnchor {
     other:Wall;
@@ -11,11 +11,8 @@ export class Wall extends Graphics {
     
     leftNode: number;
     rightNode: number;
-    timestamp:number;
     constructor(x1:number, y1: number, x2:number, y2:number, leftNode:number, rightNode:number) {
         super();
-        this.timestamp = Date.now();
-        // console.log("created", leftNode, rightNode, this.timestamp)
 
         this.interactive = true;
         this.leftNode = leftNode;
@@ -35,7 +32,7 @@ export class Wall extends Graphics {
         this.clear();
         this.lineStyle(1,0x1a1a1a);
 
-        if (x1 > x2) {
+        if (x1 > x2) { //TODO scrie mai frumos aici
             let aux;
             aux = x1
             x1 = x2;
@@ -61,8 +58,9 @@ export class Wall extends Graphics {
 
     }
 
-    private mousedown() {
-        console.log("hi!", this.leftNode, this.rightNode, this.timestamp)
+    private mousedown(ev:InteractionEvent) {
+        let coords = new Point(ev.data.global.x, ev.data.global.y)
+        console.log("hi!", this.leftNode, this.rightNode, coords.x, coords.y)
     }
   
 }

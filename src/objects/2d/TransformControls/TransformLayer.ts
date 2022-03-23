@@ -1,7 +1,10 @@
 import { Container, Graphics, Point, Sprite } from "pixi.js";
-import { Coord } from "../constants";
+import { Coord, Tool } from "../../../constants";
+import { ToolManager } from "../../../Tools/ToolManager";
 import { Handle, HandleType } from "./Handle";
 
+// handles moving, resizing and rotating of objects.
+// can only work if its state is active.
 export class TransformLayer extends Container {
     private target: Sprite;
     private points: Point[];
@@ -43,9 +46,6 @@ export class TransformLayer extends Container {
     }
 
     private onMouseDown() {
-        console.log(
-            "cleck"
-        )
     }
 
     public static get Instance()
@@ -72,6 +72,9 @@ export class TransformLayer extends Container {
     }
 
     public select(t:Sprite) {
+        if (ToolManager.Instance.getTool() != Tool.FurnitureEdit) {
+            return;
+        }
         if (this.target != null) {
             this.deselect();
             return;
@@ -110,7 +113,7 @@ export class TransformLayer extends Container {
 
     }
     
-    private deselect() {
+    public deselect() {
         this.target = null;
         this.visible = false;
         this.interactive = false;

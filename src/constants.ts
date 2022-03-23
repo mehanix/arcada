@@ -14,3 +14,19 @@ export enum Coord {
     S,
     C
 };
+
+export enum ToolMode {
+    WallMode,
+    FurnitureMode,
+    ViewMode
+};
+
+export enum Tool {
+    WallAdd,
+    WallEdit,
+    WallRemove,
+    FurnitureAdd,
+    FurnitureEdit,
+    FurnitureRemove,
+    View
+};
