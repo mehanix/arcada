@@ -87,6 +87,8 @@ export class Transformable extends Sprite {
         this.data = e.data;
         this.mouseDown = true;
 
+        
+
         // let position = this.data.getLocalPosition(this);
         // this.pivot.set(position.x, position.y);
         // this.position.set(this.data.global.x, this.data.global.y); // todo: mate to fix the flicker.

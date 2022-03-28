@@ -1,12 +1,18 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
+import { Tool } from "../../../constants";
+import { ToolManager } from "../../../actions/ToolManager";
 import { FloorPlan } from "../FloorPlan";
 
 export class WallNode extends Graphics {
 
     private dragging:boolean;
-    constructor(x:number, y: number) {
+    private id:number;
+
+    constructor(x:number, y: number, nodeId:number) {
         super();
         this.interactive = true;
+        this.id = nodeId;
+        console.log(this.id)
         this.pivot.set(0.5);
         this.beginFill(Math.floor(Math.random()*16777215));
         this.drawCircle(0,0,10)
@@ -22,7 +28,14 @@ export class WallNode extends Graphics {
     }
   
     private mousedown() {
-        this.dragging = true;
+        switch (ToolManager.Instance.getTool()) {
+            case Tool.WallEdit:
+                this.dragging = true;
+                break;
+            case Tool.WallRemove:
+                break;
+        }
+    
     }
     private onMouseMove(ev: InteractionEvent) {
         if (!this.dragging) {

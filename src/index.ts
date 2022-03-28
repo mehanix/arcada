@@ -1,8 +1,8 @@
 import { IViewportOptions } from 'pixi-viewport';
 import { Application } from 'pixi.js'
-import { Tool, ToolMode } from './constants';
-import { Main } from './scenes/Main'; // This is the import statement
-import { ToolManager } from './Tools/ToolManager';
+import { Tool, ToolMode } from './editor/constants';
+import { Main } from './editor/scenes/Main';
+import { ToolManager } from './editor/actions/ToolManager';
 
 const app = new Application({
     view: document.getElementById("pixi-canvas") as HTMLCanvasElement,

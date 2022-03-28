@@ -1,6 +1,6 @@
 import { Container, Graphics, Point, Sprite } from "pixi.js";
 import { Coord, Tool } from "../../../constants";
-import { ToolManager } from "../../../Tools/ToolManager";
+import { ToolManager } from "../../../actions/ToolManager";
 import { Handle, HandleType } from "./Handle";
 
 // handles moving, resizing and rotating of objects.

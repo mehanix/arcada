@@ -1,6 +1,6 @@
 import { Container } from "pixi.js";
-import { Furniture } from "../2d/Furniture";
-import { FurnitureFactory } from "../2d/FurnitureFactory";
+import { Furniture } from "./Furniture";
+import { FurnitureFactory } from "./FurnitureFactory";
 import { WallNodeSequence } from "./Walls/WallNodeSequence";
 
 export class FloorPlan extends Container {
@@ -54,6 +54,10 @@ export class FloorPlan extends Container {
             seq.drawWalls();
           }
           
+    }
+
+    public removeWallNode() {
+        
     }
 
 }

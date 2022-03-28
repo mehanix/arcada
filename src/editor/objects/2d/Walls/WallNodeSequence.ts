@@ -21,7 +21,6 @@ export class WallNodeSequence extends Container {
         this.addNode(300,50);
         this.addNode(300,200);
         this.addNode(600,200);
-        this.wallNodeLinks[1].push(5);
         this.wallNodeLinks[5].push(2);
         this.wallNodeLinks[5].push(6);
         this.wallNodeLinks[6].push(7);
@@ -47,8 +46,13 @@ export class WallNodeSequence extends Container {
     public addNode(x: number, y: number) {
         WallNodeSequence.wallNodeId += 1;
         const nodeId = WallNodeSequence.wallNodeId;
-        this.wallNodes[nodeId] = new WallNode(x, y);
+        this.wallNodes[nodeId] = new WallNode(x, y, nodeId);
         this.wallNodeLinks[nodeId] = [];
+    }
+
+    public addWall(leftNode:number, rightNode:number) {
+        this.wallNodeLinks[leftNode].push(rightNode);
+
     }
     public drawWalls() {
         console.log("redraw")

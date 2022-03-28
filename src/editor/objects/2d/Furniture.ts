@@ -1,15 +1,17 @@
 import { Sprite, Texture } from "pixi.js";
-import { METER } from "../../constants";
+import { METER, Tool } from "../../constants";
+import { ToolManager } from "../../actions/ToolManager";
+import { FloorPlan } from "./FloorPlan";
 import { TransformLayer } from "./TransformControls/TransformLayer";
 
 export class Furniture extends Sprite {
 
-  
-    private id:number; // fiecare mobila isi stie index-ul in plan. uuids?
+
+    private id: number; // fiecare mobila isi stie index-ul in plan. uuids?
     // private dragging: boolean;
 
     private transformLayer: TransformLayer;
-    constructor(resourcePath: string, id:number) {
+    constructor(resourcePath: string, id: number) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
@@ -17,7 +19,7 @@ export class Furniture extends Sprite {
 
         this.interactive = true;
         // this.dragging = false;
-        this.width = 2.6* METER;
+        this.width = 2.6 * METER;
         this.height = METER;
         this.id = id;
         console.log(this.id)
@@ -30,14 +32,22 @@ export class Furniture extends Sprite {
 
     private onMouseDown() {
 
-        this.transformLayer.select(this);
+        switch (ToolManager.Instance.getTool()) {
+            case Tool.FurnitureEdit:
+                this.transformLayer.select(this);
+                break;
+
+            case Tool.FurnitureRemove:
+                FloorPlan.Instance.removeFurniture(this.id);
+                break;
+        }
     }
 
     private onMouseMove() {
         this.transformLayer.update();
     }
-    
 
-   
+
+
 
 }
