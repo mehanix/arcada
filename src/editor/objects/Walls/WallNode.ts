@@ -1,6 +1,6 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
-import { Tool } from "../../../constants";
-import { ToolManager } from "../../../actions/ToolManager";
+import { Tool } from "../../constants";
+import { ToolManager } from "../../actions/ToolManager";
 import { FloorPlan } from "../FloorPlan";
 
 export class WallNode extends Graphics {

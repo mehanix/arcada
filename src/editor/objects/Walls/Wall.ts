@@ -1,5 +1,5 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
-import { WALL_THICKNESS } from "../../../constants";
+import { WALL_THICKNESS } from "../../constants";
 
 export interface IAnchor {
     other:Wall;

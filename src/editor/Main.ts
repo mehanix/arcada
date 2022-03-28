@@ -1,8 +1,8 @@
 import { IViewportOptions, PluginManager, Viewport } from "pixi-viewport";
 import { Loader, TilingSprite } from "pixi.js";
-import { FloorPlan } from "../objects/2d/FloorPlan";
-import { assets } from "../objects/2d/assets"
-import { TransformLayer } from "../objects/2d/TransformControls/TransformLayer";
+import { FloorPlan } from "./objects/FloorPlan";
+import { assets } from "./objects/assets"
+import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 export class Main extends Viewport {
 
     private bkgPattern: TilingSprite;

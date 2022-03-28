@@ -1,7 +1,7 @@
 import { PluginManager } from "pixi-viewport";
 import { Graphics, Point, Rectangle, Sprite, Texture } from "pixi.js";
-import { Modes, Coord } from "../../../constants";
-import { Main } from "../../../scenes/Main";
+import { Modes, Coord } from "../../constants";
+import { Main } from "../../Main";
 import { Handle, HandleType } from "./Handle";
 
 export class Transformable extends Sprite {

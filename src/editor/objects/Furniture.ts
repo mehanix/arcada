@@ -1,6 +1,6 @@
 import { Sprite, Texture } from "pixi.js";
-import { METER, Tool } from "../../constants";
-import { ToolManager } from "../../actions/ToolManager";
+import { METER, Tool } from "../constants";
+import { ToolManager } from "../actions/ToolManager";
 import { FloorPlan } from "./FloorPlan";
 import { TransformLayer } from "./TransformControls/TransformLayer";
 

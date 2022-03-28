@@ -1,5 +1,5 @@
 import { ToolMode, Tool } from "../constants";
-import { TransformLayer } from "../objects/2d/TransformControls/TransformLayer";
+import { TransformLayer } from "../objects/TransformControls/TransformLayer";
 
 export class ToolManager {
     public mode:ToolMode;
