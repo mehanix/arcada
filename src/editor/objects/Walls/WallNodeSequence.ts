@@ -18,15 +18,15 @@ export class WallNodeSequence extends Container {
         this.addNode(750, 50);
         this.addNode(750, 750);
         this.addNode(50, 750);
-        this.addNode(300,50);
-        this.addNode(300,200);
-        this.addNode(600,200);
-        this.wallNodeLinks[5].push(2);
-        this.wallNodeLinks[5].push(6);
-        this.wallNodeLinks[6].push(7);
+        this.addNode(300, 50);
+        this.addNode(300, 200);
+        this.addNode(600, 200);
+        this.wallNodeLinks[1].push(4);
+        this.wallNodeLinks[2].push(5);
         this.wallNodeLinks[2].push(3);
         this.wallNodeLinks[3].push(4);
-        this.wallNodeLinks[4].push(1);
+        this.wallNodeLinks[5].push(6);
+        this.wallNodeLinks[6].push(7);
         console.log(this.wallNodes);
         console.log(this.wallNodeLinks)
         this.drawWalls();
@@ -43,6 +43,29 @@ export class WallNodeSequence extends Container {
         console.log("sunt doar un vagabond")
     }
 
+    public contains(id: number) {
+        return id in this.wallNodes;
+    }
+
+    public remove(id: number) {
+        // remove node
+        this.wallNodes[id].destroy(true);
+        this.wallNodes[id] = null;
+
+        // remove links containing node TODO if implementing undo. remember these
+        this.wallNodeLinks[id].length = 0;
+
+
+        //TODO only remove if connected to 2 points.
+        for (const src in this.wallNodeLinks) {
+            for (const dest of this.wallNodeLinks[src]) {
+                if (dest == id) {
+                    console.log("tre sa plece", src, dest)
+                }
+            }
+        }
+    }
+
     public addNode(x: number, y: number) {
         WallNodeSequence.wallNodeId += 1;
         const nodeId = WallNodeSequence.wallNodeId;
@@ -50,8 +73,23 @@ export class WallNodeSequence extends Container {
         this.wallNodeLinks[nodeId] = [];
     }
 
-    public addWall(leftNode:number, rightNode:number) {
+    public addWall(leftNode: number, rightNode: number) {
         this.wallNodeLinks[leftNode].push(rightNode);
+
+    }
+    
+    public removeWall(leftNode:number, rightNode:number) {
+         const index = this.wallNodeLinks[leftNode].indexOf(rightNode);
+        console.log("links for left:",leftNode, "right:", rightNode, "found index:",index)
+        console.log("links 2 left:",this.wallNodeLinks[leftNode]);
+        console.log("links 2 right:",this.wallNodeLinks[rightNode]);
+
+        if (index != -1) {
+            this.wallNodeLinks[leftNode].splice(index, 1);
+            this.drawWalls();
+        }
+        console.log("tratate 2 left:",this.wallNodeLinks[leftNode]);
+        console.log("tratate 2 right:",this.wallNodeLinks[rightNode]);
 
     }
     public drawWalls() {

@@ -1,5 +1,7 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
-import { WALL_THICKNESS } from "../../constants";
+import { ToolManager } from "../../actions/ToolManager";
+import { Tool, WALL_THICKNESS } from "../../constants";
+import { FloorPlan } from "../FloorPlan";
 
 export interface IAnchor {
     other:Wall;
@@ -45,10 +47,8 @@ export class Wall extends Graphics {
 
         let radians = Math.atan((y2-y1)/(x2-x1)); // aflu unghiul sa pot roti
         let length = Math.hypot(x1-x2, y1-y2);
-        console.log("angle", radians, Object.is(radians, -0))
         this.beginFill().drawRect(0,0,length,WALL_THICKNESS).endFill()
          this.position.set(x1,y1)
-        // console.log("hit",this.hitArea)
         if (Object.is(radians, -0)) {
             this.angle = 180;
         } else {
@@ -59,8 +59,14 @@ export class Wall extends Graphics {
     }
 
     private mousedown(ev:InteractionEvent) {
+        ev.stopPropagation();
         let coords = new Point(ev.data.global.x, ev.data.global.y)
         console.log("hi!", this.leftNode, this.rightNode, coords.x, coords.y)
+
+        if (ToolManager.Instance.getTool() == Tool.WallRemove) {
+            console.log("stergem", this.leftNode,this.rightNode)
+            FloorPlan.Instance.removeWall(this);
+        }
     }
   
 }

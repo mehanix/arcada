@@ -26,6 +26,10 @@ export class WallNode extends Graphics {
 
 
     }
+
+    public getId() {
+        return this.id;
+    }
   
     private mousedown() {
         switch (ToolManager.Instance.getTool()) {
