@@ -30,10 +30,6 @@ export class WallNodeSequence extends Container {
         console.log(this.wallNodes);
         console.log(this.wallNodeLinks)
         this.drawWalls();
-        // this.addChild(this.walls);
-        for (let nodeId in this.wallNodes) {
-            this.addChild(this.wallNodes[nodeId])
-        }
 
         this.on("mousedown", this.mousedown)
 
@@ -71,11 +67,13 @@ export class WallNodeSequence extends Container {
         const nodeId = WallNodeSequence.wallNodeId;
         this.wallNodes[nodeId] = new WallNode(x, y, nodeId);
         this.wallNodeLinks[nodeId] = [];
+        this.addChild(this.wallNodes[nodeId])
+        return nodeId;
     }
 
     public addWall(leftNode: number, rightNode: number) {
         this.wallNodeLinks[leftNode].push(rightNode);
-
+        this.drawWalls();
     }
     
     public removeWall(leftNode:number, rightNode:number) {

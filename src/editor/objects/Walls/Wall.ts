@@ -67,6 +67,11 @@ export class Wall extends Graphics {
             console.log("stergem", this.leftNode,this.rightNode)
             FloorPlan.Instance.removeWall(this);
         }
+
+        if (ToolManager.Instance.getTool() == Tool.WallAdd) {
+            console.log("stergem", this.leftNode,this.rightNode)
+            FloorPlan.Instance.addNodeToWall(this, coords);
+        }
     }
   
 }
