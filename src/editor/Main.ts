@@ -40,7 +40,12 @@ export class Main extends Viewport {
         this.floorPlan.addFurniture("sofa");
         this.floorPlan.addFurniture("sofa");
 
+        // let rectGraph = new Graphics();
+        // rectGraph.interactive = true;
+        // rectGraph.beginFill().drawRect(100,100,200,200).endFill()
+        // rectGraph.on("mousedown", ()=>{console.log("cleck test")})
 
+        // this.addChild(rectGraph);
 
     }
 

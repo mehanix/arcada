@@ -66,6 +66,7 @@ export class Handle extends Graphics {
             return;
         }
         this.startPoint = this.getGlobalPosition();
+        console.log("badabum")
         this.startDimensions = new Point(this.target.width, this.target.height);
         TransformLayer.dragging = true;
         this.active = true;
