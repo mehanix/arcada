@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import { Container, Point } from "pixi.js";
 import { Furniture } from "./Furniture";
 import { FurnitureFactory } from "./FurnitureFactory";
 import { Wall } from "./Walls/Wall";
@@ -11,17 +11,14 @@ export class FloorPlan extends Container {
 
     public furnitureArray: Record<number, Furniture>;
 
-    private wallSequenceArray: Record<number, WallNodeSequence>;
+    private wallNodeSequence: WallNodeSequence;
     private furnitureId = 0;
-    private wallGroupId = 0;
 
     private constructor() {
         super();
         this.furnitureArray = {};
-        this.wallSequenceArray = {};
-        this.wallSequenceArray[this.wallGroupId] = new WallNodeSequence();
-        this.addChild(this.wallSequenceArray[0]);
-        // this.removeWall(this);
+        this.wallNodeSequence = new WallNodeSequence();
+        this.addChild(this.wallNodeSequence);
 
     }
 
@@ -52,34 +49,38 @@ export class FloorPlan extends Container {
     }
 
     public redrawWalls() {
-        for (const [_, seq] of Object.entries(this.wallSequenceArray)) {
-            seq.drawWalls();
-        }
-
+        this.wallNodeSequence.drawWalls();
     }
 
 
     public removeWallNode(nodeId: number) {
-        for (const [_, seq] of Object.entries(this.wallSequenceArray)) {
 
-            if (seq.contains(nodeId)) {
-                console.log("m a gasit")
-                seq.remove(nodeId);
-                break;
-            }
+        if (this.wallNodeSequence.contains(nodeId)) {
+            console.log("m a gasit")
+            this.wallNodeSequence.remove(nodeId);
         }
+
     }
 
     public removeWall(wall: Wall) {
         let leftNode = wall.leftNode;
         let rightNode = wall.rightNode;
 
-        for (const [_, seq] of Object.entries(this.wallSequenceArray)) {
-
-            if (seq.contains(leftNode)) {
-                seq.removeWall(leftNode, rightNode);
-            }
+        if (this.wallNodeSequence.contains(leftNode)) {
+            this.wallNodeSequence.removeWall(leftNode, rightNode);
         }
+    }
+
+    public addNodeToWall(wall:Wall, coords:Point) {
+        let leftNode = wall.leftNode;
+        let rightNode = wall.rightNode;
+        // delete wall between left and right node
+        this.removeWall(wall);
+        // add node and connect walls to it
+        let newNode = this.wallNodeSequence.addNode(coords.x, coords.y);
+        
+        this.wallNodeSequence.addWall(leftNode, newNode);
+        this.wallNodeSequence.addWall(newNode, rightNode);
 
     }
 }

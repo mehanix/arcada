@@ -22,7 +22,7 @@ export class Wall extends Graphics {
         this.pivot.set(8);
 
         this.drawLine(x1,y1,x2,y2);
-        this.on("mousedown", this.mousedown)
+        this.on("mousedown", this.onMouseDown)
         // this.on("mousemove", this.onMouseMove)
         // this.on("mouseup",this.onMouseUp);
         // this.on("mouseupoutside",this.onMouseUp);
@@ -58,7 +58,7 @@ export class Wall extends Graphics {
 
     }
 
-    private mousedown(ev:InteractionEvent) {
+    private onMouseDown(ev:InteractionEvent) {
         ev.stopPropagation();
         let coords = new Point(ev.data.global.x, ev.data.global.y)
         console.log("hi!", this.leftNode, this.rightNode, coords.x, coords.y)
@@ -66,6 +66,11 @@ export class Wall extends Graphics {
         if (ToolManager.Instance.getTool() == Tool.WallRemove) {
             console.log("stergem", this.leftNode,this.rightNode)
             FloorPlan.Instance.removeWall(this);
+        }
+
+        if (ToolManager.Instance.getTool() == Tool.WallAdd) {
+            console.log("stergem", this.leftNode,this.rightNode)
+            FloorPlan.Instance.addNodeToWall(this, coords);
         }
     }
   
