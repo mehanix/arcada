@@ -63,8 +63,8 @@ export class FloorPlan extends Container {
     }
 
     public removeWall(wall: Wall) {
-        let leftNode = wall.leftNode;
-        let rightNode = wall.rightNode;
+        let leftNode = wall.leftNode.getId();
+        let rightNode = wall.rightNode.getId();
 
         if (this.wallNodeSequence.contains(leftNode)) {
             this.wallNodeSequence.removeWall(leftNode, rightNode);
@@ -72,8 +72,8 @@ export class FloorPlan extends Container {
     }
 
     public addNodeToWall(wall:Wall, coords:Point) {
-        let leftNode = wall.leftNode;
-        let rightNode = wall.rightNode;
+        let leftNode = wall.leftNode.getId();
+        let rightNode = wall.rightNode.getId();
         // delete wall between left and right node
         this.removeWall(wall);
         // add node and connect walls to it

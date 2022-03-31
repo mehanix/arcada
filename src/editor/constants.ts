@@ -12,9 +12,15 @@ export enum Coord {
     E,
     SE,
     S,
-    C
+    C,
+    Horizontal,
+    Vertical
 };
 
+export enum LabelAxis {
+    Horizontal,
+    Vertical
+}
 export enum ToolMode {
     WallMode,
     FurnitureMode,

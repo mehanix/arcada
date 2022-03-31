@@ -2,6 +2,8 @@ import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { ToolManager } from "../../actions/ToolManager";
 import { Tool, WALL_THICKNESS } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
+import { Label } from "../TransformControls/Label";
+import { WallNode } from "./WallNode";
 
 export interface IAnchor {
     other:Wall;
@@ -11,9 +13,11 @@ export interface IAnchor {
 
 export class Wall extends Graphics {
     
-    leftNode: number;
-    rightNode: number;
-    constructor(x1:number, y1: number, x2:number, y2:number, leftNode:number, rightNode:number) {
+    leftNode: WallNode;
+    rightNode: WallNode;
+    length: number;
+    label: Label;
+    constructor(x1:number, y1: number, x2:number, y2:number, leftNode:WallNode, rightNode:WallNode) {
         super();
 
         this.interactive = true;
@@ -47,6 +51,8 @@ export class Wall extends Graphics {
 
         let radians = Math.atan((y2-y1)/(x2-x1)); // aflu unghiul sa pot roti
         let length = Math.hypot(x1-x2, y1-y2);
+        this.length = length;
+        console.log(length)
         this.beginFill().drawRect(0,0,length,WALL_THICKNESS).endFill()
          this.position.set(x1,y1)
         if (Object.is(radians, -0)) {
@@ -54,6 +60,11 @@ export class Wall extends Graphics {
         } else {
             this.angle = radians * 57.29577
         }
+
+        this.label = new Label(length);
+        this.addChild(this.label)
+        this.label.position.x = this.width / 2;
+
         
 
     }

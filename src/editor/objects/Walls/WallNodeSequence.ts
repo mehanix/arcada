@@ -18,15 +18,13 @@ export class WallNodeSequence extends Container {
         this.addNode(750, 50);
         this.addNode(750, 750);
         this.addNode(50, 750);
-        this.addNode(300, 50);
-        this.addNode(300, 200);
-        this.addNode(600, 200);
+        
         this.wallNodeLinks[1].push(4);
-        this.wallNodeLinks[2].push(5);
+        this.wallNodeLinks[1].push(2);
         this.wallNodeLinks[2].push(3);
         this.wallNodeLinks[3].push(4);
-        this.wallNodeLinks[5].push(6);
-        this.wallNodeLinks[6].push(7);
+        // this.wallNodeLinks[5].push(6);
+        // this.wallNodeLinks[6].push(7);
         console.log(this.wallNodes);
         console.log(this.wallNodeLinks)
         this.drawWalls();
@@ -77,6 +75,7 @@ export class WallNodeSequence extends Container {
     }
     
     public removeWall(leftNode:number, rightNode:number) {
+
          const index = this.wallNodeLinks[leftNode].indexOf(rightNode);
         console.log("links for left:",leftNode, "right:", rightNode, "found index:",index)
         console.log("links 2 left:",this.wallNodeLinks[leftNode]);
@@ -103,7 +102,7 @@ export class WallNodeSequence extends Container {
                 console.log(src, dest)
                 const leftNode = this.wallNodes[parseInt(src)]
                 const rightNode = this.wallNodes[dest]
-                this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, parseInt(src), dest))
+                this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, this.wallNodes[parseInt(src)], this.wallNodes[dest]))
             }
         }
         for (let wall of this.walls) {

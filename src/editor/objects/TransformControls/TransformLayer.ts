@@ -1,7 +1,8 @@
 import { Container, Graphics, Point, Sprite } from "pixi.js";
-import { Coord, Tool } from "../../constants";
+import { Coord, LabelAxis, Tool } from "../../constants";
 import { ToolManager } from "../../actions/ToolManager";
 import { Handle, HandleType } from "./Handle";
+import { Label } from "./Label";
 
 // handles moving, resizing and rotating of objects.
 // can only work if its state is active.
@@ -9,6 +10,7 @@ export class TransformLayer extends Container {
     private target: Sprite;
     private points: Point[];
     private handles: Handle[];
+    private labels: Label[];
     private border:Graphics;
     private borderOffset:number;
     public static dragging:boolean;
@@ -20,7 +22,7 @@ export class TransformLayer extends Container {
         super();
         this.points = [];
         this.handles = [];
-
+        this.labels = [];
         this.visible = false;
         this.target = null;
         this.border = new Graphics();
@@ -36,11 +38,15 @@ export class TransformLayer extends Container {
         this.addHandle(HandleType.FreeTransform); 
         this.addHandle(HandleType.Vertical);
         this.addHandle(HandleType.Move);       
-
      
-        for (let i=0;i<5; i++) {
+        for (let i=0;i<7; i++) {
             this.points[i] = new Point();
         }
+
+        this.labels[LabelAxis.Horizontal] = new Label();
+        this.labels[LabelAxis.Vertical] = new Label();
+        this.addChild(this.labels[LabelAxis.Horizontal]);
+        this.addChild(this.labels[LabelAxis.Vertical]);
 
         this.on("mousedown",this.onMouseDown)
     }
@@ -62,7 +68,8 @@ export class TransformLayer extends Container {
         [this.points[Coord.SE].x, this.points[Coord.SE].y] = [x + this.target.width, y + this.target.height];
         [this.points[Coord.S].x, this.points[Coord.S].y] = [x + (this.target.width / 2), y +this.target.height];
         [this.points[Coord.C].x, this.points[Coord.C].y] = [x + (this.target.width / 2), y +(this.target.height / 2)];
-
+        [this.points[Coord.Horizontal].x, this.points[Coord.Horizontal].y] = [x + this.target.width + 10, y + (this.target.height / 2)];
+        [this.points[Coord.Vertical].x, this.points[Coord.Vertical].y] = [x + (this.target.width / 2), y +this.target.height + 10];
 
     }
     private addHandle(type: HandleType) {
@@ -70,7 +77,6 @@ export class TransformLayer extends Container {
         this.addChild(handle);
         this.handles.push(handle);
     }
-
     public select(t:Sprite) {
         if (ToolManager.Instance.getTool() != Tool.FurnitureEdit) {
             return;
@@ -79,7 +85,6 @@ export class TransformLayer extends Container {
             this.deselect();
             return;
         }
-        console.log("t")
         this.target = t;
         this.visible = true;
         this.interactive = true;
@@ -98,7 +103,9 @@ export class TransformLayer extends Container {
 
             this.handles[i].update(this.points[i])
         }
-        
+
+        // set labels
+        this.labels[LabelAxis.Horizontal].position.set(this.points[Coord.Horizontal].x, this.points[Coord.Horizontal].y);
     }
 
     private drawBorder() {
@@ -129,5 +136,9 @@ export class TransformLayer extends Container {
         for (let i = 0; i < this.handles.length; i++) { 
             this.handles[i].update(this.points[i])
         }
+
+        this.labels[LabelAxis.Horizontal].updatePos(this.points[Coord.Horizontal], this.target.height)
+        this.labels[LabelAxis.Vertical].updatePos(this.points[Coord.Vertical], this.target.width)
+
     }
 }
