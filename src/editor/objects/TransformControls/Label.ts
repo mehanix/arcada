@@ -33,8 +33,8 @@ export class Label extends Container {
         size = size / METER;
 
         // truncating to the 2nd decimal
-        size = Math.trunc((size*100))/100
+        const sizeLabel = (Math.round(size * 100) / 100).toFixed(2);
 
-        return size.toString() + "m"
+        return sizeLabel + "m"
     }    
 }
