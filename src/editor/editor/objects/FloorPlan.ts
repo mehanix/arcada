@@ -26,10 +26,10 @@ export class FloorPlan extends Container {
         return this.instance || (this.instance = new this());
     }
 
-    public addFurniture(type: string) {
+    public addFurniture(url: string) {
 
         this.furnitureId += 1;
-        let object = FurnitureFactory.create(type, this.furnitureId);
+        let object = FurnitureFactory.create(url, this.furnitureId);
         this.furnitureArray[this.furnitureId] = object;
         this.addChild(object)
 

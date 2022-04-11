@@ -4,10 +4,10 @@ export class FurnitureFactory {
 
     private constructor() { }
 
-    public static create(furnitureId:string, index:number):Furniture {
+    public static create(furnitureUrl:string, index:number):Furniture {
 
-        console.log(furnitureId);
-        let newFurniture = new Furniture("sofa", index);
+        console.log(furnitureUrl);
+        let newFurniture = new Furniture(furnitureUrl, index);
         return newFurniture;
     }
     

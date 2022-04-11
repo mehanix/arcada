@@ -20,9 +20,9 @@ export class Furniture extends Sprite {
 
         this.interactive = true;
         // this.dragging = false;
-        this.width = 2.6 * METER;
-        this.height = METER;
-        console.log(this.id)
+        this.width = 2.0 * METER;
+        this.height = 1 * METER;
+        console.log(resourcePath)
 
         this.on('mousedown', this.onMouseDown)
         this.on('mousemove', this.onMouseMove)

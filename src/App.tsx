@@ -1,11 +1,19 @@
+import { useEffect } from 'react';
 import './App.css';
 import { PageLayout } from './ui/Layout/PageLayout';
-function App() {
+import {useFurnitureStore} from './stores/FurnitureStore'
 
+function App() {
+  const {categories, getCategories} = useFurnitureStore();
+
+  useEffect(() => {
+    getCategories()
+    console.log("k", categories)
+  },[])
   return (
     <>
-    <PageLayout />  
-  </>
+      <PageLayout />
+    </>
   );
 }
 

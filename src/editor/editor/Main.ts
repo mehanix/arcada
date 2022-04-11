@@ -40,8 +40,9 @@ export class Main extends Viewport {
         this.transformLayer = TransformLayer.Instance;
         this.addChild(this.transformLayer)
 
-        this.floorPlan.addFurniture("sofa");
-        this.floorPlan.addFurniture("sofa");
+        this.floorPlan.addFurniture("http://localhost:4133/living_room/canapea-1-m");
+        this.floorPlan.addFurniture("http://localhost:4133/kitchen/aragaz-4-ochiuri");
+        this.floorPlan.addFurniture("http://localhost:4133/bedroom/king-size-bed");
 
         // let rectGraph = new Graphics();
         // rectGraph.interactive = true;
