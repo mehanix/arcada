@@ -2,7 +2,6 @@ import { createStyles, Navbar, ScrollArea, Select, SimpleGrid } from "@mantine/c
 import { useEffect, useState } from "react";
 import { FurnitureItem } from "./FurnitureItem";
 import { useFurnitureStore } from "../../../stores/FurnitureStore";
-import { endpoint } from "../../../api/api-client";
 const useStyles = createStyles((theme) => ({
     mb: {
         marginTop: theme.spacing.xs,
@@ -29,7 +28,7 @@ export function FurnitureAddPanel() {
         console.log("Am",   currentFurnitureData)
         setCards(currentFurnitureData.map((item) => 
             (
-                <FurnitureItem name={item.name} img={`${endpoint}${category}/${item.id}`}></FurnitureItem>
+                <FurnitureItem item={item} category={category} ></FurnitureItem>
             )
         ))
         console.log("cards", cards)

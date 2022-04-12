@@ -1,4 +1,5 @@
 import { Container, Point } from "pixi.js";
+import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Furniture } from "./Furniture";
 import { FurnitureFactory } from "./FurnitureFactory";
 import { Wall } from "./Walls/Wall";
@@ -26,15 +27,17 @@ export class FloorPlan extends Container {
         return this.instance || (this.instance = new this());
     }
 
-    public addFurniture(url: string) {
+    public addFurniture(obj: FurnitureData, category:string) {
 
         this.furnitureId += 1;
-        let object = FurnitureFactory.create(url, this.furnitureId);
+        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height);
         this.furnitureArray[this.furnitureId] = object;
         this.addChild(object)
 
         object.position.set(150, 150)
         console.log(this.furnitureArray)
+
+        return this.furnitureId;
     }
 
     public removeFurniture(id: number) {

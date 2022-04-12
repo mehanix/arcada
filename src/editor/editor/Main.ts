@@ -4,6 +4,7 @@ import { FloorPlan } from "./objects/FloorPlan";
 import { assets } from "./objects/assets"
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 import { Label } from "./objects/TransformControls/Label";
+import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
     private bkgPattern: TilingSprite;
@@ -40,9 +41,37 @@ export class Main extends Viewport {
         this.transformLayer = TransformLayer.Instance;
         this.addChild(this.transformLayer)
 
-        this.floorPlan.addFurniture("http://localhost:4133/living_room/canapea-1-m");
-        this.floorPlan.addFurniture("http://localhost:4133/kitchen/aragaz-4-ochiuri");
-        this.floorPlan.addFurniture("http://localhost:4133/bedroom/king-size-bed");
+        let f1:FurnitureData= {
+            width:"2.0",
+            height:"1.0",
+            id:"canapea-1-l-2-1",
+            name:"canapea mare"
+        }
+
+        let f2:FurnitureData= {
+            width:"1.6",
+            height:"2.0",
+            id:"king-size-bed-1.6-2",
+            name:"canapea mare"
+        }
+        let f3:FurnitureData = {
+            width:"0.6",
+            height:"0.6",
+            id:"plant-0.6-0.6",
+            name:"planta"
+        }
+        let id1 = this.floorPlan.addFurniture(f1, "living_room");
+        let id2 = this.floorPlan.addFurniture(f2, "bedroom");
+        let id3 = this.floorPlan.addFurniture(f3, "bedroom");
+
+        this.floorPlan.furnitureArray[id1].position.set(100,100);
+        this.floorPlan.furnitureArray[id2].position.set(400,150);
+        this.floorPlan.furnitureArray[id3].position.set(200,600);
+
+
+
+        // this.floorPlan.addFurniture("http://localhost:4133/kitchen/aragaz-4-ochiuri");
+        // this.floorPlan.addFurniture("http://localhost:4133/bedroom/king-size-bed");
 
         // let rectGraph = new Graphics();
         // rectGraph.interactive = true;

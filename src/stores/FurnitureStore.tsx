@@ -9,6 +9,8 @@ export interface Category {
 export interface FurnitureData {
     id: string,
     name: string,
+    width: string,
+    height: string
 }
 
 export interface FurnitureStore {

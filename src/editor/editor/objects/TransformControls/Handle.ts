@@ -22,7 +22,7 @@ export class Handle extends Graphics {
 
     private type: HandleType;
     private target: Sprite;
-    private color: number = 0xffffff;
+    private color: number = 0x000;
     private size: number = 7;
     
     private active: boolean = false;

@@ -11,7 +11,7 @@ export class Furniture extends Sprite {
     // private dragging: boolean;
 
     private transformLayer: TransformLayer;
-    constructor(resourcePath: string, id: number) {
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
@@ -20,8 +20,8 @@ export class Furniture extends Sprite {
 
         this.interactive = true;
         // this.dragging = false;
-        this.width = 2.0 * METER;
-        this.height = 1 * METER;
+        this.width = widthFactor * METER;
+        this.height = heightFactor * METER;
         console.log(resourcePath)
 
         this.on('mousedown', this.onMouseDown)
