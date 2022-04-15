@@ -67,14 +67,14 @@ export class TransformLayer extends Container {
         [this.points[Coord.C].x, this.points[Coord.C].y] = [x + (this.target.width / 2), y + (this.target.height / 2)];
 
         this.points[Coord.Vertical].x = x + this.target.width + LABEL_OFFSET;
-        this.points[Coord.Vertical].y = y + (this.target.height / 2)  - this.labels[LabelAxis.Vertical].height / 2 ;
+        this.points[Coord.Vertical].y = y + (this.target.height / 2) - this.labels[LabelAxis.Vertical].height / 2 
 
-        this.points[Coord.Horizontal].x = x + (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 3 ;
-        this.points[Coord.Horizontal].y =  y + this.target.height + LABEL_OFFSET;
+        this.points[Coord.Horizontal].x = x + (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 3;
+        this.points[Coord.Horizontal].y = y + this.target.height + LABEL_OFFSET;
 
     }
 
-    
+
     private addHandle(type: HandleType) {
         let handle = new Handle({ type: type, target: null, pos: new Point(0, 0) });
         this.addChild(handle);
@@ -126,7 +126,11 @@ export class TransformLayer extends Container {
         const h = this.points[Coord.SE].y - y + 2 * this.borderOffset;
         this.border
             .lineStyle(3, 0, 1, 0, true)
-            .drawRect(x, y, w, h)
+            .drawRect(0, 0, w, h)
+
+        this.border.position.x = x;
+        this.border.position.y = y;
+        this.border.rotation = this.target.rotation;
 
     }
 

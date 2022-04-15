@@ -3,7 +3,6 @@ import { Loader, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { assets } from "./objects/assets"
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
-import { Label } from "./objects/TransformControls/Label";
 import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
@@ -79,7 +78,6 @@ export class Main extends Viewport {
         // rectGraph.on("mousedown", ()=>{console.log("cleck test")})
 
         // this.addChild(rectGraph);
-        this.addChild(new Label(255));
 
     }
 

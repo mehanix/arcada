@@ -29,6 +29,7 @@ export class Handle extends Graphics {
     private startPoint: Point;
     private startDimensions: Point;
     private offset: Point;
+    startRotaton: number;
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
@@ -68,6 +69,7 @@ export class Handle extends Graphics {
         this.startPoint = this.getGlobalPosition();
         console.log("badabum")
         this.startDimensions = new Point(this.target.width, this.target.height);
+        this.startRotaton = this.target.rotation;
         TransformLayer.dragging = true;
         this.active = true;
         // this.target.setSmartPivot(0);
@@ -93,6 +95,15 @@ export class Handle extends Graphics {
         let distance = this.getDistance(this.startPoint, currentPoint)
         // console.log(this.startPoint, currentPoint, distance, this.type)
         switch (this.type) {
+            case HandleType.Rotate:
+                let relativeStart = new Point(this.startPoint.x - this.target.x, this.startPoint.y - this.target.y)
+                let relativeEnd = new Point( currentPoint.x - this.target.x, currentPoint.y - this.target.y)
+
+                let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
+                let startAngle = Math.atan2(relativeStart.y, relativeStart.x)
+                let deltaAngle = endAngle - startAngle;
+                this.target.rotation = this.startRotaton + deltaAngle;
+                break;
             case HandleType.Horizontal:
                 this.target.width= this.startDimensions.x + distance.x;
                 break;
@@ -114,10 +125,6 @@ export class Handle extends Graphics {
                 this.target.y = currentPoint.y - this.offset.y
                 break;
         }
-
-        // this.target.update();
-
-
     }
 
     private getDistance(src:Point, dest:Point) {
@@ -136,6 +143,7 @@ export class Handle extends Graphics {
 
     /* sets scale and transform */
     public update(pos:Point) {
+        console.log("updating...")
         this.position.set(pos.x, pos.y)
         this.offset.x = pos.x - this.target.x;
         this.offset.y = pos.y - this.target.y;
