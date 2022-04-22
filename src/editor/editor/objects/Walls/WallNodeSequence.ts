@@ -98,9 +98,23 @@ export class WallNodeSequence extends Container {
         console.log("links 2 left:", this.wallNodeLinks[leftNode]);
         console.log("links 2 right:", this.wallNodeLinks[rightNode]);
 
+
         if (index != -1) {
             this.wallNodeLinks[leftNode].splice(index, 1);
             this.drawWalls();
+        }
+        let toBeRemoved = -1;
+        for (let i=0; i<this.walls.length; i++) {
+            let wall = this.walls[i];
+            if (wall.leftNode.getId() == leftNode && wall.rightNode.getId() == rightNode) {
+                toBeRemoved = i;
+                break;
+            }
+        }
+        if (toBeRemoved != -1) {
+            this.removeChild(this.walls[toBeRemoved]);
+            this.walls.splice(toBeRemoved, 1);
+
         }
         console.log("tratate 2 left:", this.wallNodeLinks[leftNode]);
         console.log("tratate 2 right:", this.wallNodeLinks[rightNode]);
