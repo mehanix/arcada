@@ -3,6 +3,7 @@ import { useStore } from "../../../stores/ToolStore";
 import { METER, Tool } from "../constants";
 import { FloorPlan } from "./FloorPlan";
 import { TransformLayer } from "./TransformControls/TransformLayer";
+import { Wall } from "./Walls/Wall";
 
 export class Furniture extends Sprite {
 
@@ -11,12 +12,20 @@ export class Furniture extends Sprite {
     // private dragging: boolean;
 
     private transformLayer: TransformLayer;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number) {
+    public isSticky: boolean;
+    public stickyObject:Wall;
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, sticky?:boolean) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
+        
+        if (sticky) {
+            this.isSticky = sticky
+        } else {
+            this.isSticky = false;
+        }
 
         this.interactive = true;
         // this.dragging = false;
@@ -45,6 +54,7 @@ export class Furniture extends Sprite {
 
     private onMouseMove() {
         this.transformLayer.update();
+        FloorPlan.Instance.checkWallCollisions(this)
     }
 
 

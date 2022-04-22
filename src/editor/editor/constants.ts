@@ -30,7 +30,7 @@ export enum ToolMode {
     ViewMode
 };
 
-export enum Tool {
+export enum Tool { //TODO uneste ma cu fratele meu
     WallAdd,
     WallEdit,
     WallRemove,

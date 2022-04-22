@@ -23,7 +23,8 @@ const useStyles = createStyles((theme) => ({
 
 const tools = [
   { label: 'Edit furniture', tool:Tool.FurnitureEdit },
-  { label: 'Remove furniture', tool:Tool.FurnitureRemove }
+  { label: 'Remove furniture', tool:Tool.FurnitureRemove },
+  {label: 'Add window', tool:Tool.FurnitureAddWindow }
 ];
 
 export function FurnitureTools() {

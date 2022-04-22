@@ -53,6 +53,9 @@ export class WallNodeSequence extends Container {
         return id in this.wallNodes;
     }
 
+    public getWalls() {
+        return this.walls;
+    }
     public remove(id: number) {
         // remove node
         this.wallNodes[id]!.destroy(true);

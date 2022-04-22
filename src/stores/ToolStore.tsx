@@ -15,6 +15,7 @@ export enum Tool {
     FurnitureAdd,
     FurnitureEdit,
     FurnitureRemove,
+    FurnitureAddWindow,
     View
 };
 

@@ -1,8 +1,8 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
-import { useStore } from "../../../../stores/ToolStore";
+import { Tool, useStore } from "../../../../stores/ToolStore";
 // import { ToolManager } from "../../actions/ToolManager";
 // import { useGlobalState } from "../../../../GlobalStateProvider";
-import { Tool, WALL_THICKNESS } from "../../constants";
+import {  WALL_THICKNESS } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
 import { Furniture } from "../Furniture";
 import { Label } from "../TransformControls/Label";
@@ -107,6 +107,9 @@ export class Wall extends Graphics {
         if (state.activeTool == Tool.WallAdd) {
             console.log("add", this.leftNode, this.rightNode)
             FloorPlan.Instance.addNodeToWall(this, coords);
+        }
+        if (state.activeTool == Tool.FurnitureAddWindow) {
+            
         }
 
     }
