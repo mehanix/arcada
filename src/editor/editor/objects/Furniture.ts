@@ -12,19 +12,19 @@ export class Furniture extends Sprite {
     // private dragging: boolean;
 
     private transformLayer: TransformLayer;
-    public isSticky: boolean;
-    public stickyObject:Wall;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, sticky?:boolean) {
+    public stickyTarget:Wall;
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, stickyTarget?:Wall) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
         
-        if (sticky) {
-            this.isSticky = sticky
+        if (stickyTarget) {
+            this.stickyTarget = stickyTarget
+            console.log("sunt sticky!", stickyTarget.leftNode.getId(), stickyTarget.rightNode.getId())
         } else {
-            this.isSticky = false;
+            this.stickyTarget = undefined
         }
 
         this.interactive = true;
@@ -54,7 +54,6 @@ export class Furniture extends Sprite {
 
     private onMouseMove() {
         this.transformLayer.update();
-        FloorPlan.Instance.checkWallCollisions(this)
     }
 
 

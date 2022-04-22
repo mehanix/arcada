@@ -1,4 +1,5 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
+import { FurnitureData } from "../../../../stores/FurnitureStore";
 import { Tool, useStore } from "../../../../stores/ToolStore";
 // import { ToolManager } from "../../actions/ToolManager";
 // import { useGlobalState } from "../../../../GlobalStateProvider";
@@ -109,7 +110,13 @@ export class Wall extends Graphics {
             FloorPlan.Instance.addNodeToWall(this, coords);
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
-            
+            let f1:FurnitureData= {
+                width:"2.0",
+                height:"1.0",
+                id:"canapea-1-l-2-1",
+                name:"canapea mare"
+            }
+             FloorPlan.Instance.addFurniture(f1, "living_room", this);
         }
 
     }

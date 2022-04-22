@@ -63,9 +63,10 @@ export class Main extends Viewport {
         let id2 = this.floorPlan.addFurniture(f2, "bedroom");
         let id3 = this.floorPlan.addFurniture(f3, "bedroom");
 
-        this.floorPlan.furnitureArray[id1].position.set(100,100);
-        this.floorPlan.furnitureArray[id2].position.set(400,150);
-        this.floorPlan.furnitureArray[id3].position.set(200,600);
+        this.floorPlan.setFurniturePosition(id1,100,100);
+        this.floorPlan.setFurniturePosition(id2,400,150);
+        this.floorPlan.setFurniturePosition(id3,200,600);
+
 
 
 

@@ -1,4 +1,4 @@
-import { Container, Point, Sprite } from "pixi.js";
+import { Container, Point } from "pixi.js";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Furniture } from "./Furniture";
 import { FurnitureFactory } from "./FurnitureFactory";
@@ -22,10 +22,10 @@ export class FloorPlan extends Container {
         return this.instance || (this.instance = new this());
     }
 
-    public addFurniture(obj: FurnitureData, category:string) {
+    public addFurniture(obj: FurnitureData, category:string, stickyTarget?:Wall) {
 
         this.furnitureId += 1;
-        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height);
+        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height, stickyTarget);
         this.furnitureArray[this.furnitureId] = object;
         this.addChild(object)
 
@@ -35,6 +35,10 @@ export class FloorPlan extends Container {
         return this.furnitureId;
     }
 
+    public setFurniturePosition(id: number, x:number, y:number) {
+        this.furnitureArray[id].position.set(x,y);
+    }
+    
     public removeFurniture(id: number) {
 
         this.removeChild(this.furnitureArray[id]);
@@ -82,8 +86,4 @@ export class FloorPlan extends Container {
 
     }
 
-    public checkWallCollisions(obj:Sprite) {
-        console.log(obj)
-        // for (let wall of this.wallNodeSequence.getWalls())
-    }
 }
