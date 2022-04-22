@@ -27,13 +27,11 @@ export class Handle extends Graphics {
     
     private active: boolean = false;
     private mouseStartPoint: Point;
-    private offset: Point;
     private startRotaton: number;
     private startScale:Point;
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
-        this.offset = new Point();
         if (handleConfig.color) {
             this.color = handleConfig.color;
         }
@@ -124,8 +122,8 @@ export class Handle extends Graphics {
                 console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
 
                 // distanta dintre punct start si colt stanga sus
-                this.target.x = mouseEndPoint.x - this.offset.x
-                this.target.y = mouseEndPoint.y - this.offset.y
+                this.target.x = mouseEndPoint.x - this.target.width / 2
+                this.target.y = mouseEndPoint.y - this.target.height / 2
                 break;
         }
     }
@@ -140,9 +138,6 @@ export class Handle extends Graphics {
 
     /* sets scale and transform */
     public update(pos:Point) {
-        console.log("updating...")
         this.position.set(pos.x, pos.y)
-        this.offset.x = pos.x - this.target.x;
-        this.offset.y = pos.y - this.target.y;
     }
 }

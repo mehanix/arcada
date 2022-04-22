@@ -57,33 +57,32 @@ export class TransformLayer extends Container {
     }
 
     private computePoints() {
-        let x = this.target.position.x;
-        let y = this.target.position.y;
+      
 
-        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [x + this.target.width, y];
-        [this.points[Coord.E].x, this.points[Coord.E].y] = [x + this.target.width, y + (this.target.height / 2)];
-        [this.points[Coord.SE].x, this.points[Coord.SE].y] = [x + this.target.width, y + this.target.height];
-        [this.points[Coord.S].x, this.points[Coord.S].y] = [x + (this.target.width / 2), y + this.target.height];
-        [this.points[Coord.C].x, this.points[Coord.C].y] = [x + (this.target.width / 2), y + (this.target.height / 2)];
+        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [ this.target.width, 0];
+        [this.points[Coord.E].x, this.points[Coord.E].y] = [this.target.width, (this.target.height / 2)];
+        [this.points[Coord.SE].x, this.points[Coord.SE].y] = [this.target.width, this.target.height];
+        [this.points[Coord.S].x, this.points[Coord.S].y] = [(this.target.width / 2), this.target.height];
+        [this.points[Coord.C].x, this.points[Coord.C].y] = [ (this.target.width / 2),  (this.target.height / 2)];
 
-        this.points[Coord.Vertical].x = x + this.target.width + LABEL_OFFSET;
-        this.points[Coord.Vertical].y = y + (this.target.height / 2) - this.labels[LabelAxis.Vertical].height / 2 
+        this.points[Coord.Vertical].x =  this.target.width + LABEL_OFFSET;
+        this.points[Coord.Vertical].y =  (this.target.height / 2) - this.labels[LabelAxis.Vertical].height / 2 
 
-        this.points[Coord.Horizontal].x = x + (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 3;
-        this.points[Coord.Horizontal].y = y + this.target.height + LABEL_OFFSET;
+        this.points[Coord.Horizontal].x =  (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 2;
+        this.points[Coord.Horizontal].y =  this.target.height + LABEL_OFFSET;
 
     }
 
 
     private addHandle(type: HandleType) {
         let handle = new Handle({ type: type, target: null, pos: new Point(0, 0) });
-        this.addChild(handle);
+        this.border.addChild(handle);
         this.handles.push(handle);
     }
 
     private addLabel(axis: LabelAxis) {
         this.labels[axis] = new Label();
-        this.addChild(this.labels[axis]);
+        this.border.addChild(this.labels[axis]);
     }
     public select(t: Sprite) {
         if (useStore.getState().activeTool != Tool.FurnitureEdit) {
@@ -122,8 +121,8 @@ export class TransformLayer extends Container {
         this.border.clear();
         const x = this.target.position.x - this.borderOffset;
         const y = this.target.position.y - this.borderOffset;
-        const w = this.points[Coord.SE].x - x + 2 * this.borderOffset;
-        const h = this.points[Coord.SE].y - y + 2 * this.borderOffset;
+        const w = this.target.width + 2 * this.borderOffset;
+        const h = this.target.height + 2 * this.borderOffset;
         this.border
             .lineStyle(3, 0, 1, 0, true)
             .drawRect(0, 0, w, h)
