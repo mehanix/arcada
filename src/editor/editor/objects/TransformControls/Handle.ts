@@ -1,4 +1,4 @@
-import { Graphics, InteractionEvent, Point, Sprite } from "pixi.js";
+import {Graphics, InteractionEvent, Point, Sprite } from "pixi.js";
 import { TransformLayer } from "./TransformLayer";
 
 export enum HandleType {
@@ -26,10 +26,10 @@ export class Handle extends Graphics {
     private size: number = 7;
     
     private active: boolean = false;
-    private startPoint: Point;
-    private startDimensions: Point;
+    private mouseStartPoint: Point;
     private offset: Point;
-    startRotaton: number;
+    private startRotaton: number;
+    private startScale:Point;
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
@@ -66,10 +66,10 @@ export class Handle extends Graphics {
         if (TransformLayer.dragging) {
             return;
         }
-        this.startPoint = this.getGlobalPosition();
+        this.mouseStartPoint = new Point(ev.data.global.x, ev.data.global.y); // unde se afla target la mousedown
         console.log("badabum")
-        this.startDimensions = new Point(this.target.width, this.target.height);
         this.startRotaton = this.target.rotation;
+        this.startScale = new Point(this.target.scale.x, this.target.scale.y)
         TransformLayer.dragging = true;
         this.active = true;
         // this.target.setSmartPivot(0);
@@ -91,50 +91,47 @@ export class Handle extends Graphics {
         if (!this.active || !TransformLayer.dragging) {
             return;
         }
-        let currentPoint = new Point(ev.data.global.x, ev.data.global.y);
-        let distance = this.getDistance(this.startPoint, currentPoint)
-        // console.log(this.startPoint, currentPoint, distance, this.type)
+        let mouseEndPoint = new Point(ev.data.global.x, ev.data.global.y); // unde i mouseul acum
+        let startDistance = this.getDistance(this.mouseStartPoint, this.target.position)
+        let endDistance = this.getDistance(mouseEndPoint, this.target.position);
+        let sizeFactor = endDistance / startDistance;
+        // console.log(this.mouseStartPoint, currentPoint, distance, this.type)
         switch (this.type) {
             case HandleType.Rotate:
-                let relativeStart = new Point(this.startPoint.x - this.target.x, this.startPoint.y - this.target.y)
-                let relativeEnd = new Point( currentPoint.x - this.target.x, currentPoint.y - this.target.y)
+                let relativeStart = new Point(this.mouseStartPoint.x - this.target.x, this.mouseStartPoint.y - this.target.y)
+                let relativeEnd = new Point( mouseEndPoint.x - this.target.x, mouseEndPoint.y - this.target.y)
 
                 let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
                 let startAngle = Math.atan2(relativeStart.y, relativeStart.x)
                 let deltaAngle = endAngle - startAngle;
                 this.target.rotation = this.startRotaton + deltaAngle;
+                
                 break;
             case HandleType.Horizontal:
-                this.target.width= this.startDimensions.x + distance.x;
+                this.target.scale.x = this.startScale.x * sizeFactor;
                 break;
             case HandleType.Vertical:
-                this.target.height= this.startDimensions.y + distance.y;
+                this.target.scale.y = this.startScale.y * sizeFactor;
                 break;
             case HandleType.FreeTransform:
-                this.target.width= this.startDimensions.x + distance.x;
-                this.target.height= this.startDimensions.y + distance.y;
+                this.target.scale.x = this.startScale.x * sizeFactor;
+                this.target.scale.y = this.startScale.y * sizeFactor;
                 break;
             case HandleType.Move:
                 // distanta dintre mouse si punct start
-                // let deltaX = currentPoint.x - this.startPoint.x;
-                // let deltaY = currentPoint.y - this.startPoint.y;
-                console.log(this.startPoint.x, this.startPoint.y, currentPoint.x, currentPoint.y)
+                // let deltaX = currentPoint.x - this.mouseStartPoint.x;
+                // let deltaY = currentPoint.y - this.mouseStartPoint.y;
+                console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
 
                 // distanta dintre punct start si colt stanga sus
-                this.target.x = currentPoint.x - this.offset.x
-                this.target.y = currentPoint.y - this.offset.y
+                this.target.x = mouseEndPoint.x - this.offset.x
+                this.target.y = mouseEndPoint.y - this.offset.y
                 break;
         }
     }
 
     private getDistance(src:Point, dest:Point) {
-        // let ans = Math.sqrt(Math.pow(dest.x - src.x, 2) + Math.pow(dest.y - src.y, 2));
-        // if (dest.x < src.x)
-        //     ans = -ans;
-
-        let x = dest.x - src.x;
-        let y = dest.y - src.y;
-        return new Point(x,y);
+       return Math.sqrt(Math.pow(dest.x - src.x, 2) + Math.pow(dest.y - src.y, 2));
     }
 
     public setTarget(target:Sprite) {

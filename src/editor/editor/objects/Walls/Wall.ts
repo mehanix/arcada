@@ -44,9 +44,7 @@ export class Wall extends Graphics {
         // this.on("mousemove", this.onMouseMove)
         // this.on("mouseup",this.onMouseUp);
         // this.on("mouseupoutside",this.onMouseUp);
-        
-        let test = new Furniture("http://localhost:4133/living_room/canapea-1-m-1.5-1", 50, 1, 1);
-        this.addChild(test)
+
 
     }
 
