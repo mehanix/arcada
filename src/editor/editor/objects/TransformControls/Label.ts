@@ -14,7 +14,7 @@ export class Label extends Container {
 
     }
 
-    private update(sizeInPixels:number) {
+    public update(sizeInPixels:number) {
         this.removeChildren();
 
         this.text = new Text(this.toMeter(sizeInPixels), this.textStyle);

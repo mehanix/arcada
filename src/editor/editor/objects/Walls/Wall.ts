@@ -1,4 +1,4 @@
-import { Container, Graphics, InteractionEvent, Point } from "pixi.js";
+import {  Graphics, InteractionEvent, Point } from "pixi.js";
 import { useStore } from "../../../../stores/ToolStore";
 // import { ToolManager } from "../../actions/ToolManager";
 // import { useGlobalState } from "../../../../GlobalStateProvider";
@@ -14,41 +14,53 @@ export interface IAnchor {
     myPoint: Point;
 }
 
-export class Wall extends Container {
+export class Wall extends Graphics {
 
     leftNode: WallNode;
     rightNode: WallNode;
     length: number;
     label: Label;
-    wall: Graphics;
     test: Furniture;
-    constructor(x1: number, y1: number, x2: number, y2: number, leftNode: WallNode, rightNode: WallNode) {
+    id: number;
+    x1:number;
+    x2:number;
+    y1:number;
+    y2:number;
+    constructor(leftNode: WallNode, rightNode: WallNode) {
         super();
 
         this.interactive = true;
+        // this.attachedFurniture = [];
         this.leftNode = leftNode;
         this.rightNode = rightNode;
-        this.wall = new Graphics();
-        this.wall.pivot.set(8, 8);
-        this.addChild(this.wall)
-        this.test = new Furniture("http://localhost:4133/living_room/canapea-1-m-1.5-1", 50, 1, 1);
-        this.test.pivot.set(this.test.height / 2, this.test.width / 2)
-        this.addChild(this.test);
-        this.drawLine(x1, y1, x2, y2);
+        this.pivot.set(8, 8);
+   
+        this.setLineCoords();
+        this.label = new Label(0);
+        this.addChild(this.label)
+        this.drawLine();
+       
         this.on("mousedown", this.onMouseDown)
         // this.on("mousemove", this.onMouseMove)
         // this.on("mouseup",this.onMouseUp);
         // this.on("mouseupoutside",this.onMouseUp);
-
-        this.test.position.set(x1, y1)
-
-
+        
+        let test = new Furniture("http://localhost:4133/living_room/canapea-1-m-1.5-1", 50, 1, 1);
+        this.addChild(test)
 
     }
 
-    private drawLine(x1: number, y1: number, x2: number, y2: number) {
-        this.wall.clear();
-        this.wall.lineStyle(1, 0x1a1a1a);
+    public setLineCoords() {
+        this.x1 = this.leftNode.x;
+        this.x2 = this.rightNode.x;
+        this.y1 = this.leftNode.y;
+        this.y2 = this.rightNode.y;
+
+    }
+    public drawLine() {
+        this.clear();
+        this.setLineCoords();
+        this.lineStyle(1, 0x1a1a1a);
 
         // if (x1 > x2) { //TODO scrie mai frumos aici
         //     let aux;
@@ -61,24 +73,25 @@ export class Wall extends Container {
 
         // }
 
-        let theta = Math.atan2((y2 - y1), (x2 - x1)); // aflu unghiul sa pot roti
+        let theta = Math.atan2((this.y2 - this.y1), (this.x2 - this.x1)); // aflu unghiul sa pot roti
         theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
         if (theta < 0) theta = 360 + theta; // range [0, 360)
         console.log(theta)
-        let length = Math.hypot(x1 - x2, y1 - y2);
+        let length = Math.hypot(this.x1 - this.x2, this.y1 - this.y2);
         this.length = length;
         console.log(length)
-        this.wall.beginFill().drawRect(0, 0, length, WALL_THICKNESS).endFill()
-        this.wall.position.set(x1, y1)
-        this.wall.angle = theta
+        this.beginFill().drawRect(0, 0, length, WALL_THICKNESS).endFill()
+        this.position.set(this.x1, this.y1)
+        this.angle = theta
 
+        // for (let attached of this.attachedFurniture) {
+        //     console.log("salsal")
+        //     attached.parentAngle = theta;
+        // }
 
-        this.label = new Label(length);
-        this.addChild(this.label)
+        this.label.update(length);
         this.label.position.x = this.width / 2;
         this.label.position.y = -25;
-        this.test.position.set(x1, y1)
-         this.test.angle = this.wall.angle;
 
     }
 
@@ -97,6 +110,7 @@ export class Wall extends Container {
             console.log("add", this.leftNode, this.rightNode)
             FloorPlan.Instance.addNodeToWall(this, coords);
         }
+
     }
 
 }

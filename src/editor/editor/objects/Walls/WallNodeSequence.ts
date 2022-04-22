@@ -7,6 +7,7 @@ export class WallNodeSequence extends Container {
     private wallNodeLinks: Record<string, number[]>
     private walls: Wall[];
     private static wallNodeId: number = 0;
+    private mouseTouching: number;
     constructor() {
         super();
         this.sortableChildren = true;
@@ -18,11 +19,15 @@ export class WallNodeSequence extends Container {
         this.addNode(750, 50);
         this.addNode(750, 750);
         this.addNode(50, 750);
-        
-        this.wallNodeLinks[1].push(4);
-        this.wallNodeLinks[1].push(2);
-        this.wallNodeLinks[2].push(3);
-        this.wallNodeLinks[3].push(4);
+
+        this.addWall(1,4);
+        this.addWall(1,2);
+        this.addWall(2,3);
+        this.addWall(3,4);
+        // this.wallNodeLinks[1].push(4);
+        // this.wallNodeLinks[1].push(2);
+        // this.wallNodeLinks[2].push(3);
+        // this.wallNodeLinks[3].push(4);
         // this.wallNodeLinks[5].push(6);
         // this.wallNodeLinks[6].push(7);
         console.log(this.wallNodes);
@@ -37,6 +42,13 @@ export class WallNodeSequence extends Container {
         console.log("sunt doar un vagabond")
     }
 
+    public setMouseTouching(id: number) {
+        this.mouseTouching = id;
+    }
+
+    public getMouseTouching() {
+        return this.mouseTouching
+    }
     public contains(id: number) {
         return id in this.wallNodes;
     }
@@ -69,45 +81,53 @@ export class WallNodeSequence extends Container {
         return nodeId;
     }
 
-    public addWall(leftNode: number, rightNode: number) {
-        this.wallNodeLinks[leftNode].push(rightNode);
+    public addWall(leftNodeId: number, rightNodeId: number) {
+        this.wallNodeLinks[leftNodeId].push(rightNodeId);
+        const leftNode = this.wallNodes[leftNodeId]
+        const rightNode = this.wallNodes[rightNodeId]
+        let wall = new Wall(leftNode, rightNode)
+        this.walls.push(wall)
+        this.addChild(wall)
         this.drawWalls();
     }
-    
-    public removeWall(leftNode:number, rightNode:number) {
 
-         const index = this.wallNodeLinks[leftNode].indexOf(rightNode);
-        console.log("links for left:",leftNode, "right:", rightNode, "found index:",index)
-        console.log("links 2 left:",this.wallNodeLinks[leftNode]);
-        console.log("links 2 right:",this.wallNodeLinks[rightNode]);
+    public removeWall(leftNode: number, rightNode: number) {
+
+        const index = this.wallNodeLinks[leftNode].indexOf(rightNode);
+        console.log("links for left:", leftNode, "right:", rightNode, "found index:", index)
+        console.log("links 2 left:", this.wallNodeLinks[leftNode]);
+        console.log("links 2 right:", this.wallNodeLinks[rightNode]);
 
         if (index != -1) {
             this.wallNodeLinks[leftNode].splice(index, 1);
             this.drawWalls();
         }
-        console.log("tratate 2 left:",this.wallNodeLinks[leftNode]);
-        console.log("tratate 2 right:",this.wallNodeLinks[rightNode]);
+        console.log("tratate 2 left:", this.wallNodeLinks[leftNode]);
+        console.log("tratate 2 right:", this.wallNodeLinks[rightNode]);
 
     }
     public drawWalls() {
         console.log("redraw")
-
+        console.log(this.walls)
         this.walls.forEach(wall => {
-            wall.destroy(true);
+            wall.drawLine();
         })
-        this.walls.length = 0;
-        console.log(this.wallNodes)
-        for (const src in this.wallNodeLinks) {
-            for (const dest of this.wallNodeLinks[src]) {
-                console.log(src, dest)
-                const leftNode = this.wallNodes[parseInt(src)]
-                const rightNode = this.wallNodes[dest]
-                this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, this.wallNodes[parseInt(src)], this.wallNodes[dest]))
-            }
-        }
-        for (let wall of this.walls) {
-            this.addChild(wall)
-        }
+        // this.walls.length = 0;
+        // console.log(this.wallNodes)
+        // for (const src in this.wallNodeLinks) {
+        //     for (const dest of this.wallNodeLinks[src]) {
+        //         console.log(src, dest)
+        //         const leftNode = this.wallNodes[parseInt(src)]
+        //         const rightNode = this.wallNodes[dest]
+        //         this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, this.wallNodes[parseInt(src)], this.wallNodes[dest]))
+        //     }
+        // }
+        // for (let wall of this.walls) {
+        //     this.addChild(wall)
+        // }
+
+
+
         // for (let left=0; left<this.wallNodes.length - 1; left++) {
         //     let right = left + 1;
         //     console.log(right,left)
