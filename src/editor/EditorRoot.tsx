@@ -3,8 +3,6 @@ import { Application } from "pixi.js";
 import { Main } from "./editor/Main";
 import { IViewportOptions } from 'pixi-viewport';
 
-
-
 export function EditorRoot() {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -35,7 +33,7 @@ export function EditorRoot() {
             interaction: app.renderer.plugins.interaction
         }
         const main: Main = new Main(viewportSettings);
-
+         
 
         // Add app to DOM
         ref.current!.appendChild(app.view);

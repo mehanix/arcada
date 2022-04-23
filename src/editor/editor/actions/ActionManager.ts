@@ -1,3 +1,4 @@
+import { TransformLayer } from "../objects/TransformControls/TransformLayer";
 import { WallNode } from "../objects/Walls/WallNode";
 import { AddWallAction } from "./AddWallAction";
 
@@ -33,9 +34,17 @@ export class ActionManager {
         
     }
 
+    public unset() {
+        this.previousNode = undefined;
+    }
     public static get Instance()
     {
         return this.instance || (this.instance = new this());
     }
 
+    public resetTools() {
+        TransformLayer.Instance.deselect();
+        this.unset();
+    }
 }
+
