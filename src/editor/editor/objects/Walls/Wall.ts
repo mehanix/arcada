@@ -1,8 +1,6 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
 import { FurnitureData } from "../../../../stores/FurnitureStore";
 import { Tool, useStore } from "../../../../stores/ToolStore";
-// import { ToolManager } from "../../actions/ToolManager";
-// import { useGlobalState } from "../../../../GlobalStateProvider";
 import {  WALL_THICKNESS } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
 import { Furniture } from "../Furniture";
@@ -83,11 +81,6 @@ export class Wall extends Graphics {
         this.position.set(this.x1, this.y1)
         this.angle = theta
 
-        // for (let attached of this.attachedFurniture) {
-        //     console.log("salsal")
-        //     attached.parentAngle = theta;
-        // }
-
         this.label.update(length);
         this.label.position.x = this.width / 2;
         this.label.position.y = -25;
@@ -112,15 +105,17 @@ export class Wall extends Graphics {
             FloorPlan.Instance.addNodeToWall(this, coords);
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
-            let f1:FurnitureData= {
-                width:"2.0",
-                height:"1.0",
+            let obj:FurnitureData= {
+                width:"1",
+                height:"0.15",
                 id:"canapea-1-l-2-1",
                 name:"canapea mare"
             }
-            let id = FloorPlan.Instance.addFurniture(f1, "living_room", this);
-            FloorPlan.Instance.furnitureArray[id].setParent(this)
-            FloorPlan.Instance.setFurniturePosition(id, localCoords.x, 0);
+            let win = new Furniture("window.svg", 200, parseFloat(obj.width), parseFloat(obj.height), this);
+            FloorPlan.Instance.furnitureArray[win.getId()] = win
+            this.addChild(win)
+            console.log(win)
+            FloorPlan.Instance.setFurniturePosition(win.getId(), localCoords.x, 0);
         }
 
     }

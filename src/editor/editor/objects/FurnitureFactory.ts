@@ -10,7 +10,7 @@ export class FurnitureFactory {
         let assetUrl = `${endpoint}${category}/${furnitureId}`
         let isAttached = attachedTo ? true:false;
 
-        let newFurniture = new Furniture(assetUrl, index, parseFloat(width), parseFloat(height), isAttached);
+        let newFurniture = new Furniture(assetUrl, index, parseFloat(width), parseFloat(height), attachedTo);
         if (isAttached) {
             attachedTo.addChild(newFurniture)
         }

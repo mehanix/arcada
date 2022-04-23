@@ -3,6 +3,7 @@ import { useStore } from "../../../stores/ToolStore";
 import { METER, Tool } from "../constants";
 import { FloorPlan } from "./FloorPlan";
 import { TransformLayer } from "./TransformControls/TransformLayer";
+import { Wall } from "./Walls/Wall";
 
 export class Furniture extends Sprite {
 
@@ -12,15 +13,22 @@ export class Furniture extends Sprite {
     public isAttached:boolean;
     public xLocked:boolean;
     private transformLayer: TransformLayer;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, isAttached = false) {
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, attachedTo?:Wall) {
 
         let texture = Texture.from(resourcePath);
+        console.log(texture)
         super(texture);
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
         
-        this.isAttached = isAttached;
-        this.xLocked = this.isAttached;
+        if (attachedTo) {
+            this.isAttached = true;
+            this.parent = attachedTo;
+            this.xLocked = true;
+        } else {
+            this.xLocked = false;
+            this.isAttached = false;
+        }
         this.interactive = true;
         // this.dragging = false;
         this.width = widthFactor * METER;
@@ -31,6 +39,10 @@ export class Furniture extends Sprite {
         this.on('mousemove', this.onMouseMove)
         // this.on('mouseup', this.onMouseUp)
 
+    }
+
+    public getId() {
+        return this.id;
     }
     private onMouseDown() {
 
