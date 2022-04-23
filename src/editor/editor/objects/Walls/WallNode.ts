@@ -39,6 +39,7 @@ export class WallNode extends Graphics {
                 this.dragging = true;
                 break;
             case Tool.WallRemove:
+                FloorPlan.Instance.removeWallNode(this.id);
                 break;
             case Tool.WallAdd:
                 ActionManager.Instance.step(this);

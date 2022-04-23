@@ -20,10 +20,10 @@ export class WallNodeSequence extends Container {
         this.addNode(750, 750);
         this.addNode(50, 750);
 
-        this.addWall(1,4);
-        this.addWall(1,2);
-        this.addWall(2,3);
-        this.addWall(3,4);
+        this.addWall(1, 4);
+        this.addWall(1, 2);
+        this.addWall(2, 3);
+        this.addWall(3, 4);
         // this.wallNodeLinks[1].push(4);
         // this.wallNodeLinks[1].push(2);
         // this.wallNodeLinks[2].push(3);
@@ -57,22 +57,33 @@ export class WallNodeSequence extends Container {
         return this.walls;
     }
     public remove(id: number) {
-        // remove node
-        this.wallNodes[id]!.destroy(true);
-        this.wallNodes[id] = null;
-
-        // remove links containing node TODO if implementing undo. remember these
-        this.wallNodeLinks[id].length = 0;
-
-
         //TODO only remove if connected to 2 points.
-        for (const src in this.wallNodeLinks) {
-            for (const dest of this.wallNodeLinks[src]) {
-                if (dest == id) {
-                    console.log("tre sa plece", src, dest)
+        let isolated = true;
+        if (this.wallNodeLinks[id].length > 0) {
+            isolated = false;
+        } else {
+            for (const src in this.wallNodeLinks) {
+                for (const dest of this.wallNodeLinks[src]) {
+                    if (dest == id) {
+                        isolated = false;
+                    }
                 }
             }
         }
+
+        if (isolated) {
+            // remove node
+            this.wallNodes[id]!.destroy(true);
+            this.wallNodes[id] = null;
+
+            // remove links containing node TODO if implementing undo. remember these
+            this.wallNodeLinks[id].length = 0;
+
+        } else {
+            console.log ("cannot remove node with walls attached");
+        }
+
+
     }
 
     public addNode(x: number, y: number) {
@@ -93,7 +104,7 @@ export class WallNodeSequence extends Container {
             leftNodeId = rightNodeId;
             rightNodeId = aux;
         }
-        
+
         if (this.wallNodeLinks[leftNodeId].includes(rightNodeId)) {
             return;
         }
@@ -119,7 +130,7 @@ export class WallNodeSequence extends Container {
             this.drawWalls();
         }
         let toBeRemoved = -1;
-        for (let i=0; i<this.walls.length; i++) {
+        for (let i = 0; i < this.walls.length; i++) {
             let wall = this.walls[i];
             if (wall.leftNode.getId() == leftNode && wall.rightNode.getId() == rightNode) {
                 toBeRemoved = i;

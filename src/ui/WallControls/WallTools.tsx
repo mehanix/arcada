@@ -22,9 +22,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const tools = [
-  { label: 'Add node', tool:Tool.WallAdd },
-  { label: 'Edit walls', tool:Tool.WallEdit },
-  { label: 'Remove walls', tool:Tool.WallRemove }
+  { label: 'Add', tool:Tool.WallAdd },
+  { label: 'Edit', tool:Tool.WallEdit },
+  { label: 'Remove', tool:Tool.WallRemove }
 ];
 
 export function WallTools() {
