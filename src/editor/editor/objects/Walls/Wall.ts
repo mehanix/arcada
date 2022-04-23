@@ -1,6 +1,7 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
 import { FurnitureData } from "../../../../stores/FurnitureStore";
 import { Tool, useStore } from "../../../../stores/ToolStore";
+import { AddNodeAction } from "../../actions/AddNodeAction";
 import {  WALL_THICKNESS } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
 import { Furniture } from "../Furniture";
@@ -101,8 +102,8 @@ export class Wall extends Graphics {
         }
 
         if (state.activeTool == Tool.WallAdd) {
-            console.log("add", this.leftNode, this.rightNode)
-            FloorPlan.Instance.addNodeToWall(this, coords);
+            const addNode = new AddNodeAction(this, coords);
+            addNode.execute();
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
             let obj:FurnitureData= {

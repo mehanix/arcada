@@ -2,6 +2,7 @@ import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { Tool } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
 import { useStore } from "../../../../stores/ToolStore";
+import { ActionManager } from "../../actions/ActionManager";
 
 export class WallNode extends Graphics {
 
@@ -19,7 +20,7 @@ export class WallNode extends Graphics {
         this.position.set(x,y)
         this.endFill();
         this.zIndex = 999;
-        this.on("mousedown", this.mousedown)
+        this.on("mousedown", this.onMouseDown)
         this.on("mousemove", this.onMouseMove)
         this.on("mouseup",this.onMouseUp);
         this.on("mouseupoutside",this.onMouseUp);
@@ -31,12 +32,16 @@ export class WallNode extends Graphics {
         return this.id;
     }
   
-    private mousedown() {
+    private onMouseDown(ev:InteractionEvent) {
+        ev.stopPropagation();
         switch (useStore.getState().activeTool) {
             case Tool.WallEdit:
                 this.dragging = true;
                 break;
             case Tool.WallRemove:
+                break;
+            case Tool.WallAdd:
+                ActionManager.Instance.step(this);
                 break;
         }
     

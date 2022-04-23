@@ -1,9 +1,11 @@
 import { IViewportOptions, PluginManager, Viewport } from "pixi-viewport";
-import { Loader, TilingSprite } from "pixi.js";
+import { InteractionEvent, Loader, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { assets } from "./objects/assets"
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 import { FurnitureData } from "../../stores/FurnitureStore";
+import { Tool, useStore } from "../../stores/ToolStore";
+import { AddNodeAction } from "./actions/AddNodeAction";
 export class Main extends Viewport {
 
     private bkgPattern: TilingSprite;
@@ -12,7 +14,7 @@ export class Main extends Viewport {
     public static viewportPluginManager: PluginManager;
     transformLayer: TransformLayer;
 
-    constructor(options:IViewportOptions) {
+    constructor(options: IViewportOptions) {
         super(options);
 
         Loader.shared.add(assets);
@@ -26,7 +28,7 @@ export class Main extends Viewport {
 
     }
 
-    private setup(scene:any) {
+    private setup(scene: any) {
         console.log("done loading")
         Main.viewportPluginManager = this.plugins;
         // this.drag().clamp({direction: 'all'})
@@ -40,35 +42,35 @@ export class Main extends Viewport {
         this.transformLayer = TransformLayer.Instance;
         this.addChild(this.transformLayer)
 
-        let f1:FurnitureData= {
-            width:"2.0",
-            height:"1.0",
-            id:"canapea-1-l-2-1",
-            name:"canapea mare"
+        let f1: FurnitureData = {
+            width: "2.0",
+            height: "1.0",
+            id: "canapea-1-l-2-1",
+            name: "canapea mare"
         }
 
-        let f2:FurnitureData= {
-            width:"1.6",
-            height:"2.0",
-            id:"king-size-bed-1.6-2",
-            name:"canapea mare"
+        let f2: FurnitureData = {
+            width: "1.6",
+            height: "2.0",
+            id: "king-size-bed-1.6-2",
+            name: "canapea mare"
         }
-        let f3:FurnitureData = {
-            width:"0.6",
-            height:"0.6",
-            id:"plant-0.6-0.6",
-            name:"planta"
+        let f3: FurnitureData = {
+            width: "0.6",
+            height: "0.6",
+            id: "plant-0.6-0.6",
+            name: "planta"
         }
         let id1 = this.floorPlan.addFurniture(f1, "living_room");
         let id2 = this.floorPlan.addFurniture(f2, "bedroom");
         let id3 = this.floorPlan.addFurniture(f3, "bedroom");
 
-        this.floorPlan.setFurniturePosition(id1,100,100);
-        this.floorPlan.setFurniturePosition(id2,400,150);
-        this.floorPlan.setFurniturePosition(id3,200,600);
+        this.floorPlan.setFurniturePosition(id1, 100, 100);
+        this.floorPlan.setFurniturePosition(id2, 400, 150);
+        this.floorPlan.setFurniturePosition(id3, 200, 600);
 
 
-
+        this.on("mousedown", this.checkTools)
 
         // this.floorPlan.addFurniture("http://localhost:4133/kitchen/aragaz-4-ochiuri");
         // this.floorPlan.addFurniture("http://localhost:4133/bedroom/king-size-bed");
@@ -80,6 +82,15 @@ export class Main extends Viewport {
 
         // this.addChild(rectGraph);
 
+    }
+    private checkTools(ev:InteractionEvent) {
+        ev.stopPropagation()
+        switch (useStore.getState().activeTool) {
+            case Tool.WallAdd:
+                let action = new AddNodeAction(undefined, ev.data.global)
+                action.execute();
+                break;
+        }
     }
 
 }

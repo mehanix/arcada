@@ -22,6 +22,10 @@ export class FloorPlan extends Container {
         return this.instance || (this.instance = new this());
     }
 
+    public getWallNodeSeq() {
+        return this.wallNodeSequence
+    }
+
     public addFurniture(obj: FurnitureData, category:string, attachedTo?:Wall) {
 
         this.furnitureId += 1;
@@ -83,10 +87,11 @@ export class FloorPlan extends Container {
         this.removeWall(wall);
         // add node and connect walls to it
         let newNode = this.wallNodeSequence.addNode(coords.x, coords.y);
+        let newNodeId = newNode.getId()
+        this.wallNodeSequence.addWall(leftNode, newNodeId);
+        this.wallNodeSequence.addWall(newNodeId, rightNode);
         
-        this.wallNodeSequence.addWall(leftNode, newNode);
-        this.wallNodeSequence.addWall(newNode, rightNode);
-
+        return newNode;
     }
 
 }

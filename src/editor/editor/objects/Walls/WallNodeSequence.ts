@@ -81,10 +81,22 @@ export class WallNodeSequence extends Container {
         this.wallNodes[nodeId] = new WallNode(x, y, nodeId);
         this.wallNodeLinks[nodeId] = [];
         this.addChild(this.wallNodes[nodeId])
-        return nodeId;
+        return this.wallNodes[nodeId];
     }
 
     public addWall(leftNodeId: number, rightNodeId: number) {
+        if (leftNodeId == rightNodeId) {
+            return;
+        }
+        if (leftNodeId > rightNodeId) {
+            let aux = leftNodeId;
+            leftNodeId = rightNodeId;
+            rightNodeId = aux;
+        }
+        
+        if (this.wallNodeLinks[leftNodeId].includes(rightNodeId)) {
+            return;
+        }
         this.wallNodeLinks[leftNodeId].push(rightNodeId);
         const leftNode = this.wallNodes[leftNodeId]
         const rightNode = this.wallNodes[rightNodeId]
