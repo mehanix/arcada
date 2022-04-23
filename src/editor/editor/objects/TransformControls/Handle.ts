@@ -19,7 +19,6 @@ export interface IHandleConfig {
 
 export class Handle extends Graphics {
 
-
     private type: HandleType;
     private target: Sprite;
     private color: number = 0x000;
@@ -27,6 +26,7 @@ export class Handle extends Graphics {
     
     private active: boolean = false;
     private mouseStartPoint: Point;
+    private targetStartPoint: Point;
     private startRotaton: number;
     private startScale:Point;
     constructor(handleConfig: IHandleConfig) {
@@ -66,6 +66,7 @@ export class Handle extends Graphics {
         }
         this.mouseStartPoint = new Point(ev.data.global.x, ev.data.global.y); // unde se afla target la mousedown
         console.log("badabum")
+        this.targetStartPoint = this.target.getGlobalPosition();
         this.startRotaton = this.target.rotation;
         this.startScale = new Point(this.target.scale.x, this.target.scale.y)
         TransformLayer.dragging = true;
@@ -85,13 +86,13 @@ export class Handle extends Graphics {
     private onMouseMove(ev: InteractionEvent) {
 
         // update scale 
-
+        let globalPos = this.target.getGlobalPosition();
         if (!this.active || !TransformLayer.dragging) {
             return;
         }
         let mouseEndPoint = new Point(ev.data.global.x, ev.data.global.y); // unde i mouseul acum
-        let startDistance = this.getDistance(this.mouseStartPoint, this.target.position)
-        let endDistance = this.getDistance(mouseEndPoint, this.target.position);
+        let startDistance = this.getDistance(this.mouseStartPoint, globalPos)
+        let endDistance = this.getDistance(mouseEndPoint, globalPos);
         let sizeFactor = endDistance / startDistance;
         // console.log(this.mouseStartPoint, currentPoint, distance, this.type)
         switch (this.type) {
@@ -119,11 +120,18 @@ export class Handle extends Graphics {
                 // distanta dintre mouse si punct start
                 // let deltaX = currentPoint.x - this.mouseStartPoint.x;
                 // let deltaY = currentPoint.y - this.mouseStartPoint.y;
-                console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
 
-                // distanta dintre punct start si colt stanga sus
-                this.target.x = mouseEndPoint.x - this.target.width / 2
-                this.target.y = mouseEndPoint.y - this.target.height / 2
+                // move delta: distanta intre click original si move
+                let delta = new Point(this.mouseStartPoint.x - mouseEndPoint.x, this.mouseStartPoint.y - mouseEndPoint.y)
+                this.target.position.x = this.targetStartPoint.x - delta.x;
+                this.target.position.y = this.targetStartPoint.y - delta.y;
+
+                // console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
+
+                // // distanta dintre punct start si colt stanga sus
+                // let mpl = this.toLocal(mouseEndPoint, this.target);
+                // this.target.x = mpl.x - this.target.width / 2
+                // this.target.y = mpl.y - this.target.height / 2
                 break;
         }
     }

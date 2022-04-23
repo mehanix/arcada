@@ -1,13 +1,14 @@
-import { Container, Graphics, Point, Sprite } from "pixi.js";
+import { Container, Graphics, Point } from "pixi.js";
 import { useStore } from "../../../../stores/ToolStore";
 import { Coord, LabelAxis, LABEL_OFFSET, Tool } from "../../constants";
+import { Furniture } from "../Furniture";
 import { Handle, HandleType } from "./Handle";
 import { Label } from "./Label";
 
 // handles moving, resizing and rotating of objects.
 // can only work if its state is active.
 export class TransformLayer extends Container {
-    private target: Sprite;
+    private target: Furniture;
     private points: Point[];
     private handles: Handle[];
     private labels: Label[];
@@ -57,19 +58,19 @@ export class TransformLayer extends Container {
     }
 
     private computePoints() {
-      
 
-        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [ this.target.width, 0];
+
+        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [this.target.width, 0];
         [this.points[Coord.E].x, this.points[Coord.E].y] = [this.target.width, (this.target.height / 2)];
         [this.points[Coord.SE].x, this.points[Coord.SE].y] = [this.target.width, this.target.height];
         [this.points[Coord.S].x, this.points[Coord.S].y] = [(this.target.width / 2), this.target.height];
-        [this.points[Coord.C].x, this.points[Coord.C].y] = [ (this.target.width / 2),  (this.target.height / 2)];
+        [this.points[Coord.C].x, this.points[Coord.C].y] = [(this.target.width / 2), (this.target.height / 2)];
 
-        this.points[Coord.Vertical].x =  this.target.width + LABEL_OFFSET;
-        this.points[Coord.Vertical].y =  (this.target.height / 2) - this.labels[LabelAxis.Vertical].height / 2 
+        this.points[Coord.Vertical].x = this.target.width + LABEL_OFFSET;
+        this.points[Coord.Vertical].y = (this.target.height / 2) - this.labels[LabelAxis.Vertical].height / 2
 
-        this.points[Coord.Horizontal].x =  (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 2;
-        this.points[Coord.Horizontal].y =  this.target.height + LABEL_OFFSET;
+        this.points[Coord.Horizontal].x = (this.target.width / 2) - this.labels[LabelAxis.Horizontal].width / 2;
+        this.points[Coord.Horizontal].y = this.target.height + LABEL_OFFSET;
 
     }
 
@@ -84,7 +85,7 @@ export class TransformLayer extends Container {
         this.labels[axis] = new Label();
         this.border.addChild(this.labels[axis]);
     }
-    public select(t: Sprite) {
+    public select(t: Furniture) {
         if (useStore.getState().activeTool != Tool.FurnitureEdit) {
             return;
         }
@@ -119,8 +120,9 @@ export class TransformLayer extends Container {
 
     private drawBorder() {
         this.border.clear();
-        const x = this.target.position.x - this.borderOffset;
-        const y = this.target.position.y - this.borderOffset;
+        let globals = this.target.getGlobalPosition();
+        const x = globals.x - this.borderOffset;
+        const y = globals.y - this.borderOffset;
         const w = this.target.width + 2 * this.borderOffset;
         const h = this.target.height + 2 * this.borderOffset;
         this.border
@@ -129,10 +131,18 @@ export class TransformLayer extends Container {
 
         this.border.position.x = x;
         this.border.position.y = y;
-        this.border.rotation = this.target.rotation;
+        this.border.rotation = this.computeTargetRotation();
+
 
     }
 
+    private computeTargetRotation() {
+        if (!this.target.stickyTarget) {
+            return this.target.rotation;
+        }
+        return this.target.parent.rotation;
+    }
+    
     public deselect() {
         this.target = null;
         this.visible = false;
