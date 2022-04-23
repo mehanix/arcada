@@ -97,6 +97,8 @@ export class Wall extends Graphics {
     private onMouseDown(ev: InteractionEvent) {
         ev.stopPropagation();
         let coords = new Point(ev.data.global.x, ev.data.global.y)
+        let localCoords =  ev.data.getLocalPosition(this)
+        console.log("click local la:", localCoords)
         console.log("hi!", this.leftNode, this.rightNode, coords.x, coords.y)
         const state = useStore.getState()
 
@@ -117,7 +119,8 @@ export class Wall extends Graphics {
                 name:"canapea mare"
             }
             let id = FloorPlan.Instance.addFurniture(f1, "living_room", this, coords);
-            FloorPlan.Instance.setFurniturePosition(id, coords.x, coords.y, this.angle);
+            FloorPlan.Instance.furnitureArray[id].setParent(this)
+            FloorPlan.Instance.setFurniturePosition(id, localCoords.x, localCoords.y);
         }
 
     }
