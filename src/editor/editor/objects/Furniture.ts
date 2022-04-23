@@ -1,4 +1,4 @@
-import { Sprite, Texture } from "pixi.js";
+import { Point, Sprite, Texture } from "pixi.js";
 import { useStore } from "../../../stores/ToolStore";
 import { METER, Tool } from "../constants";
 import { FloorPlan } from "./FloorPlan";
@@ -13,7 +13,8 @@ export class Furniture extends Sprite {
 
     private transformLayer: TransformLayer;
     public stickyTarget:Wall;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, stickyTarget?:Wall) {
+    public stickyOrigin:Point;
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, stickyTarget?:Wall, stickyOrigin?:Point) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
@@ -22,6 +23,7 @@ export class Furniture extends Sprite {
         
         if (stickyTarget) {
             this.stickyTarget = stickyTarget
+            this.stickyOrigin = stickyOrigin
             console.log("sunt sticky!", stickyTarget.leftNode.getId(), stickyTarget.rightNode.getId())
         } else {
             this.stickyTarget = undefined
@@ -36,6 +38,17 @@ export class Furniture extends Sprite {
         this.on('mousedown', this.onMouseDown)
         this.on('mousemove', this.onMouseMove)
         // this.on('mouseup', this.onMouseUp)
+
+    }
+
+    public updatePos() {
+        if (this.stickyOrigin == undefined) { //todo set dirty flag sa nu se faca mereu
+            return
+        }
+
+        console.log(this.toLocal(this.stickyOrigin,this))
+
+
 
     }
 
@@ -54,6 +67,8 @@ export class Furniture extends Sprite {
 
     private onMouseMove() {
         this.transformLayer.update();
+        this.updatePos() //sticky
+        
     }
 
 

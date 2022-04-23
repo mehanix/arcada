@@ -22,10 +22,10 @@ export class FloorPlan extends Container {
         return this.instance || (this.instance = new this());
     }
 
-    public addFurniture(obj: FurnitureData, category:string, stickyTarget?:Wall) {
+    public addFurniture(obj: FurnitureData, category:string, stickyTarget?:Wall, stickyCoords?:Point) {
 
         this.furnitureId += 1;
-        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height, stickyTarget);
+        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height, stickyTarget, stickyCoords);
         this.furnitureArray[this.furnitureId] = object;
         this.addChild(object)
 
@@ -35,8 +35,11 @@ export class FloorPlan extends Container {
         return this.furnitureId;
     }
 
-    public setFurniturePosition(id: number, x:number, y:number) {
+    public setFurniturePosition(id: number, x:number, y:number, angle?:number) {
         this.furnitureArray[id].position.set(x,y);
+        if (angle) {
+            this.furnitureArray[id].angle = angle;
+        }
     }
     
     public removeFurniture(id: number) {
