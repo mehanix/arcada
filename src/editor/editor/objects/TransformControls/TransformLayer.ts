@@ -113,6 +113,12 @@ export class TransformLayer extends Container {
             this.handles[i].update(this.points[i])
         }
 
+        // deactivate Horizontal handle on x-locked furniture
+        this.handles[HandleType.Horizontal].visible = !this.target.xLocked;
+        this.handles[HandleType.Rotate].visible = !this.target.xLocked;
+        this.handles[HandleType.FreeTransform].visible = !this.target.xLocked;
+    
+
         // set labels
         this.labels[LabelAxis.Horizontal].updatePos(this.points[Coord.Horizontal], this.target.width)
         this.labels[LabelAxis.Vertical].updatePos(this.points[Coord.Vertical], this.target.height)
@@ -137,12 +143,12 @@ export class TransformLayer extends Container {
     }
 
     private computeTargetRotation() {
-        if (!this.target.stickyTarget) {
+        if (!this.target.isAttached) {
             return this.target.rotation;
         }
         return this.target.parent.rotation;
     }
-    
+
     public deselect() {
         this.target = null;
         this.visible = false;

@@ -118,9 +118,9 @@ export class Wall extends Graphics {
                 id:"canapea-1-l-2-1",
                 name:"canapea mare"
             }
-            let id = FloorPlan.Instance.addFurniture(f1, "living_room", this, coords);
+            let id = FloorPlan.Instance.addFurniture(f1, "living_room", this);
             FloorPlan.Instance.furnitureArray[id].setParent(this)
-            FloorPlan.Instance.setFurniturePosition(id, localCoords.x, localCoords.y);
+            FloorPlan.Instance.setFurniturePosition(id, localCoords.x, 0);
         }
 
     }

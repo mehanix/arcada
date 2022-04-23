@@ -1,4 +1,5 @@
-import {Graphics, InteractionEvent, Point, Sprite } from "pixi.js";
+import {Graphics, InteractionEvent, Point } from "pixi.js";
+import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
 
 export enum HandleType {
@@ -13,14 +14,14 @@ export interface IHandleConfig {
     size?: number,
     color?: number,
     type: HandleType,
-    target: Sprite,
+    target: Furniture,
     pos?: Point
 }
 
 export class Handle extends Graphics {
 
     private type: HandleType;
-    private target: Sprite;
+    private target: Furniture;
     private color: number = 0x000;
     private size: number = 7;
     
@@ -124,7 +125,9 @@ export class Handle extends Graphics {
                 // move delta: distanta intre click original si move
                 let delta = new Point(this.mouseStartPoint.x - mouseEndPoint.x, this.mouseStartPoint.y - mouseEndPoint.y)
                 this.target.position.x = this.targetStartPoint.x - delta.x;
-                this.target.position.y = this.targetStartPoint.y - delta.y;
+                if (!this.target.xLocked) {
+                    this.target.position.y = this.targetStartPoint.y - delta.y;
+                }
 
                 // console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
 
@@ -140,7 +143,7 @@ export class Handle extends Graphics {
        return Math.sqrt(Math.pow(dest.x - src.x, 2) + Math.pow(dest.y - src.y, 2));
     }
 
-    public setTarget(target:Sprite) {
+    public setTarget(target:Furniture) {
         this.target = target;
     }
 

@@ -1,34 +1,26 @@
-import { Point, Sprite, Texture } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { useStore } from "../../../stores/ToolStore";
 import { METER, Tool } from "../constants";
 import { FloorPlan } from "./FloorPlan";
 import { TransformLayer } from "./TransformControls/TransformLayer";
-import { Wall } from "./Walls/Wall";
 
 export class Furniture extends Sprite {
 
 
     private id: number; // fiecare mobila isi stie index-ul in plan. uuids?
     // private dragging: boolean;
-
+    public isAttached:boolean;
+    public xLocked:boolean;
     private transformLayer: TransformLayer;
-    public stickyTarget:Wall;
-    public stickyOrigin:Point;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, stickyTarget?:Wall, stickyOrigin?:Point) {
+    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, isAttached = false) {
 
         let texture = Texture.from(resourcePath);
         super(texture);
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
         
-        if (stickyTarget) {
-            this.stickyTarget = stickyTarget
-            this.stickyOrigin = stickyOrigin
-            console.log("sunt sticky!", stickyTarget.leftNode.getId(), stickyTarget.rightNode.getId())
-        } else {
-            this.stickyTarget = undefined
-        }
-
+        this.isAttached = isAttached;
+        this.xLocked = this.isAttached;
         this.interactive = true;
         // this.dragging = false;
         this.width = widthFactor * METER;
@@ -40,18 +32,6 @@ export class Furniture extends Sprite {
         // this.on('mouseup', this.onMouseUp)
 
     }
-
-    public updatePos() {
-        if (this.stickyOrigin == undefined) { //todo set dirty flag sa nu se faca mereu
-            return
-        }
-
-        console.log(this.toLocal(this.stickyOrigin,this))
-
-
-
-    }
-
     private onMouseDown() {
 
         switch (useStore.getState().activeTool) {
@@ -66,12 +46,6 @@ export class Furniture extends Sprite {
     }
 
     private onMouseMove() {
-        this.transformLayer.update();
-        this.updatePos() //sticky
-        
+        this.transformLayer.update();        
     }
-
-
-
-
 }
