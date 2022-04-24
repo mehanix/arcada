@@ -6,6 +6,7 @@ import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 import { FurnitureData } from "../../stores/FurnitureStore";
 import { Tool, useStore } from "../../stores/ToolStore";
 import { AddNodeAction } from "./actions/AddNodeAction";
+import { ToolStateManager } from "./actions/ToolStateManager";
 export class Main extends Viewport {
 
     private bkgPattern: TilingSprite;
@@ -13,6 +14,7 @@ export class Main extends Viewport {
     private floorPlan: FloorPlan;
     public static viewportPluginManager: PluginManager;
     transformLayer: TransformLayer;
+    toolStateManager:ToolStateManager;
 
     constructor(options: IViewportOptions) {
         super(options);
@@ -41,6 +43,10 @@ export class Main extends Viewport {
 
         this.transformLayer = TransformLayer.Instance;
         this.addChild(this.transformLayer)
+
+        this.toolStateManager = ToolStateManager.Instance;
+        this.addChild(this.toolStateManager.preview)
+
 
         let f1: FurnitureData = {
             width: "2.0",
@@ -71,7 +77,7 @@ export class Main extends Viewport {
 
 
         this.on("mousedown", this.checkTools)
-
+        this.on("mousemove", this.updatePreview)
         // this.floorPlan.addFurniture("http://localhost:4133/kitchen/aragaz-4-ochiuri");
         // this.floorPlan.addFurniture("http://localhost:4133/bedroom/king-size-bed");
 
@@ -82,6 +88,9 @@ export class Main extends Viewport {
 
         // this.addChild(rectGraph);
 
+    }
+    private updatePreview(ev:InteractionEvent) {
+        this.toolStateManager.updatePreview(ev);
     }
     private checkTools(ev:InteractionEvent) {
         ev.stopPropagation()

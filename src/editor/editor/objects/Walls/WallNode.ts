@@ -2,7 +2,7 @@ import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { Tool } from "../../constants";
 import { FloorPlan } from "../FloorPlan";
 import { useStore } from "../../../../stores/ToolStore";
-import { ActionManager } from "../../actions/ActionManager";
+import { ToolStateManager } from "../../actions/ToolStateManager";
 
 export class WallNode extends Graphics {
 
@@ -42,7 +42,7 @@ export class WallNode extends Graphics {
                 FloorPlan.Instance.removeWallNode(this.id);
                 break;
             case Tool.WallAdd:
-                ActionManager.Instance.step(this);
+                ToolStateManager.Instance.step(this);
                 break;
         }
     

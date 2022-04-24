@@ -1,18 +1,37 @@
+import { Graphics, InteractionEvent } from "pixi.js";
+import { WALL_THICKNESS } from "../constants";
 import { TransformLayer } from "../objects/TransformControls/TransformLayer";
 import { WallNode } from "../objects/Walls/WallNode";
 import { AddWallAction } from "./AddWallAction";
 
 // tracks current action data
-export class ActionManager {
+export class ToolStateManager {
     
 
-    private static instance:ActionManager;
+    private static instance:ToolStateManager;
 
     public previousNode:WallNode;
+
+    public preview:Graphics;
     private constructor() {
         this.previousNode = undefined;
+        this.preview = new Graphics();
+        this.preview.clear();
+
+
     }
 
+    public updatePreview(ev:InteractionEvent) {
+        if (this.previousNode === undefined) {
+            return;
+        }
+        console.log("aaaaaaaaa")
+        ToolStateManager.Instance.preview
+        .clear()
+        .lineStyle(WALL_THICKNESS,0x1f1f1f)
+        .moveTo(this.previousNode.x, this.previousNode.y)
+        .lineTo(ev.data.global.x, ev.data.global.y);
+    }
     public step(node:WallNode) {
         console.log("STEP CU ", node.getId())
         if (this.previousNode === undefined) {
@@ -31,11 +50,13 @@ export class ActionManager {
         }
 
         this.previousNode = node;
+        this.preview.clear();
         
     }
 
     public unset() {
         this.previousNode = undefined;
+        this.preview.clear();
     }
     public static get Instance()
     {
