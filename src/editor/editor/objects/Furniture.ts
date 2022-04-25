@@ -11,19 +11,24 @@ export class Furniture extends Sprite {
     private id: number; // fiecare mobila isi stie index-ul in plan. uuids?
     // private dragging: boolean;
     public isAttached:boolean;
+    public attachedToLeft:number;
+    public attachedToRight:number;
     public xLocked:boolean;
     private transformLayer: TransformLayer;
+    public resourcePath: string;
     constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, attachedTo?:Wall) {
 
         let texture = Texture.from(resourcePath);
-        console.log(texture)
         super(texture);
+        this.resourcePath = resourcePath;
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
         
         if (attachedTo) {
             this.isAttached = true;
             this.parent = attachedTo;
+            this.attachedToLeft = attachedTo.leftNode.getId();
+            this.attachedToRight = attachedTo.rightNode.getId();
             this.xLocked = true;
         } else {
             this.xLocked = false;
@@ -33,7 +38,6 @@ export class Furniture extends Sprite {
         // this.dragging = false;
         this.width = widthFactor * METER;
         this.height = heightFactor * METER;
-        console.log(resourcePath)
 
         this.on('mousedown', this.onMouseDown)
         this.on('mousemove', this.onMouseMove)
@@ -46,6 +50,7 @@ export class Furniture extends Sprite {
     }
     private onMouseDown() {
 
+        console.log("click!!")
         switch (useStore.getState().activeTool) {
             case Tool.FurnitureEdit:
                 this.transformLayer.select(this);

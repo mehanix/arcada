@@ -62,7 +62,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function ToolModeView(props: { mode: ToolMode; }) {
-    console.log(props.mode, ToolMode.FurnitureMode)
+
     if (props.mode === ToolMode.FurnitureMode) {
         return <FurnitureModePanel/>
     }

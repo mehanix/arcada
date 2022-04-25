@@ -17,10 +17,7 @@ export function EditorRoot() {
             resizeTo: ref.current.parentElement
         });
 
-        function handleResize() {
-            console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
-      }
-        window.addEventListener('resize', handleResize)
+    
         app.view.oncontextmenu = (e) => {
             e.preventDefault();
         }

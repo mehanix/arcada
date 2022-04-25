@@ -21,7 +21,7 @@ export class Wall extends Graphics {
     length: number;
     label: Label;
     test: Furniture;
-    id: number;
+    
     x1:number;
     x2:number;
     y1:number;
@@ -74,10 +74,10 @@ export class Wall extends Graphics {
         let theta = Math.atan2((this.y2 - this.y1), (this.x2 - this.x1)); // aflu unghiul sa pot roti
         theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
         if (theta < 0) theta = 360 + theta; // range [0, 360)
-        console.log(theta)
+
         let length = Math.hypot(this.x1 - this.x2, this.y1 - this.y2);
         this.length = length;
-        console.log(length)
+
         this.beginFill().drawRect(0, 0, length, WALL_THICKNESS).endFill()
         this.position.set(this.x1, this.y1)
         this.angle = theta
@@ -92,12 +92,11 @@ export class Wall extends Graphics {
         ev.stopPropagation();
         let coords = new Point(ev.data.global.x, ev.data.global.y)
         let localCoords =  ev.data.getLocalPosition(this)
-        console.log("click local la:", localCoords)
-        console.log("hi!", this.leftNode, this.rightNode, coords.x, coords.y)
+
         const state = useStore.getState()
 
         if (state.activeTool == Tool.WallRemove) {
-            console.log("stergem", this.leftNode, this.rightNode)
+
             FloorPlan.Instance.removeWall(this);
         }
 
@@ -112,10 +111,12 @@ export class Wall extends Graphics {
                 id:"canapea-1-l-2-1",
                 name:"canapea mare"
             }
-            let win = new Furniture("window.svg", 200, parseFloat(obj.width), parseFloat(obj.height), this);
+            //TODO repara cand repari backendul
+            FloorPlan.Instance.furnitureId+=1;
+            let win = new Furniture("window.svg", FloorPlan.Instance.furnitureId, parseFloat(obj.width), parseFloat(obj.height), this);
             FloorPlan.Instance.furnitureArray[win.getId()] = win
             this.addChild(win)
-            console.log(win)
+
             FloorPlan.Instance.setFurniturePosition(win.getId(), localCoords.x, 0);
         }
 

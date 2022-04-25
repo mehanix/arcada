@@ -13,7 +13,7 @@ export class WallNode extends Graphics {
         super();
         this.interactive = true;
         this.id = nodeId;
-        console.log(this.id)
+
         this.pivot.set(0.5);
         this.beginFill(Math.floor(Math.random()*16777215));
         this.drawCircle(0,0,10)
@@ -53,8 +53,8 @@ export class WallNode extends Graphics {
         }
         let currentPoint = new Point(ev.data.global.x, ev.data.global.y);
 
-        this.x = currentPoint.x;
-        this.y = currentPoint.y;
+        this.x = currentPoint.x - currentPoint.x%10;
+        this.y = currentPoint.y - currentPoint.y%10;
         FloorPlan.Instance.redrawWalls();
         
     }

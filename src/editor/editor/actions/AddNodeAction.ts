@@ -28,7 +28,6 @@ export class AddNodeAction implements Action {
         } else {
             node = this.receiver.getWallNodeSeq().addNode(this.coords.x, this.coords.y)
         }
-        console.log("vin din exec. step!")
         ToolStateManager.Instance.step(node);
     }
 }

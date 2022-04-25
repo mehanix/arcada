@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Navbar, Tooltip, UnstyledButton, createStyles, Group } from '@mantine/core';
 import {
   Icon as TablerIcon,
@@ -11,7 +11,8 @@ import {
   Ruler2,
 } from 'tabler-icons-react';
 
-import {  ToolMode, useStore } from "../../stores/ToolStore";
+import { ToolMode, useStore } from "../../stores/ToolStore";
+import { FloorPlan } from '../../editor/editor/objects/FloorPlan';
 
 
 const useStyles = createStyles((theme) => ({
@@ -59,15 +60,15 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const modes = [
-  { icon: Armchair, label: 'Furniture Mode', mode:ToolMode.FurnitureMode },
-  { icon: BorderLeft, label: 'Wall Mode', mode:ToolMode.WallMode }
+  { icon: Armchair, label: 'Furniture Mode', mode: ToolMode.FurnitureMode },
+  { icon: BorderLeft, label: 'Wall Mode', mode: ToolMode.WallMode }
 ];
 
 
 export function ToolNavbar() {
   const [active, setActive] = useState(0);
   const { setMode } = useStore()
-  
+  const fileRef = useRef<HTMLInputElement>();
 
   const toolModes = modes.map((link, index) => (
     <NavbarLink
@@ -76,13 +77,21 @@ export function ToolNavbar() {
       active={index === active}
       onClick={() => {
         setActive(index)
-        console.log("cleck " + index)
 
         setMode(link.mode)
       }
       }
     />
   ));
+
+  const handleChange = async (e:any) => {
+
+    let resultText = await e.target.files.item(0).text();
+
+    console.log(resultText);
+     FloorPlan.Instance.load(resultText);
+
+  };
 
   return (
     <Navbar height={window.innerHeight} width={{ base: 70 }} p="md">
@@ -102,8 +111,18 @@ export function ToolNavbar() {
       </Navbar.Section>
       <Navbar.Section>
         <Group direction="column" align="center" spacing={0}>
-          <NavbarLink icon={DeviceFloppy} label="Save plan" />
-          <NavbarLink icon={Upload} label="Load plan" />
+          <NavbarLink icon={DeviceFloppy} label="Save plan" onClick={() => {
+            FloorPlan.Instance.save()
+          }} />
+     
+          <NavbarLink onClick={() => fileRef.current.click()} icon={Upload} label="Load plan" />
+          <input
+        ref={fileRef}
+        onChange={handleChange}
+        multiple={false}
+        type="file"
+        hidden
+      />
         </Group>
       </Navbar.Section>
     </Navbar>

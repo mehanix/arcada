@@ -25,7 +25,6 @@ export class ToolStateManager {
         if (this.previousNode === undefined) {
             return;
         }
-        console.log("aaaaaaaaa")
         ToolStateManager.Instance.preview
         .clear()
         .lineStyle(WALL_THICKNESS,0x1f1f1f)
@@ -33,15 +32,12 @@ export class ToolStateManager {
         .lineTo(ev.data.global.x, ev.data.global.y);
     }
     public step(node:WallNode) {
-        console.log("STEP CU ", node.getId())
         if (this.previousNode === undefined) {
-            console.log('a')
             this.previousNode = node;
             return;
         }
 
         if (this.previousNode.getId() === node.getId()) {
-            console.log("suntem la fel")
             this.previousNode = undefined;
             return;
         } else {

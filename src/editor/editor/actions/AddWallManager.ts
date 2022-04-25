@@ -14,15 +14,12 @@ export class AddWallManager {
     }
 
     public step(node:WallNode) {
-        console.log("STEP CU ", node.getId())
         if (this.previousNode === undefined) {
-            console.log('a')
             this.previousNode = node;
             return;
         }
 
         if (this.previousNode.getId() === node.getId()) {
-            console.log("suntem la fel")
             this.previousNode = undefined;
             return;
         } else {

@@ -20,18 +20,18 @@ export function FurnitureAddPanel() {
     }, [categories])
 
     useEffect(() => {
-        console.log(category)
+
         getCurrentFurnitureData(category)
     }, [category])
 
     useEffect(() => {
-        console.log("Am",   currentFurnitureData)
+
         setCards(currentFurnitureData.map((item) => 
             (
                 <FurnitureItem item={item} category={category} ></FurnitureItem>
             )
         ))
-        console.log("cards", cards)
+
     }, [currentFurnitureData])
 
     const getCategoryData = () => {
@@ -39,7 +39,7 @@ export function FurnitureAddPanel() {
         for (let cat of categories) {
             data.push({ value: cat.id, label: cat.name })
         }
-        console.log(data, "data")
+
         setAvailableCategories(data);
     }
 

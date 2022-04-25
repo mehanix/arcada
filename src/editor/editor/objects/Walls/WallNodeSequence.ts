@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+import { INodeSerializable } from "../../persistence/INodeSerializable";
 import { Wall } from "./Wall";
 import { WallNode } from "./WallNode";
 
@@ -30,17 +31,12 @@ export class WallNodeSequence extends Container {
         // this.wallNodeLinks[3].push(4);
         // this.wallNodeLinks[5].push(6);
         // this.wallNodeLinks[6].push(7);
-        console.log(this.wallNodes);
-        console.log(this.wallNodeLinks)
-        this.drawWalls();
 
-        this.on("mousedown", this.mousedown)
+        this.drawWalls();
 
         // this.on("mousemove", this.drawWalls);
     }
-    private mousedown() {
-        console.log("sunt doar un vagabond")
-    }
+
 
     public setMouseTouching(id: number) {
         this.mouseTouching = id;
@@ -55,6 +51,49 @@ export class WallNodeSequence extends Container {
 
     public getWalls() {
         return this.walls;
+    }
+
+    public getWallNodes() {
+        return this.wallNodes;
+    }
+
+    public getWallNodeLinks() {
+        return this.wallNodeLinks;
+    }
+
+    public load(nodes: INodeSerializable[], nodeLinks: Record<string, number[]>) {
+        // this.wallNodeLinks = nodeLinks; //deep copy?
+        for (let node of nodes) {
+            this.addNode(node.x, node.y, node.id);
+        }
+        for (const src in nodeLinks) {
+            for (const dest of nodeLinks[src]) {
+                console.log("zid intre ",src,dest)
+                this.addWall(parseInt(src),dest)
+                this.wallNodeLinks[src].push(dest);
+            }
+        }
+        console.log(this.wallNodeLinks);
+    }   
+
+    // drop everything
+    public reset() {
+        for (let i = 1; i <= WallNodeSequence.wallNodeId; i++) {
+            if (this.wallNodes[i] != undefined) {
+                this.wallNodes[i].destroy(true);
+            }
+        }
+        this.wallNodes = {};
+
+        for (let wall of this.walls) {
+            wall.destroy(true)
+        }
+        this.walls = []
+
+        this.wallNodeLinks = {}
+        WallNodeSequence.wallNodeId = 0;
+
+
     }
     public remove(id: number) {
         //TODO only remove if connected to 2 points.
@@ -80,18 +119,24 @@ export class WallNodeSequence extends Container {
             this.wallNodeLinks[id].length = 0;
 
         } else {
-            console.log ("cannot remove node with walls attached");
+            console.log("cannot remove node with walls attached");
         }
 
 
     }
 
-    public addNode(x: number, y: number) {
-        WallNodeSequence.wallNodeId += 1;
-        const nodeId = WallNodeSequence.wallNodeId;
+    public addNode(x: number, y: number, id?: number) {
+        let nodeId;
+        if (id) {
+            nodeId = id;
+        } else {
+            WallNodeSequence.wallNodeId += 1;
+            nodeId = WallNodeSequence.wallNodeId;
+        }
         this.wallNodes[nodeId] = new WallNode(x, y, nodeId);
         this.wallNodeLinks[nodeId] = [];
         this.addChild(this.wallNodes[nodeId])
+        console.log(this.wallNodeLinks[1])
         return this.wallNodes[nodeId];
     }
 

@@ -3,10 +3,10 @@ import { InteractionEvent, Loader, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { assets } from "./objects/assets"
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
-import { FurnitureData } from "../../stores/FurnitureStore";
 import { Tool, useStore } from "../../stores/ToolStore";
 import { AddNodeAction } from "./actions/AddNodeAction";
 import { ToolStateManager } from "./actions/ToolStateManager";
+import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
     private bkgPattern: TilingSprite;
@@ -26,12 +26,10 @@ export class Main extends Viewport {
         // Start loading!
         Loader.shared.load();
         // this.setup(this);
-        console.log("hi")
 
     }
 
     private setup(scene: any) {
-        console.log("done loading")
         Main.viewportPluginManager = this.plugins;
         // this.drag().clamp({direction: 'all'})
         // .wheel().clampZoom({minScale: 1.0, maxScale:3.0})
@@ -84,7 +82,6 @@ export class Main extends Viewport {
         // let rectGraph = new Graphics();
         // rectGraph.interactive = true;
         // rectGraph.beginFill().drawRect(100,100,200,200).endFill()
-        // rectGraph.on("mousedown", ()=>{console.log("cleck test")})
 
         // this.addChild(rectGraph);
 

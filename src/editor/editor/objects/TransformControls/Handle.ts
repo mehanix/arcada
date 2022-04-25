@@ -66,7 +66,6 @@ export class Handle extends Graphics {
             return;
         }
         this.mouseStartPoint = new Point(ev.data.global.x, ev.data.global.y); // unde se afla target la mousedown
-        console.log("badabum")
         this.targetStartPoint = this.target.getGlobalPosition();
         this.startRotaton = this.target.rotation;
         this.startScale = new Point(this.target.scale.x, this.target.scale.y)
@@ -77,7 +76,6 @@ export class Handle extends Graphics {
     }
 
     private onMouseUp(ev: InteractionEvent) {
-        console.log("hei hei")
         TransformLayer.dragging = false;
         this.active = false;
         ev.stopPropagation();
@@ -95,7 +93,6 @@ export class Handle extends Graphics {
         let startDistance = this.getDistance(this.mouseStartPoint, globalPos)
         let endDistance = this.getDistance(mouseEndPoint, globalPos);
         let sizeFactor = endDistance / startDistance;
-        // console.log(this.mouseStartPoint, currentPoint, distance, this.type)
         switch (this.type) {
             case HandleType.Rotate:
                 let relativeStart = new Point(this.mouseStartPoint.x - this.target.x, this.mouseStartPoint.y - this.target.y)
@@ -129,7 +126,6 @@ export class Handle extends Graphics {
                     this.target.position.y = this.targetStartPoint.y - delta.y;
                 }
 
-                // console.log(this.mouseStartPoint.x, this.mouseStartPoint.y, mouseEndPoint.x, mouseEndPoint.y)
 
                 // // distanta dintre punct start si colt stanga sus
                 // let mpl = this.toLocal(mouseEndPoint, this.target);
