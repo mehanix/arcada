@@ -2,15 +2,18 @@ import create from "zustand";
 import { getCategoriesRequest, getCategoryInfo } from "../api/api-client";
 
 export interface Category {
-    id: string,
-    name: string
+    _id: string,
+    name: string,
+    visible: boolean
 }
 
 export interface FurnitureData {
-    id: string,
+    _id: string,
     name: string,
-    width: string,
-    height: string
+    width: number,
+    height: number,
+    imagePath: string,
+    category: string
 }
 
 export interface FurnitureStore {

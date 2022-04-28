@@ -1,4 +1,6 @@
 import { Sprite, Texture } from "pixi.js";
+import { endpoint } from "../../../api/api-client";
+import { FurnitureData } from "../../../stores/FurnitureStore";
 import { useStore } from "../../../stores/ToolStore";
 import { METER, Tool } from "../constants";
 import { FloorPlan } from "./FloorPlan";
@@ -16,11 +18,11 @@ export class Furniture extends Sprite {
     public xLocked:boolean;
     private transformLayer: TransformLayer;
     public resourcePath: string;
-    constructor(resourcePath: string, id: number, widthFactor:number, heightFactor:number, attachedTo?:Wall) {
+    constructor(data:FurnitureData, id:number, attachedTo?:Wall) {
 
-        let texture = Texture.from(resourcePath);
+        let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
         super(texture);
-        this.resourcePath = resourcePath;
+        this.resourcePath = data.imagePath;
         this.id = id;
         this.transformLayer = TransformLayer.Instance;
         
@@ -36,12 +38,11 @@ export class Furniture extends Sprite {
         }
         this.interactive = true;
         // this.dragging = false;
-        this.width = widthFactor * METER;
-        this.height = heightFactor * METER;
+        this.width = data.width * METER;
+        this.height = data.height * METER;
 
         this.on('mousedown', this.onMouseDown)
         this.on('mousemove', this.onMouseMove)
-        // this.on('mouseup', this.onMouseUp)
 
     }
 

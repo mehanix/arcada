@@ -1,5 +1,5 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
-import { FurnitureData } from "../../../../stores/FurnitureStore";
+// import { FurnitureData } from "../../../../stores/FurnitureStore";
 import { Tool, useStore } from "../../../../stores/ToolStore";
 import { AddNodeAction } from "../../actions/AddNodeAction";
 import {  WALL_THICKNESS } from "../../constants";
@@ -105,19 +105,7 @@ export class Wall extends Graphics {
             addNode.execute();
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
-            let obj:FurnitureData= {
-                width:"1",
-                height:"0.15",
-                id:"canapea-1-l-2-1",
-                name:"canapea mare"
-            }
-            //TODO repara cand repari backendul
-            FloorPlan.Instance.furnitureId+=1;
-            let win = new Furniture("window.svg", FloorPlan.Instance.furnitureId, parseFloat(obj.width), parseFloat(obj.height), this);
-            FloorPlan.Instance.furnitureArray[win.getId()] = win
-            this.addChild(win)
-
-            FloorPlan.Instance.setFurniturePosition(win.getId(), localCoords.x, 0);
+            FloorPlan.Instance.addFurniture(FloorPlan.Instance.windowFurniture, this, new Point(localCoords.x, 0))
         }
 
     }

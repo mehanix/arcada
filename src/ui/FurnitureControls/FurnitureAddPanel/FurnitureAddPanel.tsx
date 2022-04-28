@@ -28,7 +28,7 @@ export function FurnitureAddPanel() {
 
         setCards(currentFurnitureData.map((item) => 
             (
-                <FurnitureItem item={item} category={category} ></FurnitureItem>
+                <FurnitureItem data={item} ></FurnitureItem>
             )
         ))
 
@@ -37,7 +37,7 @@ export function FurnitureAddPanel() {
     const getCategoryData = () => {
         const data = [];
         for (let cat of categories) {
-            data.push({ value: cat.id, label: cat.name })
+            data.push({ value: cat._id, label: cat.name })
         }
 
         setAvailableCategories(data);

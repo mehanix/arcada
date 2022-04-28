@@ -2,11 +2,11 @@ import { Container, Point } from "pixi.js";
 import { Serializer } from "../persistence/Serializer";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Furniture } from "./Furniture";
-import { FurnitureFactory } from "./FurnitureFactory";
 import { Wall } from "./Walls/Wall";
 import { WallNodeSequence } from "./Walls/WallNodeSequence";
 import { saveAs } from 'file-saver';
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
+import { getWindow } from "../../../api/api-client";
 export class FloorPlan extends Container {
    
     private static instance: FloorPlan;
@@ -16,12 +16,16 @@ export class FloorPlan extends Container {
 
     private serializer:Serializer;
     public furnitureId = 0;   // TODO repara cand repari backendul  
+
+    public windowFurniture: FurnitureData;
     private constructor() {
         super();
         this.furnitureArray = {};
         this.wallNodeSequence = new WallNodeSequence();
         this.addChild(this.wallNodeSequence);
         this.serializer = new Serializer();
+        
+        this.windowFurniture = getWindow();
     }
     public static get Instance() {
         return this.instance || (this.instance = new this());
@@ -66,14 +70,20 @@ export class FloorPlan extends Container {
         this.furnitureArray = {};
 
     }
-    public addFurniture(obj: FurnitureData, category:string, attachedTo?:Wall) {
+    public addFurniture(obj: FurnitureData, attachedTo?:Wall, coords?:Point) {
 
         this.furnitureId += 1;
-        let object = FurnitureFactory.create(obj.id, category, this.furnitureId, obj.width, obj.height, attachedTo);
+        let object = new Furniture(obj, this.furnitureId, attachedTo)
         this.furnitureArray[this.furnitureId] = object;
-        this.addChild(object)
+        
+        if (attachedTo !== undefined) {
+            attachedTo.addChild(object)
+            object.position.set(coords.x, coords.y)
+        } else {
+            this.addChild(object)
+            object.position.set(150, 150)
+        }
 
-        object.position.set(150, 150)
 
         return this.furnitureId;
     }
