@@ -11,7 +11,7 @@ const useStyles = createStyles((theme) => ({
 
 export function FurnitureAddPanel() {
     const { classes } = useStyles();
-    const [category, setCategory] = useState('kitchen');
+    const [category, setCategory] = useState('');
     const [availableCategories, setAvailableCategories] = useState([]);
     const { categories, currentFurnitureData, getCurrentFurnitureData } = useFurnitureStore();
     const [cards, setCards] = useState([]);
@@ -21,15 +21,18 @@ export function FurnitureAddPanel() {
 
     useEffect(() => {
 
-        getCurrentFurnitureData(category)
+        if (category) {
+            getCurrentFurnitureData(category)
+            console.log(category, currentFurnitureData)
+        }
     }, [category])
 
     useEffect(() => {
 
-        setCards(currentFurnitureData.map((item) => 
-            (
-                <FurnitureItem data={item} ></FurnitureItem>
-            )
+        setCards(currentFurnitureData.map((item) =>
+        (
+            <FurnitureItem data={item} ></FurnitureItem>
+        )
         ))
 
     }, [currentFurnitureData])
@@ -39,6 +42,7 @@ export function FurnitureAddPanel() {
         for (let cat of categories) {
             data.push({ value: cat._id, label: cat.name })
         }
+        console.log(data)
 
         setAvailableCategories(data);
     }

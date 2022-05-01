@@ -35,7 +35,8 @@ export const useFurnitureStore = create<FurnitureStore>(set => ({
     getCurrentFurnitureData: async (categoryId:string) => {
         let res = await(await getCategoryInfo(categoryId)).json()
         set(() => ({
-            currentFurnitureData: res.objects
-        }));
+            currentFurnitureData: res
+        }))
+
     }
 }))
