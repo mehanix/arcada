@@ -7,14 +7,15 @@ import { WallNodeSequence } from "./Walls/WallNodeSequence";
 import { saveAs } from 'file-saver';
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { getWindow } from "../../../api/api-client";
+import { IFurnitureSerializable } from "../persistence/IFurnitureSerializable";
 export class FloorPlan extends Container {
-   
+
     private static instance: FloorPlan;
 
     public furnitureArray: Record<number, Furniture>;
     private wallNodeSequence: WallNodeSequence;
 
-    private serializer:Serializer;
+    private serializer: Serializer;
     public furnitureId = 0;   // TODO repara cand repari backendul  
 
     public windowFurniture: FurnitureData;
@@ -24,7 +25,7 @@ export class FloorPlan extends Container {
         this.wallNodeSequence = new WallNodeSequence();
         this.addChild(this.wallNodeSequence);
         this.serializer = new Serializer();
-        
+
         this.windowFurniture = getWindow();
     }
     public static get Instance() {
@@ -37,12 +38,12 @@ export class FloorPlan extends Container {
 
     public save() {
         let floorPlan = this.serializer.serialize(this.furnitureArray, this.furnitureId, this.wallNodeSequence);
-        let blob = new Blob([floorPlan], {type: "text/plain;charset=utf-8"});
+        let blob = new Blob([floorPlan], { type: "text/plain;charset=utf-8" });
         saveAs(blob, "floor_plan.txt")
 
     }
 
-    public load(planText:string) {
+    public load(planText: string) {
         console.log("text:", planText);
         let plan: FloorPlanSerializable = JSON.parse(planText)
         console.log(plan)
@@ -51,17 +52,22 @@ export class FloorPlan extends Container {
         this.wallNodeSequence.load(plan.wallNodes, plan.wallNodeLinks);
 
         for (let furniture of plan.furnitureArray) {
-            console.log(furniture) // refa backend. nu uita de salvat si valori id-uri in json.
+            this.loadFurniture(furniture);
         }
+
+        this.furnitureId = plan.furnitureId;
+        this.wallNodeSequence.setId(plan.wallNodeId);
 
     }
 
+
+
     // cleans up everything. prepare for new load.
     private reset() {
-        
+
         // remove furniture
         for (let i = 1; i <= this.furnitureId; i++) {
-            if(this.furnitureArray[i] != undefined) {
+            if (this.furnitureArray[i] != undefined) {
                 this.removeFurniture(i);
             }
         }
@@ -70,12 +76,40 @@ export class FloorPlan extends Container {
         this.furnitureArray = {};
 
     }
-    public addFurniture(obj: FurnitureData, attachedTo?:Wall, coords?:Point) {
+
+    private loadFurniture(fur: IFurnitureSerializable) {
+
+        let furnitureData: FurnitureData = { //todo. nu e complet aici
+            _id: "",
+            name: "",
+            width: 0,
+            height: 0,
+            imagePath: "",
+            category: ""
+        };
+        furnitureData.height = fur.height;
+        furnitureData.width = fur.width;
+        furnitureData.imagePath = fur.texturePath;
+        let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
+
+        let object = new Furniture(furnitureData, fur.id, attachedTo)
+        this.furnitureArray[fur.id] = object;
+
+        if (attachedTo != undefined) {
+            attachedTo.addChild(object)
+        } else {
+            this.addChild(object)
+        }
+        object.position.set(fur.x, fur.y)
+    
+    }
+
+    public addFurniture(obj: FurnitureData, attachedTo?: Wall, coords?: Point) {
 
         this.furnitureId += 1;
         let object = new Furniture(obj, this.furnitureId, attachedTo)
         this.furnitureArray[this.furnitureId] = object;
-        
+
         if (attachedTo !== undefined) {
             attachedTo.addChild(object)
             object.position.set(coords.x, coords.y)
@@ -88,16 +122,16 @@ export class FloorPlan extends Container {
         return this.furnitureId;
     }
 
-    public setFurniturePosition(id: number, x:number, y:number, angle?:number) {
-        this.furnitureArray[id].position.set(x,y);
+    public setFurniturePosition(id: number, x: number, y: number, angle?: number) {
+        this.furnitureArray[id].position.set(x, y);
         if (angle) {
             this.furnitureArray[id].angle = angle;
         }
     }
-    
+
     public removeFurniture(id: number) {
 
-        if(this.furnitureArray[id].isAttached) {
+        if (this.furnitureArray[id].isAttached) {
             this.furnitureArray[id].parent.removeChild(this.furnitureArray[id])
         } else {
             this.removeChild(this.furnitureArray[id]);
@@ -132,17 +166,17 @@ export class FloorPlan extends Container {
         }
     }
 
-    public addNodeToWall(wall:Wall, coords:Point) {
+    public addNodeToWall(wall: Wall, coords: Point) {
         let leftNode = wall.leftNode.getId();
         let rightNode = wall.rightNode.getId();
         // delete wall between left and right node
         this.removeWall(wall);
         // add node and connect walls to it
-        let newNode = this.wallNodeSequence.addNode(coords.x - coords.x%10, coords.y - coords.y%10);
+        let newNode = this.wallNodeSequence.addNode(coords.x - coords.x % 10, coords.y - coords.y % 10);
         let newNodeId = newNode.getId()
         this.wallNodeSequence.addWall(leftNode, newNodeId);
         this.wallNodeSequence.addWall(newNodeId, rightNode);
-        
+
         return newNode;
     }
 

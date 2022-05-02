@@ -1,3 +1,4 @@
+import { METER } from "../constants";
 import { Furniture } from "../objects/Furniture";
 import { WallNode } from "../objects/Walls/WallNode";
 import { WallNodeSequence } from "../objects/Walls/WallNodeSequence";
@@ -35,6 +36,8 @@ export class Serializer {
         }
         floorPlan.furnitureArray = serializedFurniture;
 
+        floorPlan.furnitureId = furnitureId;
+        floorPlan.wallNodeId = wallNodeSequence.getWallNodeId();
         let resultString = JSON.stringify(floorPlan)
         return resultString
     }
@@ -44,8 +47,8 @@ export class Serializer {
         res = {
             x: obj.x,
             y: obj.y,
-            height: obj.height,
-            width: obj.width,
+            height: obj.height / METER,
+            width: obj.width / METER,
             id: obj.getId(),
             texturePath: obj.resourcePath,
             rotation: obj.rotation,

@@ -45,6 +45,14 @@ export class WallNodeSequence extends Container {
     public getMouseTouching() {
         return this.mouseTouching
     }
+
+    public setId(id:number) {
+        WallNodeSequence.wallNodeId = id;
+    }
+
+    public getWallNodeId() {
+        return WallNodeSequence.wallNodeId;
+    }
     public contains(id: number) {
         return id in this.wallNodes;
     }
@@ -190,6 +198,21 @@ export class WallNodeSequence extends Container {
         console.log("tratate 2 left:", this.wallNodeLinks[leftNode]);
         console.log("tratate 2 right:", this.wallNodeLinks[rightNode]);
 
+    }
+
+    public getWall(leftNodeId:number, rightNodeId:number) {
+        
+        if (!this.wallNodeLinks[leftNodeId] || !this.wallNodeLinks[leftNodeId].includes(rightNodeId)) {
+            return null;
+        }
+
+        for (let wall of this.walls) {
+            if (wall.leftNode.getId() === leftNodeId && wall.rightNode.getId() === rightNodeId) {
+                return wall;
+            }
+        }
+
+        return null;
     }
     public drawWalls() {
         console.log("redraw")

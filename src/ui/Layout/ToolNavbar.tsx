@@ -9,9 +9,11 @@ import {
   DeviceFloppy,
   Upload,
   Ruler2,
+  Box,
+  Home,
 } from 'tabler-icons-react';
 
-import { ToolMode, useStore } from "../../stores/ToolStore";
+import { ToolMode, useStore, ViewMode } from "../../stores/ToolStore";
 import { FloorPlan } from '../../editor/editor/objects/FloorPlan';
 
 
@@ -64,10 +66,17 @@ const modes = [
   { icon: BorderLeft, label: 'Wall Mode', mode: ToolMode.WallMode }
 ];
 
+const viewModes = [
+  { icon: Home, label: '2D', mode: ViewMode.TwoD },
+  { icon: Box, label: '3D', mode:  ViewMode.ThreeD }
+];
+
 
 export function ToolNavbar() {
   const [active, setActive] = useState(0);
-  const { setMode } = useStore()
+  const [activeView, setActiveView] = useState(0);
+
+  const { setMode, setViewMode } = useStore()
   const fileRef = useRef<HTMLInputElement>();
 
   const toolModes = modes.map((link, index) => (
@@ -84,6 +93,21 @@ export function ToolNavbar() {
     />
   ));
 
+  const viewModeButtons = viewModes.map((link, index) => (
+    <NavbarLink
+      {...link}
+      key={link.label}
+      active={index === activeView}
+      onClick={() => {
+        setActiveView(index)
+
+        setViewMode(link.mode)
+      }
+      }
+    />
+  ));
+
+
   const handleChange = async (e:any) => {
 
     let resultText = await e.target.files.item(0).text();
@@ -99,6 +123,12 @@ export function ToolNavbar() {
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
           {toolModes}
+        </Group>
+      
+      </Navbar.Section>
+      <Navbar.Section grow>
+      <Group direction="column" align="center" spacing={0}>
+          {viewModeButtons}
         </Group>
       </Navbar.Section>
       <Navbar.Section grow >

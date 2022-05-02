@@ -9,6 +9,11 @@ export enum ToolMode {
     ViewMode
 };
 
+export enum ViewMode {
+  TwoD,
+  ThreeD
+}
+
 export enum Tool {
     WallAdd,
     WallEdit,
@@ -22,18 +27,26 @@ export enum Tool {
 
 export interface ToolStore {
     mode:ToolMode,
+    viewMode:ViewMode,
     activeTool:Tool,
     setMode: (mode:ToolMode) => void,
-    setTool: (tool: Tool) => void
+    setTool: (tool: Tool) => void,
+    setViewMode: (mode:ViewMode) => void
 }
 
 
 export const useStore = create<ToolStore>(set => ({
   mode: ToolMode.FurnitureMode,
   activeTool: Tool.FurnitureEdit,
+  viewMode: ViewMode.TwoD,
   setMode: (mode: ToolMode) => {
     set(() => ({
       mode: mode
+    }));    
+  },
+  setViewMode: (mode: ViewMode) => {
+    set(() => ({
+      viewMode: mode
     }));    
   },
   setTool: (tool: Tool) => {
