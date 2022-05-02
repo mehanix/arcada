@@ -2,11 +2,22 @@ import { useRef, useEffect } from "react";
 import { Application } from "pixi.js";
 import { Main } from "./editor/Main";
 import { IViewportOptions } from 'pixi-viewport';
+import { useStore, ViewMode } from "../stores/ToolStore";
+import { createStyles } from "@mantine/core";
+
+const useStyles = createStyles(() => ({
+    inactive:{
+        display:'none'
+    }
+
+}));
 
 export function EditorRoot() {
     const ref = useRef<HTMLDivElement>(null);
+    const state = useStore();
+    const {classes} = useStyles();
     useEffect(() => {
-
+        
         // On first render create our application
         const app = new Application({
             view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -44,5 +55,5 @@ export function EditorRoot() {
         };
     }, []);
 
-    return <div ref={ref} />;
+    return <div className={state.viewMode == ViewMode.TwoD ? "" : classes.inactive} ref={ref} />;
 }
