@@ -6,7 +6,6 @@ import { Wall } from "./Walls/Wall";
 import { WallNodeSequence } from "./Walls/WallNodeSequence";
 import { saveAs } from 'file-saver';
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
-import { getWindow } from "../../../api/api-client";
 import { IFurnitureSerializable } from "../persistence/IFurnitureSerializable";
 export class FloorPlan extends Container {
 
@@ -26,7 +25,6 @@ export class FloorPlan extends Container {
         this.addChild(this.wallNodeSequence);
         this.serializer = new Serializer();
 
-        this.windowFurniture = getWindow();
     }
     public static get Instance() {
         return this.instance || (this.instance = new this());
@@ -137,7 +135,12 @@ export class FloorPlan extends Container {
         } else {
             this.removeChild(this.furnitureArray.get(id));
         }
-        this.furnitureArray.get(id).destroy(true);
+        this.furnitureArray.get(id).destroy({
+            children:true,
+            texture:false,
+            baseTexture:false
+
+        });
         this.furnitureArray.delete(id);
     }
 

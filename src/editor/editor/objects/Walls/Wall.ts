@@ -1,4 +1,5 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
+import { getWindow } from "../../../../api/api-client";
 // import { FurnitureData } from "../../../../stores/FurnitureStore";
 import { Tool, useStore } from "../../../../stores/ToolStore";
 import { AddNodeAction } from "../../actions/AddNodeAction";
@@ -105,7 +106,10 @@ export class Wall extends Graphics {
             addNode.execute();
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
-            FloorPlan.Instance.addFurniture(FloorPlan.Instance.windowFurniture, this, new Point(localCoords.x, 0))
+            getWindow().then(res => {
+                FloorPlan.Instance.addFurniture(res[0], this, new Point(localCoords.x, 0))
+            })
+
         }
 
     }
