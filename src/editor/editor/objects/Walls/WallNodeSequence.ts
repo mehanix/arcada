@@ -4,8 +4,8 @@ import { Wall } from "./Wall";
 import { WallNode } from "./WallNode";
 
 export class WallNodeSequence extends Container {
-    private wallNodes: Record<string, WallNode>;
-    private wallNodeLinks: Record<string, number[]>
+    private wallNodes: Map<number, WallNode>;
+    private wallNodeLinks: Map<number, number[]>
     private walls: Wall[];
     private static wallNodeId: number = 0;
     private mouseTouching: number;
@@ -13,8 +13,8 @@ export class WallNodeSequence extends Container {
         super();
         this.sortableChildren = true;
         this.walls = [];
-        this.wallNodes = {};
-        this.wallNodeLinks = {};
+        this.wallNodes = new Map<number, WallNode>();
+        this.wallNodeLinks = new Map<number, number[]>();
 
         this.addNode(50, 50);
         this.addNode(750, 50);
@@ -54,7 +54,7 @@ export class WallNodeSequence extends Container {
         return WallNodeSequence.wallNodeId;
     }
     public contains(id: number) {
-        return id in this.wallNodes;
+        return this.wallNodes.has(id);
     }
 
     public getWalls() {
@@ -69,16 +69,17 @@ export class WallNodeSequence extends Container {
         return this.wallNodeLinks;
     }
 
-    public load(nodes: INodeSerializable[], nodeLinks: Record<string, number[]>) {
+    public load(nodes: INodeSerializable[], nodeLinks: Map<number, number[]>) {
         // this.wallNodeLinks = nodeLinks; //deep copy?
         for (let node of nodes) {
             this.addNode(node.x, node.y, node.id);
         }
-        for (const src in nodeLinks) {
-            for (const dest of nodeLinks[src]) {
+        console.log(nodes, nodeLinks)
+        for (let [src, dests] of nodeLinks) {
+            for (const dest of dests) {
                 console.log("zid intre ",src,dest)
-                this.addWall(parseInt(src),dest)
-                this.wallNodeLinks[src].push(dest);
+                this.addWall(src,dest)
+                this.wallNodeLinks.get(src).push(dest);
             }
         }
         console.log(this.wallNodeLinks);
@@ -86,19 +87,17 @@ export class WallNodeSequence extends Container {
 
     // drop everything
     public reset() {
-        for (let i = 1; i <= WallNodeSequence.wallNodeId; i++) {
-            if (this.wallNodes[i] != undefined) {
-                this.wallNodes[i].destroy(true);
-            }
+        for (let key of this.wallNodes.keys()) {
+                this.wallNodes.get(key).destroy(true);
         }
-        this.wallNodes = {};
+        this.wallNodes.clear();
 
         for (let wall of this.walls) {
             wall.destroy(true)
         }
         this.walls = []
 
-        this.wallNodeLinks = {}
+        this.wallNodeLinks.clear();
         WallNodeSequence.wallNodeId = 0;
 
 
@@ -106,11 +105,11 @@ export class WallNodeSequence extends Container {
     public remove(id: number) {
         //TODO only remove if connected to 2 points.
         let isolated = true;
-        if (this.wallNodeLinks[id].length > 0) {
+        if (this.wallNodeLinks.get(id).length > 0) {
             isolated = false;
         } else {
-            for (const src in this.wallNodeLinks) {
-                for (const dest of this.wallNodeLinks[src]) {
+            for (let src of this.wallNodeLinks.keys()) {
+                for (const dest of this.wallNodeLinks.get(src)) {
                     if (dest == id) {
                         isolated = false;
                     }
@@ -120,11 +119,11 @@ export class WallNodeSequence extends Container {
 
         if (isolated) {
             // remove node
-            this.wallNodes[id]!.destroy(true);
-            this.wallNodes[id] = null;
+            this.wallNodes.get(id)!.destroy(true);
+            this.wallNodes.delete(id)
 
             // remove links containing node TODO if implementing undo. remember these
-            this.wallNodeLinks[id].length = 0;
+            // this.wallNodeLinks[id].length = 0;
 
         } else {
             console.log("cannot remove node with walls attached");
@@ -141,11 +140,10 @@ export class WallNodeSequence extends Container {
             WallNodeSequence.wallNodeId += 1;
             nodeId = WallNodeSequence.wallNodeId;
         }
-        this.wallNodes[nodeId] = new WallNode(x, y, nodeId);
-        this.wallNodeLinks[nodeId] = [];
-        this.addChild(this.wallNodes[nodeId])
-        console.log(this.wallNodeLinks[1])
-        return this.wallNodes[nodeId];
+        this.wallNodes.set(nodeId, new WallNode(x, y, nodeId));
+        this.wallNodeLinks.set(nodeId,[]);
+        this.addChild(this.wallNodes.get(nodeId))
+        return this.wallNodes.get(nodeId);
     }
 
     public addWall(leftNodeId: number, rightNodeId: number) {
@@ -158,12 +156,12 @@ export class WallNodeSequence extends Container {
             rightNodeId = aux;
         }
 
-        if (this.wallNodeLinks[leftNodeId].includes(rightNodeId)) {
+        if (this.wallNodeLinks.get(leftNodeId).includes(rightNodeId)) {
             return;
         }
-        this.wallNodeLinks[leftNodeId].push(rightNodeId);
-        const leftNode = this.wallNodes[leftNodeId]
-        const rightNode = this.wallNodes[rightNodeId]
+        this.wallNodeLinks.get(leftNodeId).push(rightNodeId);
+        const leftNode = this.wallNodes.get(leftNodeId)
+        const rightNode = this.wallNodes.get(rightNodeId)
         let wall = new Wall(leftNode, rightNode)
         this.walls.push(wall)
         this.addChild(wall)
@@ -172,14 +170,14 @@ export class WallNodeSequence extends Container {
 
     public removeWall(leftNode: number, rightNode: number) {
 
-        const index = this.wallNodeLinks[leftNode].indexOf(rightNode);
+        const index = this.wallNodeLinks.get(leftNode).indexOf(rightNode);
         console.log("links for left:", leftNode, "right:", rightNode, "found index:", index)
-        console.log("links 2 left:", this.wallNodeLinks[leftNode]);
-        console.log("links 2 right:", this.wallNodeLinks[rightNode]);
+        console.log("links 2 left:", this.wallNodeLinks.get(leftNode));
+        console.log("links 2 right:", this.wallNodeLinks.get(rightNode));
 
 
         if (index != -1) {
-            this.wallNodeLinks[leftNode].splice(index, 1);
+            this.wallNodeLinks.get(leftNode).splice(index, 1);
             this.drawWalls();
         }
         let toBeRemoved = -1;
@@ -195,14 +193,14 @@ export class WallNodeSequence extends Container {
             this.walls.splice(toBeRemoved, 1);
 
         }
-        console.log("tratate 2 left:", this.wallNodeLinks[leftNode]);
-        console.log("tratate 2 right:", this.wallNodeLinks[rightNode]);
+        console.log("tratate 2 left:", this.wallNodeLinks.get(leftNode));
+        console.log("tratate 2 right:", this.wallNodeLinks.get(rightNode));
 
     }
 
     public getWall(leftNodeId:number, rightNodeId:number) {
         
-        if (!this.wallNodeLinks[leftNodeId] || !this.wallNodeLinks[leftNodeId].includes(rightNodeId)) {
+        if (!this.wallNodeLinks.get(leftNodeId) || !this.wallNodeLinks.get(leftNodeId).includes(rightNodeId)) {
             return null;
         }
 

@@ -14,30 +14,31 @@ export class Serializer {
 
     }
 
-    public serialize(furnitureArray: Record<number, Furniture>, furnitureId: number, wallNodeSequence: WallNodeSequence) {
+    public serialize(furnitureArray: Map<number, Furniture>, furnitureId: number, wallNodeSequence: WallNodeSequence) {
         let floorPlan = new FloorPlanSerializable();
 
         // wall nodes
         let wallNodes = wallNodeSequence.getWallNodes();
-
-        Object.entries(wallNodes).forEach(obj => {
-            let node = this.serializeNode(obj[1]);
+        console.log("the nodes:", wallNodes)
+        for (let obj of wallNodes.values()) {
+            let node = this.serializeNode(obj);
             floorPlan.wallNodes.push(node);
-        })
+        }
 
         // wall node links
-        floorPlan.wallNodeLinks = wallNodeSequence.getWallNodeLinks();
+        floorPlan.wallNodeLinks = Array.from(wallNodeSequence.getWallNodeLinks().entries());
         // furniture
         let serializedFurniture = []
-        for (let i = 0; i <= furnitureId; i++) {
-            if (furnitureArray[i] != undefined) {
-                serializedFurniture.push(this.serializeFurniture(furnitureArray[i]))
-            }
+        for (let v of furnitureArray.values()) {
+                serializedFurniture.push(this.serializeFurniture(v))
+            
         }
         floorPlan.furnitureArray = serializedFurniture;
 
         floorPlan.furnitureId = furnitureId;
         floorPlan.wallNodeId = wallNodeSequence.getWallNodeId();
+
+        console.log("pre save:", floorPlan)
         let resultString = JSON.stringify(floorPlan)
         return resultString
     }

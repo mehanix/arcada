@@ -1,5 +1,5 @@
 import { Grid } from '@mantine/core';
-import {  ThreeDRoot } from '../../3d/ThreeDRoot';
+// import {  ThreeDRoot } from '../../3d/ThreeDRoot';
 import { EditorRoot } from '../../editor/EditorRoot';
 import { ToolNavbar } from './ToolNavbar';
 import { ToolOptionsNavbar } from './ToolOptionsNavbar';
@@ -12,7 +12,7 @@ export function PageLayout() {
             <ToolNavbar></ToolNavbar>
             <Grid.Col span={9}>
                 <EditorRoot />
-                <ThreeDRoot />
+                {/* <ThreeDRoot /> */}
             </Grid.Col>
             <Grid.Col span={2}>
                 <ToolOptionsNavbar></ToolOptionsNavbar>

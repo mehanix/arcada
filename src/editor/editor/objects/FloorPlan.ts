@@ -12,7 +12,7 @@ export class FloorPlan extends Container {
 
     private static instance: FloorPlan;
 
-    public furnitureArray: Record<number, Furniture>;
+    public furnitureArray: Map<number, Furniture>;
     private wallNodeSequence: WallNodeSequence;
 
     private serializer: Serializer;
@@ -21,7 +21,7 @@ export class FloorPlan extends Container {
     public windowFurniture: FurnitureData;
     private constructor() {
         super();
-        this.furnitureArray = {};
+        this.furnitureArray = new Map<number, Furniture>();
         this.wallNodeSequence = new WallNodeSequence();
         this.addChild(this.wallNodeSequence);
         this.serializer = new Serializer();
@@ -49,7 +49,8 @@ export class FloorPlan extends Container {
         console.log(plan)
         this.reset();
         this.wallNodeSequence.reset();
-        this.wallNodeSequence.load(plan.wallNodes, plan.wallNodeLinks);
+        let nodeLinks = new Map<number, number[]>(plan.wallNodeLinks)
+        this.wallNodeSequence.load(plan.wallNodes, nodeLinks);
 
         for (let furniture of plan.furnitureArray) {
             this.loadFurniture(furniture);
@@ -66,14 +67,13 @@ export class FloorPlan extends Container {
     private reset() {
 
         // remove furniture
-        for (let i = 1; i <= this.furnitureId; i++) {
-            if (this.furnitureArray[i] != undefined) {
-                this.removeFurniture(i);
-            }
+        for (let id of this.furnitureArray.keys()) {
+                this.removeFurniture(id);
+            
         }
         this.furnitureId = 0;
         this.wallNodeSequence.reset();
-        this.furnitureArray = {};
+        this.furnitureArray = new Map<number, Furniture>();
 
     }
 
@@ -93,7 +93,7 @@ export class FloorPlan extends Container {
         let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
 
         let object = new Furniture(furnitureData, fur.id, attachedTo)
-        this.furnitureArray[fur.id] = object;
+        this.furnitureArray.set(fur.id, object);
 
         if (attachedTo != undefined) {
             attachedTo.addChild(object)
@@ -101,6 +101,7 @@ export class FloorPlan extends Container {
             this.addChild(object)
         }
         object.position.set(fur.x, fur.y)
+        object.rotation = fur.rotation;
     
     }
 
@@ -108,7 +109,7 @@ export class FloorPlan extends Container {
 
         this.furnitureId += 1;
         let object = new Furniture(obj, this.furnitureId, attachedTo)
-        this.furnitureArray[this.furnitureId] = object;
+        this.furnitureArray.set(this.furnitureId,object);
 
         if (attachedTo !== undefined) {
             attachedTo.addChild(object)
@@ -123,25 +124,25 @@ export class FloorPlan extends Container {
     }
 
     public setFurniturePosition(id: number, x: number, y: number, angle?: number) {
-        this.furnitureArray[id].position.set(x, y);
+        this.furnitureArray.get(id).position.set(x, y);
         if (angle) {
-            this.furnitureArray[id].angle = angle;
+            this.furnitureArray.get(id).angle = angle;
         }
     }
 
     public removeFurniture(id: number) {
 
-        if (this.furnitureArray[id].isAttached) {
-            this.furnitureArray[id].parent.removeChild(this.furnitureArray[id])
+        if (this.furnitureArray.get(id).isAttached) {
+            this.furnitureArray.get(id).parent.removeChild(this.furnitureArray.get(id))
         } else {
-            this.removeChild(this.furnitureArray[id]);
+            this.removeChild(this.furnitureArray.get(id));
         }
-        this.furnitureArray[id].destroy(true);
-        delete this.furnitureArray[id];
+        this.furnitureArray.get(id).destroy(true);
+        this.furnitureArray.delete(id);
     }
 
     public getObject(id: number) {
-        return this.furnitureArray[id];
+        return this.furnitureArray.get(id);
     }
 
     public redrawWalls() {
@@ -151,6 +152,7 @@ export class FloorPlan extends Container {
 
     public removeWallNode(nodeId: number) {
 
+        console.log("remove wall node", nodeId, "from ", this.wallNodeSequence)
         if (this.wallNodeSequence.contains(nodeId)) {
             this.wallNodeSequence.remove(nodeId);
         }
@@ -158,10 +160,12 @@ export class FloorPlan extends Container {
     }
 
     public removeWall(wall: Wall) {
+        console.log(wall)
         let leftNode = wall.leftNode.getId();
         let rightNode = wall.rightNode.getId();
 
         if (this.wallNodeSequence.contains(leftNode)) {
+            console.log("hi")
             this.wallNodeSequence.removeWall(leftNode, rightNode);
         }
     }
