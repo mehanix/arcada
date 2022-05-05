@@ -9,11 +9,11 @@ import {
   DeviceFloppy,
   Upload,
   Ruler2,
-  Box,
-  Home,
+  StairsUp,
+  StairsDown,
 } from 'tabler-icons-react';
 
-import { ToolMode, useStore, ViewMode } from "../../stores/ToolStore";
+import { ToolMode, useStore } from "../../stores/ToolStore";
 import { FloorPlan } from '../../editor/editor/objects/FloorPlan';
 
 
@@ -63,20 +63,14 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const modes = [
   { icon: Armchair, label: 'Furniture Mode', mode: ToolMode.FurnitureMode },
-  { icon: BorderLeft, label: 'Wall Mode', mode: ToolMode.WallMode }
-];
-
-const viewModes = [
-  { icon: Home, label: '2D', mode: ViewMode.TwoD },
-  { icon: Box, label: '3D', mode:  ViewMode.ThreeD }
+  { icon: BorderLeft, label: 'Layout Mode', mode: ToolMode.WallMode }
 ];
 
 
 export function ToolNavbar() {
   const [active, setActive] = useState(0);
-  const [activeView, setActiveView] = useState(0);
 
-  const { setMode, setViewMode } = useStore()
+  const { setMode } = useStore()
   const fileRef = useRef<HTMLInputElement>();
 
   const toolModes = modes.map((link, index) => (
@@ -88,20 +82,6 @@ export function ToolNavbar() {
         setActive(index)
 
         setMode(link.mode)
-      }
-      }
-    />
-  ));
-
-  const viewModeButtons = viewModes.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === activeView}
-      onClick={() => {
-        setActiveView(index)
-
-        setViewMode(link.mode)
       }
       }
     />
@@ -128,7 +108,13 @@ export function ToolNavbar() {
       </Navbar.Section>
       <Navbar.Section grow>
       <Group direction="column" align="center" spacing={0}>
-          {viewModeButtons}
+       <NavbarLink icon={StairsUp} label="Go to next floor" onClick={() => {
+            FloorPlan.Instance.changeFloor(1)
+          }}/>
+       <NavbarLink icon={StairsDown} label="Go to previous floor" onClick={() => {
+            FloorPlan.Instance.changeFloor(-1)
+          }}/>
+
         </Group>
       </Navbar.Section>
       <Navbar.Section grow >

@@ -21,10 +21,11 @@ export class WallNodeSequence extends Container {
         this.addNode(750, 750);
         this.addNode(50, 750);
 
-        this.addWall(1, 4);
-        this.addWall(1, 2);
-        this.addWall(2, 3);
-        this.addWall(3, 4);
+        console.log(this.wallNodes);
+        // this.addWall(1, 4);
+        // this.addWall(1, 2);
+        // this.addWall(2, 3);
+        // this.addWall(3, 4);
         // this.wallNodeLinks[1].push(4);
         // this.wallNodeLinks[1].push(2);
         // this.wallNodeLinks[2].push(3);
@@ -156,7 +157,7 @@ export class WallNodeSequence extends Container {
             rightNodeId = aux;
         }
 
-        if (this.wallNodeLinks.get(leftNodeId).includes(rightNodeId)) {
+        if (this.wallNodeLinks.has(leftNodeId) && this.wallNodeLinks.get(leftNodeId)?.includes(rightNodeId)) {
             return;
         }
         this.wallNodeLinks.get(leftNodeId).push(rightNodeId);
