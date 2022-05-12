@@ -1,11 +1,12 @@
-import { Sprite, Texture } from "pixi.js";
+import { Graphics, Sprite, Texture } from "pixi.js";
 import { endpoint } from "../../../api/api-client";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { useStore } from "../../../stores/ToolStore";
+import { DeleteFurnitureAction } from "../actions/DeleteFurnitureAction";
 import { METER, Tool } from "../constants";
-import { FloorPlan } from "./FloorPlan";
+import { IFurnitureSerializable } from "../persistence/IFurnitureSerializable";
 import { TransformLayer } from "./TransformControls/TransformLayer";
-import { Wall } from "./Walls/Wall";
+// import { Wall } from "./Walls/Wall";
 
 export class Furniture extends Sprite {
 
@@ -18,7 +19,7 @@ export class Furniture extends Sprite {
     public xLocked:boolean;
     private transformLayer: TransformLayer;
     public resourcePath: string;
-    constructor(data:FurnitureData, id:number, attachedTo?:Wall) {
+    constructor(data:FurnitureData, id:number, attachedTo?:Graphics, attachedToLeft?:number, attachedToRight?:number) {
 
         let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
         super(texture);
@@ -29,8 +30,8 @@ export class Furniture extends Sprite {
         if (attachedTo) {
             this.isAttached = true;
             this.parent = attachedTo;
-            this.attachedToLeft = attachedTo.leftNode.getId();
-            this.attachedToRight = attachedTo.rightNode.getId();
+            this.attachedToLeft = attachedToLeft;
+            this.attachedToRight = attachedToRight;
             this.xLocked = true;
         } else {
             this.xLocked = false;
@@ -58,12 +59,31 @@ export class Furniture extends Sprite {
                 break;
 
             case Tool.FurnitureRemove:
-                FloorPlan.Instance.removeFurniture(this.id);
+                let action = new DeleteFurnitureAction(this.id);
+                action.execute();
                 break;
         }
     }
 
     private onMouseMove() {
         this.transformLayer.update();        
+    }
+
+    public serialize() {
+        let res: IFurnitureSerializable;
+        res = {
+            x: this.x,
+            y: this.y,
+            height: this.height / METER,
+            width: this.width / METER,
+            id: this.id,
+            texturePath: this.resourcePath,
+            rotation: this.rotation,
+            attachedToLeft: this.attachedToLeft,
+            attachedToRight: this.attachedToRight
+        }
+
+
+        return res;
     }
 }

@@ -1,11 +1,11 @@
 import {  Graphics, InteractionEvent, Point } from "pixi.js";
 import { getWindow } from "../../../../api/api-client";
-// import { FurnitureData } from "../../../../stores/FurnitureStore";
+
 import { Tool, useStore } from "../../../../stores/ToolStore";
+import { AddFurnitureAction } from "../../actions/AddFurnitureAction";
 import { AddNodeAction } from "../../actions/AddNodeAction";
+import { DeleteWallAction } from "../../actions/DeleteWallAction";
 import {  WALL_THICKNESS } from "../../constants";
-import { FloorPlan } from "../FloorPlan";
-import { Furniture } from "../Furniture";
 import { Label } from "../TransformControls/Label";
 import { WallNode } from "./WallNode";
 
@@ -21,7 +21,6 @@ export class Wall extends Graphics {
     rightNode: WallNode;
     length: number;
     label: Label;
-    test: Furniture;
     
     x1:number;
     x2:number;
@@ -98,7 +97,8 @@ export class Wall extends Graphics {
 
         if (state.activeTool == Tool.WallRemove) {
 
-            FloorPlan.Instance.removeWall(this);
+            let action = new DeleteWallAction(this);
+            action.execute();
         }
 
         if (state.activeTool == Tool.WallAdd) {
@@ -107,7 +107,9 @@ export class Wall extends Graphics {
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
             getWindow().then(res => {
-                FloorPlan.Instance.addFurniture(res[0], this, new Point(localCoords.x, 0))
+                console.log(res[0], this, new Point(localCoords.x, 0))
+                let action = new AddFurnitureAction(res[0], this, new Point(localCoords.x, 0), this.leftNode.getId(), this.rightNode.getId());
+                action.execute();
             })
 
         }

@@ -1,13 +1,14 @@
 import { Card, Center, Image, Text } from "@mantine/core"
 import { endpoint } from "../../../api/api-client"
-import { FloorPlan } from "../../../editor/editor/objects/FloorPlan"
+import { AddFurnitureAction } from "../../../editor/editor/actions/AddFurnitureAction"
 import { FurnitureData } from "../../../stores/FurnitureStore"
 
 interface IFurnitureData {
     data:FurnitureData
 }
 function add(item:IFurnitureData) {
-    FloorPlan.Instance.addFurniture(item.data)
+    let action = new AddFurnitureAction(item.data);
+    action.execute();
 }
 
 export function FurnitureItem(item:IFurnitureData) {

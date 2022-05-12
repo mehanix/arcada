@@ -1,8 +1,9 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { Tool } from "../../constants";
-import { FloorPlan } from "../FloorPlan";
 import { useStore } from "../../../../stores/ToolStore";
 import { ToolStateManager } from "../../actions/ToolStateManager";
+import { DeleteWallNodeAction } from "../../actions/DeleteWallNodeAction";
+import { INodeSerializable } from "../../persistence/INodeSerializable";
 
 export class WallNode extends Graphics {
 
@@ -39,7 +40,8 @@ export class WallNode extends Graphics {
                 this.dragging = true;
                 break;
             case Tool.WallRemove:
-                FloorPlan.Instance.removeWallNode(this.id);
+                let action = new DeleteWallNodeAction(this.id);
+                action.execute();
                 break;
             case Tool.WallAdd:
                 ToolStateManager.Instance.step(this);
@@ -55,12 +57,21 @@ export class WallNode extends Graphics {
 
         this.x = currentPoint.x - currentPoint.x%10;
         this.y = currentPoint.y - currentPoint.y%10;
-        FloorPlan.Instance.redrawWalls();
         
     }
 
     private onMouseUp() {
         this.dragging = false;
+    }
+
+    public serialize() {
+        let res: INodeSerializable;
+        res = {
+            id: this.id,
+            x: this.x,
+            y: this.y
+        }
+        return res;
     }
 
 }

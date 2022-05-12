@@ -1,18 +1,11 @@
-import { IFurnitureSerializable } from "./IFurnitureSerializable";
-import { INodeSerializable } from "./INodeSerializable";
+import { FloorSerializable } from "./FloorSerializable"
 
 export class FloorPlanSerializable {
-    public furnitureArray: IFurnitureSerializable[];
-    public wallNodes: INodeSerializable[];
-    public wallNodeLinks: [number, number[]][];
+    floors: FloorSerializable[];
     public furnitureId: number;
     public wallNodeId: number;
     
-    public constructor() {
-        this.furnitureArray = [];
-        this.wallNodes = [];
-        this.wallNodeLinks = [];
-    
+    constructor() {
+        this.floors = [];
     }
-
 }

@@ -1,27 +1,65 @@
 import { Container, Point } from "pixi.js";
 import { FurnitureData } from "../../../stores/FurnitureStore";
+import { FloorSerializable } from "../persistence/FloorSerializable";
 import { Furniture } from "./Furniture";
 import { Wall } from "./Walls/Wall";
 import { WallNodeSequence } from "./Walls/WallNodeSequence";
 
-export class Floor extends Container{
+export class Floor extends Container {
 
     public furnitureArray: Map<number, Furniture>;
     private wallNodeSequence: WallNodeSequence;
 
-    constructor() {
+    constructor(floorData?: FloorSerializable) {
         super();
+
         this.furnitureArray = new Map<number, Furniture>();
         this.wallNodeSequence = new WallNodeSequence();
         this.addChild(this.wallNodeSequence);
-
+        if (floorData) {
+            let nodeLinks = new Map<number, number[]>(floorData.wallNodeLinks)
+            this.wallNodeSequence.load(floorData.wallNodes, nodeLinks);
+            for (let fur of floorData.furnitureArray) {
+                let furnitureData: FurnitureData = { //todo. nu e complet aici
+                    _id: "",
+                    name: "",
+                    width: fur.width,
+                    height: fur.height,
+                    imagePath: fur.texturePath,
+                    category: ""
+                };
+                let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
+        
+                let object = new Furniture(furnitureData, fur.id, attachedTo)
+                this.furnitureArray.set(fur.id, object);
+        
+                if (attachedTo != undefined) {
+                    attachedTo.addChild(object)
+                } else {
+                    this.addChild(object)
+                }
+                object.position.set(fur.x, fur.y)
+                object.rotation = fur.rotation;
+                // this.loadFurniture(furniture);
+            }
+            return;
+        }
     }
 
-        
+
+
+    public reset() {
+        for (let id of this.furnitureArray.keys()) {
+            this.removeFurniture(id);
+        }
+        this.wallNodeSequence.reset();
+        this.furnitureArray = new Map<number, Furniture>();
+
+    }
     public getWallNodeSequence() {
         return this.wallNodeSequence
     }
-    
+
     public clearScreen() {
         for (let child of this.children) {
             child.visible = false;
@@ -35,14 +73,14 @@ export class Floor extends Container{
         // for (let fur of this.furnitureArray.values()) {
         //     this.addChild(fur);
         // }
-        
+
         // // this.wallNodeSequence.drawNodes();
         // this.redrawWalls();
     }
-    public addFurniture(obj: FurnitureData, id:number, attachedTo?: Wall, coords?: Point) {
+    public addFurniture(obj: FurnitureData, id: number, attachedTo?: Wall, coords?: Point, attachedToLeft?: number, attachedToRight?: number) {
 
-        let object = new Furniture(obj, id, attachedTo)
-        this.furnitureArray.set(id,object);
+        let object = new Furniture(obj, id, attachedTo, attachedToLeft, attachedToRight)
+        this.furnitureArray.set(id, object);
 
         if (attachedTo !== undefined) {
             attachedTo.addChild(object)
@@ -56,6 +94,29 @@ export class Floor extends Container{
         return id;
     }
 
+    public serialize(): FloorSerializable {
+        let plan = new FloorSerializable();
+        let wallNodes = this.wallNodeSequence.getWallNodes();
+        for (let node of wallNodes.values()) {
+            plan.wallNodes.push(node.serialize());
+        }
+
+        // wall node links
+        plan.wallNodeLinks = Array.from(this.wallNodeSequence.getWallNodeLinks().entries());
+        // furniture
+        let serializedFurniture = []
+        for (let furniture of this.furnitureArray.values()) {
+            serializedFurniture.push(furniture.serialize())
+
+        }
+        plan.furnitureArray = serializedFurniture;
+
+        // plan.furnitureId = furnitureId;
+        // plan.wallNodeId = wallNodeSequence.getWallNodeId();
+
+        console.log("pre save:", plan)
+        return plan;
+    }
     public setFurniturePosition(id: number, x: number, y: number, angle?: number) {
         this.furnitureArray.get(id).position.set(x, y);
         if (angle) {
@@ -71,9 +132,9 @@ export class Floor extends Container{
             this.removeChild(this.furnitureArray.get(id));
         }
         this.furnitureArray.get(id).destroy({
-            children:true,
-            texture:false,
-            baseTexture:false
+            children: true,
+            texture: false,
+            baseTexture: false
 
         });
         this.furnitureArray.delete(id);

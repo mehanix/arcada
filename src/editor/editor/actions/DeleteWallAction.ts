@@ -1,19 +1,17 @@
-// import { FloorPlan } from "../objects/FloorPlan";
-// import { Wall } from "../objects/Walls/Wall";
+import { FloorPlan } from "../objects/FloorPlan";
+import { Wall } from "../objects/Walls/Wall";
+import { Action } from "./Action";
 
-// class DeleteWallAction implements Action {
+export class DeleteWallAction implements Action {
 
-//     private wall:Wall; //TODO: Add node data pt undo/redo
-//     private receiver:FloorPlan;
-//     constructor(wall:Wall) {
-//         this.wall = wall;
-//         this.receiver = FloorPlan.Instance;
-//     }
+    private wall:Wall; //TODO: Add node data pt undo/redo
+    constructor(wall:Wall) {
+        this.wall = wall;
+    }
 
-//     public execute(): void {
-//         //this.receiver.removeWall(this.id);
+    public execute(): void {
+        FloorPlan.Instance.removeWall(this.wall);
         
-//     }
-// }
+    }
+}
 
-export{}
