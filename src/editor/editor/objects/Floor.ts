@@ -66,17 +66,17 @@ export class Floor extends Container {
         }
     }
 
-    public draw() {
-        for (let child of this.children) {
-            child.visible = true;
-        }
-        // for (let fur of this.furnitureArray.values()) {
-        //     this.addChild(fur);
-        // }
+    // public draw() {
+    //     for (let child of this.children) {
+    //         child.visible = true;
+    //     }
+    //     // for (let fur of this.furnitureArray.values()) {
+    //     //     this.addChild(fur);
+    //     // }
 
-        // // this.wallNodeSequence.drawNodes();
-        // this.redrawWalls();
-    }
+    //     // // this.wallNodeSequence.drawNodes();
+    //     // this.redrawWalls();
+    // }
     public addFurniture(obj: FurnitureData, id: number, attachedTo?: Wall, coords?: Point, attachedToLeft?: number, attachedToRight?: number) {
 
         let object = new Furniture(obj, id, attachedTo, attachedToLeft, attachedToRight)
@@ -166,6 +166,11 @@ export class Floor extends Container {
         if (this.wallNodeSequence.contains(leftNode)) {
             this.wallNodeSequence.removeWall(leftNode, rightNode);
         }
+    }
+
+    public addNode(leftId:number, rightId:number) {
+        return this.wallNodeSequence.addNode(leftId, rightId);
+
     }
 
     public addNodeToWall(wall: Wall, coords: Point) {

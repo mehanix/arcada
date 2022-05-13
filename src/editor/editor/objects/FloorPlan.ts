@@ -32,13 +32,12 @@ export class FloorPlan extends Container {
 
 
     public changeFloor(by: number) {
-        console.log("previous floor:", this.floors[this.currentFloor])
+
         this.removeChild(this.floors[this.currentFloor]);
         this.currentFloor += by;
         if (this.floors[this.currentFloor] == null) {
             this.floors[this.currentFloor] = new Floor();
         }
-        console.log("new floor:", this.floors[this.currentFloor])
         this.addChild(this.floors[this.currentFloor])
     }
 
@@ -124,13 +123,12 @@ export class FloorPlan extends Container {
     public addNodeToWall(wall: Wall, coords: Point) {
         return this.floors[this.currentFloor].addNodeToWall(wall, coords);
     }
+    public addNode(leftId:number, rightId:number) {
+        return this.floors[this.currentFloor].addNode(leftId, rightId);
+    }
 
     public getWallNodeSeq() {
         return this.floors[this.currentFloor].getWallNodeSequence()
-    }
-
-    public getFloor() {
-        return this.floors[this.currentFloor];
     }
 
 }

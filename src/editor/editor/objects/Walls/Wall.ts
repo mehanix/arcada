@@ -9,12 +9,6 @@ import {  WALL_THICKNESS } from "../../constants";
 import { Label } from "../TransformControls/Label";
 import { WallNode } from "./WallNode";
 
-export interface IAnchor {
-    other: Wall;
-    otherPoint: Point; // local points
-    myPoint: Point;
-}
-
 export class Wall extends Graphics {
 
     leftNode: WallNode;
@@ -30,7 +24,6 @@ export class Wall extends Graphics {
         super();
 
         this.interactive = true;
-        // this.attachedFurniture = [];
         this.leftNode = leftNode;
         this.rightNode = rightNode;
         this.pivot.set(8, 8);
@@ -41,11 +34,6 @@ export class Wall extends Graphics {
         this.drawLine();
        
         this.on("mousedown", this.onMouseDown)
-        // this.on("mousemove", this.onMouseMove)
-        // this.on("mouseup",this.onMouseUp);
-        // this.on("mouseupoutside",this.onMouseUp);
-
-
     }
 
     public setLineCoords() {
@@ -53,23 +41,12 @@ export class Wall extends Graphics {
         this.x2 = this.rightNode.x;
         this.y1 = this.leftNode.y;
         this.y2 = this.rightNode.y;
-
     }
+    
     public drawLine() {
         this.clear();
         this.setLineCoords();
         this.lineStyle(1, 0x1a1a1a);
-
-        // if (x1 > x2) { //TODO scrie mai frumos aici
-        //     let aux;
-        //     aux = x1
-        //     x1 = x2;
-        //     x2 = aux;
-        //     aux = y1;
-        //     y1 = y2;
-        //     y2 = aux
-
-        // }
 
         let theta = Math.atan2((this.y2 - this.y1), (this.x2 - this.x1)); // aflu unghiul sa pot roti
         theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
@@ -81,6 +58,9 @@ export class Wall extends Graphics {
         this.beginFill().drawRect(0, 0, length, WALL_THICKNESS).endFill()
         this.position.set(this.x1, this.y1)
         this.angle = theta
+
+        this.leftNode.angle = theta;
+        this.rightNode.angle = theta;
 
         this.label.update(length);
         this.label.position.x = this.width / 2;

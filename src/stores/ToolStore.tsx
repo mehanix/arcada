@@ -1,6 +1,6 @@
 /** handling current tool state, mainly */
 import create from 'zustand'
-import { ToolStateManager } from '../editor/editor/actions/ToolStateManager';
+import { AddWallManager } from '../editor/editor/actions/AddWallManager';
 
 
 export enum ToolMode {
@@ -53,7 +53,7 @@ export const useStore = create<ToolStore>(set => ({
     set(() => ({
       activeTool: tool
     })); 
-    ToolStateManager.Instance.resetTools()
+    AddWallManager.Instance.resetTools()
   }
 }))
 

@@ -8,7 +8,6 @@ export class WallNodeSequence extends Container {
     private wallNodeLinks: Map<number, number[]>
     private walls: Wall[];
     private static wallNodeId: number = 0;
-    private mouseTouching: number;
     constructor() {
         super();
         this.sortableChildren = true;
@@ -16,10 +15,10 @@ export class WallNodeSequence extends Container {
         this.wallNodes = new Map<number, WallNode>();
         this.wallNodeLinks = new Map<number, number[]>();
 
-        this.addNode(50, 50);
-        this.addNode(750, 50);
-        this.addNode(750, 750);
-        this.addNode(50, 750);
+        // this.addNode(50, 50);
+        // this.addNode(750, 50);
+        // this.addNode(750, 750);
+        // this.addNode(50, 750);
 
         console.log(this.wallNodes);
         // this.addWall(1, 4);
@@ -35,16 +34,7 @@ export class WallNodeSequence extends Container {
 
         this.drawWalls();
 
-        // this.on("mousemove", this.drawWalls);
-    }
-
-
-    public setMouseTouching(id: number) {
-        this.mouseTouching = id;
-    }
-
-    public getMouseTouching() {
-        return this.mouseTouching
+        this.on("mousemove", this.drawWalls);
     }
 
     public setId(id:number) {
@@ -148,6 +138,7 @@ export class WallNodeSequence extends Container {
     }
 
     public addWall(leftNodeId: number, rightNodeId: number) {
+        // 
         if (leftNodeId == rightNodeId) {
             return;
         }
@@ -172,11 +163,7 @@ export class WallNodeSequence extends Container {
     public removeWall(leftNode: number, rightNode: number) {
 
         const index = this.wallNodeLinks.get(leftNode).indexOf(rightNode);
-        console.log("links for left:", leftNode, "right:", rightNode, "found index:", index)
-        console.log("links 2 left:", this.wallNodeLinks.get(leftNode));
-        console.log("links 2 right:", this.wallNodeLinks.get(rightNode));
-
-
+        
         if (index != -1) {
             this.wallNodeLinks.get(leftNode).splice(index, 1);
             this.drawWalls();

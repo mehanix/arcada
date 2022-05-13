@@ -3,30 +3,28 @@ import { endpoint } from "../../../api/api-client";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { useStore } from "../../../stores/ToolStore";
 import { DeleteFurnitureAction } from "../actions/DeleteFurnitureAction";
+import { EditFurnitureAction } from "../actions/EditFurnitureAction";
 import { METER, Tool } from "../constants";
 import { IFurnitureSerializable } from "../persistence/IFurnitureSerializable";
 import { TransformLayer } from "./TransformControls/TransformLayer";
-// import { Wall } from "./Walls/Wall";
 
 export class Furniture extends Sprite {
 
 
     private id: number; // fiecare mobila isi stie index-ul in plan. uuids?
     // private dragging: boolean;
-    public isAttached:boolean;
-    public attachedToLeft:number;
-    public attachedToRight:number;
-    public xLocked:boolean;
-    private transformLayer: TransformLayer;
+    public isAttached: boolean;
+    public attachedToLeft: number;
+    public attachedToRight: number;
+    public xLocked: boolean;
     public resourcePath: string;
-    constructor(data:FurnitureData, id:number, attachedTo?:Graphics, attachedToLeft?:number, attachedToRight?:number) {
+    constructor(data: FurnitureData, id: number, attachedTo?: Graphics, attachedToLeft?: number, attachedToRight?: number) {
 
         let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
         super(texture);
         this.resourcePath = data.imagePath;
         this.id = id;
-        this.transformLayer = TransformLayer.Instance;
-        
+
         if (attachedTo) {
             this.isAttached = true;
             this.parent = attachedTo;
@@ -52,21 +50,24 @@ export class Furniture extends Sprite {
     }
     private onMouseDown() {
 
-        console.log("click!!")
         switch (useStore.getState().activeTool) {
-            case Tool.FurnitureEdit:
-                this.transformLayer.select(this);
-                break;
-
-            case Tool.FurnitureRemove:
-                let action = new DeleteFurnitureAction(this.id);
+            case Tool.FurnitureEdit: {
+                const action = new EditFurnitureAction(this);
                 action.execute();
                 break;
+            }
+
+            case Tool.FurnitureRemove: {
+                const action = new DeleteFurnitureAction(this.id);
+                action.execute();
+                break;
+            }
+
         }
     }
 
-    private onMouseMove() {
-        this.transformLayer.update();        
+    private onMouseMove() { //todo update doar la mousedown=true
+        TransformLayer.Instance.update();
     }
 
     public serialize() {

@@ -3,7 +3,7 @@ import { FloorPlan } from "../objects/FloorPlan";
 import { Wall } from "../objects/Walls/Wall";
 import { WallNode } from "../objects/Walls/WallNode";
 import { Action } from "./Action";
-import { ToolStateManager } from "./ToolStateManager";
+import { AddWallManager } from "./AddWallManager";
 
 // Add node to FloorPlan. if clicked on screen, just add it. otherwise, add it to the wall.
 export class AddNodeAction implements Action {
@@ -26,8 +26,8 @@ export class AddNodeAction implements Action {
         if (this.wall) {
             node = this.receiver.addNodeToWall(this.wall, this.coords);
         } else {
-            node = this.receiver.getWallNodeSeq().addNode(this.coords.x, this.coords.y)
+            node = this.receiver.addNode(this.coords.x, this.coords.y)
         }
-        ToolStateManager.Instance.step(node);
+        AddWallManager.Instance.step(node);
     }
 }

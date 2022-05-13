@@ -4,7 +4,7 @@ import { FloorPlan } from "./objects/FloorPlan";
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 import { Tool, useStore } from "../../stores/ToolStore";
 import { AddNodeAction } from "./actions/AddNodeAction";
-import { ToolStateManager } from "./actions/ToolStateManager";
+import { AddWallManager } from "./actions/AddWallManager";
 // import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
@@ -12,7 +12,7 @@ export class Main extends Viewport {
     private floorPlan: FloorPlan;
     public static viewportPluginManager: PluginManager;
     transformLayer: TransformLayer;
-    toolStateManager:ToolStateManager;
+    addWallManager:AddWallManager;
 
     constructor(options: IViewportOptions) {
         super(options);
@@ -39,15 +39,15 @@ export class Main extends Viewport {
         this.transformLayer = TransformLayer.Instance;
         this.addChild(this.transformLayer)
 
-        this.toolStateManager = ToolStateManager.Instance;
-        this.addChild(this.toolStateManager.preview)
+        this.addWallManager = AddWallManager.Instance;
+        this.addChild(this.addWallManager.preview)
 
         this.on("mousedown", this.checkTools)
         this.on("mousemove", this.updatePreview)
 
     }
     private updatePreview(ev:InteractionEvent) {
-        this.toolStateManager.updatePreview(ev);
+        this.addWallManager.updatePreview(ev);
     }
     private checkTools(ev:InteractionEvent) {
         ev.stopPropagation()

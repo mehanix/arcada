@@ -1,9 +1,10 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
-import { Tool } from "../../constants";
+import { Tool, WALL_THICKNESS } from "../../constants";
 import { useStore } from "../../../../stores/ToolStore";
-import { ToolStateManager } from "../../actions/ToolStateManager";
+import { AddWallManager } from "../../actions/AddWallManager";
 import { DeleteWallNodeAction } from "../../actions/DeleteWallNodeAction";
 import { INodeSerializable } from "../../persistence/INodeSerializable";
+import { FloorPlan } from "../FloorPlan";
 
 export class WallNode extends Graphics {
 
@@ -15,9 +16,10 @@ export class WallNode extends Graphics {
         this.interactive = true;
         this.id = nodeId;
 
-        this.pivot.set(0.5);
-        this.beginFill(Math.floor(Math.random()*16777215));
-        this.drawCircle(0,0,10)
+        this.beginFill(0x000000);
+        // this.drawCircle(0,0,WALL_THICKNESS/2)
+        this.drawRect(0,0,WALL_THICKNESS,WALL_THICKNESS)
+        this.pivot.set(WALL_THICKNESS/2, WALL_THICKNESS/2);
         this.position.set(x,y)
         this.endFill();
         this.zIndex = 999;
@@ -44,7 +46,7 @@ export class WallNode extends Graphics {
                 action.execute();
                 break;
             case Tool.WallAdd:
-                ToolStateManager.Instance.step(this);
+                AddWallManager.Instance.step(this);
                 break;
         }
     
@@ -58,6 +60,7 @@ export class WallNode extends Graphics {
         this.x = currentPoint.x - currentPoint.x%10;
         this.y = currentPoint.y - currentPoint.y%10;
         
+        FloorPlan.Instance.redrawWalls();
     }
 
     private onMouseUp() {

@@ -11,6 +11,8 @@ export class AddFurnitureAction implements Action{
     coords: Point;
     attachedToLeft: number;
     attachedToRight: number;
+    private receiver:FloorPlan;
+
     constructor(obj: FurnitureData, attachedTo?: Wall, coords?: Point, attachedToLeft?:number, attachedToRight?:number) {
         console.log(obj, attachedTo, coords);
         this.obj = obj;
@@ -18,11 +20,12 @@ export class AddFurnitureAction implements Action{
         this.coords = coords;
         this.attachedToLeft = attachedToLeft;
         this.attachedToRight = attachedToRight;
+        this.receiver = FloorPlan.Instance;
 
     }
 
 
     public execute() {
-        FloorPlan.Instance.addFurniture(this.obj, this.attachedTo, this.coords, this.attachedToLeft, this.attachedToRight);
+        this.receiver.addFurniture(this.obj, this.attachedTo, this.coords, this.attachedToLeft, this.attachedToRight);
     }
 }
