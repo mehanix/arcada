@@ -11,6 +11,7 @@ const useStyles = createStyles(() => ({
     }
 
 }));
+export let main: Main;
 
 export function EditorRoot() {
     const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export function EditorRoot() {
             worldHeight: 2000,
             interaction: app.renderer.plugins.interaction
         }
-        const main: Main = new Main(viewportSettings);
+        main = new Main(viewportSettings);
          
 
         // Add app to DOM

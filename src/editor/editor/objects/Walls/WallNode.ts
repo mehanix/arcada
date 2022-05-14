@@ -5,7 +5,7 @@ import { AddWallManager } from "../../actions/AddWallManager";
 import { DeleteWallNodeAction } from "../../actions/DeleteWallNodeAction";
 import { INodeSerializable } from "../../persistence/INodeSerializable";
 import { FloorPlan } from "../FloorPlan";
-
+import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 export class WallNode extends Graphics {
 
     private dragging:boolean;
@@ -57,8 +57,8 @@ export class WallNode extends Graphics {
         }
         let currentPoint = new Point(ev.data.global.x, ev.data.global.y);
 
-        this.x = currentPoint.x - currentPoint.x%10;
-        this.y = currentPoint.y - currentPoint.y%10;
+        this.x = viewportX(currentPoint.x - currentPoint.x%10)
+        this.y = viewportY(currentPoint.y - currentPoint.y%10);
         
         FloorPlan.Instance.redrawWalls();
     }

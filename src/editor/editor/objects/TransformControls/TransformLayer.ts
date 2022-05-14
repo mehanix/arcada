@@ -1,4 +1,5 @@
 import { Container, Graphics, Point } from "pixi.js";
+import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { useStore } from "../../../../stores/ToolStore";
 import { Coord, LabelAxis, LABEL_OFFSET, Tool } from "../../constants";
 import { Furniture } from "../Furniture";
@@ -127,8 +128,8 @@ export class TransformLayer extends Container {
     private drawBorder() {
         this.border.clear();
         let globals = this.target.getGlobalPosition();
-        const x = globals.x - this.borderOffset;
-        const y = globals.y - this.borderOffset;
+        const x = viewportX(globals.x - this.borderOffset);
+        const y = viewportY(globals.y - this.borderOffset);
         const w = this.target.width + 2 * this.borderOffset;
         const h = this.target.height + 2 * this.borderOffset;
         this.border

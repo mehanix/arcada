@@ -17,7 +17,7 @@ export class Main extends Viewport {
     constructor(options: IViewportOptions) {
         super(options);
 
-
+        
         // connect the events
         Loader.shared.onComplete.once(this.setup, this);
         // Start loading!
