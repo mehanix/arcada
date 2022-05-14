@@ -157,8 +157,8 @@ export class Floor extends Container {
         }
     }
 
-    public addNode(leftId:number, rightId:number) {
-        return this.wallNodeSequence.addNode(leftId, rightId);
+    public addNode(x:number, y:number) {
+        return this.wallNodeSequence.addNode(x, y);
 
     }
 

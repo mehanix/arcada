@@ -1,4 +1,5 @@
 import {Graphics, InteractionEvent, Point } from "pixi.js";
+import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
 
@@ -121,9 +122,9 @@ export class Handle extends Graphics {
 
                 // move delta: distanta intre click original si move
                 let delta = new Point(this.mouseStartPoint.x - mouseEndPoint.x, this.mouseStartPoint.y - mouseEndPoint.y)
-                this.target.position.x = this.targetStartPoint.x - delta.x;
+                this.target.position.x = viewportX(this.targetStartPoint.x - delta.x);
                 if (!this.target.xLocked) {
-                    this.target.position.y = this.targetStartPoint.y - delta.y;
+                    this.target.position.y = viewportY(this.targetStartPoint.y - delta.y);
                 }
 
 

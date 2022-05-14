@@ -1,4 +1,5 @@
 import { Graphics, InteractionEvent } from "pixi.js";
+import { viewportX, viewportY } from "../../../helpers/ViewportCoordinates";
 import { WALL_THICKNESS } from "../constants";
 import { TransformLayer } from "../objects/TransformControls/TransformLayer";
 import { WallNode } from "../objects/Walls/WallNode";
@@ -29,7 +30,7 @@ export class AddWallManager {
         .clear()
         .lineStyle(WALL_THICKNESS,0x1f1f1f)
         .moveTo(this.previousNode.x, this.previousNode.y)
-        .lineTo(ev.data.global.x, ev.data.global.y);
+        .lineTo(viewportX(ev.data.global.x), viewportY(ev.data.global.y));
     }
     public step(node:WallNode) {
         if (this.previousNode === undefined) {
