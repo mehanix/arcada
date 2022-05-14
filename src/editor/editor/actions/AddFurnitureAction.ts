@@ -27,5 +27,6 @@ export class AddFurnitureAction implements Action{
 
     public execute() {
         this.receiver.addFurniture(this.obj, this.attachedTo, this.coords, this.attachedToLeft, this.attachedToRight);
+        this.receiver.actions.push(this);
     }
 }

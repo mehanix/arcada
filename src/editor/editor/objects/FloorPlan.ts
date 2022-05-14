@@ -5,6 +5,7 @@ import { Floor } from "./Floor";
 import { Serializer } from "../persistence/Serializer";
 import saveAs from "file-saver";
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
+import { Action } from "../actions/Action";
 
 export class FloorPlan extends Container {
 
@@ -17,10 +18,13 @@ export class FloorPlan extends Container {
 
     public windowFurniture: FurnitureData;
 
+    public actions:Action[];
+
     public currentFloor = 0;
     private constructor() {
         super();
         this.floors = [];
+        this.actions = [];
         this.floors.push(new Floor());
         this.addChild(this.floors[0]);
         this.serializer = new Serializer();
@@ -44,6 +48,7 @@ export class FloorPlan extends Container {
 
     public save() {
 
+        console.log(this.actions)
         let floorPlan = this.serializer.serialize(this.floors, this.furnitureId);
         let blob = new Blob([floorPlan], { type: "text/plain;charset=utf-8" });
         saveAs(blob, "floor_plan.txt")

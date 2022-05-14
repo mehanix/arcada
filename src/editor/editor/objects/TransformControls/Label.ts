@@ -11,6 +11,7 @@ export class Label extends Container {
             sizeInPixels = 0;
         }
         this.update(sizeInPixels);
+        this.pivot.set(this.width / 2, this.height / 2);
 
     }
 

@@ -13,6 +13,7 @@ export class DeleteWallAction implements Action {
     }
 
     public execute(): void {
+        this.receiver.actions.push(this);
         this.receiver.removeWall(this.wall);
         
     }

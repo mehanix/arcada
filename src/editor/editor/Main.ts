@@ -28,8 +28,8 @@ export class Main extends Viewport {
 
     private setup() {
         Main.viewportPluginManager = this.plugins;
-        // this.drag().clamp({direction: 'all'})
-        // .wheel().clampZoom({minScale: 1.0, maxScale:3.0})
+        this.drag().clamp({direction: 'all'})
+        .wheel().clampZoom({minScale: 1.0, maxScale:3.0})
         // this.bkgPattern = TilingSprite.from("background-pattern", { width: scene.worldWidth ?? 0, height: scene.worldHeight ?? 0 });
         // this.addChild(this.bkgPattern);
 

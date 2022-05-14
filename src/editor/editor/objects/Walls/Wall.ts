@@ -64,7 +64,11 @@ export class Wall extends Graphics {
 
         this.label.update(length);
         this.label.position.x = this.width / 2;
-        this.label.position.y = -25;
+        console.log(theta);
+        this.label.angle =  360 - theta 
+    
+        
+        // this.label.position.y = 25;
 
     }
 

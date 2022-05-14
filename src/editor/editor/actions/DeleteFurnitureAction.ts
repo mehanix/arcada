@@ -12,6 +12,7 @@ export class DeleteFurnitureAction implements Action {
     }
 
     public execute() {
+        this.receiver.actions.push(this);
         this.receiver.removeFurniture(this.id);
     }
 }

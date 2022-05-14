@@ -66,17 +66,6 @@ export class Floor extends Container {
         }
     }
 
-    // public draw() {
-    //     for (let child of this.children) {
-    //         child.visible = true;
-    //     }
-    //     // for (let fur of this.furnitureArray.values()) {
-    //     //     this.addChild(fur);
-    //     // }
-
-    //     // // this.wallNodeSequence.drawNodes();
-    //     // this.redrawWalls();
-    // }
     public addFurniture(obj: FurnitureData, id: number, attachedTo?: Wall, coords?: Point, attachedToLeft?: number, attachedToRight?: number) {
 
         let object = new Furniture(obj, id, attachedTo, attachedToLeft, attachedToRight)

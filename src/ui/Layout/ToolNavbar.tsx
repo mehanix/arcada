@@ -14,7 +14,9 @@ import {
 } from 'tabler-icons-react';
 
 import { ToolMode, useStore } from "../../stores/ToolStore";
-import { FloorPlan } from '../../editor/editor/objects/FloorPlan';
+import { ChangeFloorAction } from '../../editor/editor/actions/ChangeFloorAction';
+import { LoadAction } from '../../editor/editor/actions/LoadAction';
+import { SaveAction } from '../../editor/editor/actions/SaveAction';
 
 
 const useStyles = createStyles((theme) => ({
@@ -88,12 +90,12 @@ export function ToolNavbar() {
   ));
 
 
-  const handleChange = async (e:any) => {
+  const handleChange = async (e: any) => {
 
     let resultText = await e.target.files.item(0).text();
 
-    console.log(resultText);
-     FloorPlan.Instance.load(resultText);
+    let action = new LoadAction(resultText);
+    action.execute();
 
   };
 
@@ -104,16 +106,18 @@ export function ToolNavbar() {
         <Group direction="column" align="center" spacing={0}>
           {toolModes}
         </Group>
-      
+
       </Navbar.Section>
       <Navbar.Section grow>
-      <Group direction="column" align="center" spacing={0}>
-       <NavbarLink icon={StairsUp} label="Go to next floor" onClick={() => {
-            FloorPlan.Instance.changeFloor(1)
-          }}/>
-       <NavbarLink icon={StairsDown} label="Go to previous floor" onClick={() => {
-            FloorPlan.Instance.changeFloor(-1)
-          }}/>
+        <Group direction="column" align="center" spacing={0}>
+          <NavbarLink icon={StairsUp} label="Go to next floor" onClick={() => {
+            let action = new ChangeFloorAction(1);
+            action.execute();
+          }} />
+          <NavbarLink icon={StairsDown} label="Go to previous floor" onClick={() => {
+            let action = new ChangeFloorAction(-1);
+            action.execute();
+          }} />
 
         </Group>
       </Navbar.Section>
@@ -128,17 +132,18 @@ export function ToolNavbar() {
       <Navbar.Section>
         <Group direction="column" align="center" spacing={0}>
           <NavbarLink icon={DeviceFloppy} label="Save plan" onClick={() => {
-            FloorPlan.Instance.save()
+            let action = new SaveAction();
+            action.execute();
           }} />
-     
+
           <NavbarLink onClick={() => fileRef.current.click()} icon={Upload} label="Load plan" />
           <input
-        ref={fileRef}
-        onChange={handleChange}
-        multiple={false}
-        type="file"
-        hidden
-      />
+            ref={fileRef}
+            onChange={handleChange}
+            multiple={false}
+            type="file"
+            hidden
+          />
         </Group>
       </Navbar.Section>
     </Navbar>

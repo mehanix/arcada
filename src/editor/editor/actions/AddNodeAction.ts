@@ -29,5 +29,6 @@ export class AddNodeAction implements Action {
             node = this.receiver.addNode(this.coords.x, this.coords.y)
         }
         AddWallManager.Instance.step(node);
+        this.receiver.actions.push(this);
     }
 }
