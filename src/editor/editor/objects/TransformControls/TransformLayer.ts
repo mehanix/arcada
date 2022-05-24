@@ -61,7 +61,7 @@ export class TransformLayer extends Container {
     private computePoints() {
 
 
-        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [this.target.width, 0];
+        [this.points[Coord.NE].x, this.points[Coord.NE].y] = [this.target.width + 5, 5];
         [this.points[Coord.E].x, this.points[Coord.E].y] = [this.target.width, (this.target.height / 2)];
         [this.points[Coord.SE].x, this.points[Coord.SE].y] = [this.target.width, this.target.height];
         [this.points[Coord.S].x, this.points[Coord.S].y] = [(this.target.width / 2), this.target.height];
@@ -87,7 +87,7 @@ export class TransformLayer extends Container {
         this.border.addChild(this.labels[axis]);
     }
     public select(t: Furniture) {
-        if (useStore.getState().activeTool != Tool.FurnitureEdit) {
+        if (useStore.getState().activeTool != Tool.Edit) {
             return;
         }
         if (this.target != null) {
@@ -172,7 +172,9 @@ export class TransformLayer extends Container {
         }
 
         this.labels[LabelAxis.Horizontal].updatePos(this.points[Coord.Horizontal], this.target.width)
+        this.labels[LabelAxis.Horizontal].angle = 360 - this.target.angle
         this.labels[LabelAxis.Vertical].updatePos(this.points[Coord.Vertical], this.target.height)
+        this.labels[LabelAxis.Vertical].angle = 360 - this.target.angle
 
     }
 }

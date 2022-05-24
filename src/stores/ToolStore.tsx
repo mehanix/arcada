@@ -1,6 +1,7 @@
 /** handling current tool state, mainly */
 import create from 'zustand'
 import { AddWallManager } from '../editor/editor/actions/AddWallManager';
+import { Tool } from '../editor/editor/constants';
 
 
 export enum ToolMode {
@@ -9,45 +10,28 @@ export enum ToolMode {
     ViewMode
 };
 
-export enum ViewMode {
-  TwoD,
-  ThreeD
-}
-
-export enum Tool {
-    WallAdd,
-    WallEdit,
-    WallRemove,
-    FurnitureAdd,
-    FurnitureEdit,
-    FurnitureRemove,
-    FurnitureAddWindow,
-    FurnitureAddDoor,
-    View
-};
-
 export interface ToolStore {
     mode:ToolMode,
-    viewMode:ViewMode,
+    floor:number,
     activeTool:Tool,
     setMode: (mode:ToolMode) => void,
     setTool: (tool: Tool) => void,
-    setViewMode: (mode:ViewMode) => void
+    setFloor: (floor:number) => void
 }
 
 
 export const useStore = create<ToolStore>(set => ({
   mode: ToolMode.FurnitureMode,
-  activeTool: Tool.FurnitureEdit,
-  viewMode: ViewMode.TwoD,
+  activeTool: Tool.View,
+  floor: 0,
   setMode: (mode: ToolMode) => {
     set(() => ({
       mode: mode
     }));    
   },
-  setViewMode: (mode: ViewMode) => {
+  setFloor: (floor:number) => {
     set(() => ({
-      viewMode: mode
+      floor: floor
     }));    
   },
   setTool: (tool: Tool) => {

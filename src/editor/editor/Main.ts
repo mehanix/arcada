@@ -1,25 +1,27 @@
 import { IViewportOptions, PluginManager, Viewport } from "pixi-viewport";
-import { InteractionEvent, Loader, Point, TilingSprite } from "pixi.js";
+import { Application, InteractionEvent, Loader, Point, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
-import { Tool, useStore } from "../../stores/ToolStore";
+import { useStore } from "../../stores/ToolStore";
 import { AddNodeAction } from "./actions/AddNodeAction";
 import { AddWallManager } from "./actions/AddWallManager";
 import { viewportX, viewportY } from "../../helpers/ViewportCoordinates";
+import { Tool } from "./constants";
 // import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
 
     private floorPlan: FloorPlan;
     public static viewportPluginManager: PluginManager;
+    public static app:Application;
     transformLayer: TransformLayer;
     addWallManager:AddWallManager;
     bkgPattern: TilingSprite;
 
-    constructor(options: IViewportOptions) {
+    constructor(options: IViewportOptions, app:Application) {
         super(options);
 
-        
+        Main.app = app;
         // connect the events
         Loader.shared.onComplete.once(this.setup, this);
         // Start loading!
@@ -31,7 +33,7 @@ export class Main extends Viewport {
     private setup() {
         Main.viewportPluginManager = this.plugins;
         this.drag().clamp({direction: 'all'})
-        .wheel().clampZoom({minScale: 1.0, maxScale:3.0})
+        .wheel().clampZoom({minScale: 1.0, maxScale:6.0})
         this.bkgPattern = TilingSprite.from("./background-pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
         this.addChild(this.bkgPattern);
 

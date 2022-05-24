@@ -1,5 +1,5 @@
 import { Group, Button, createStyles } from "@mantine/core";
-import { Tool, useStore } from "../../stores/ToolStore";
+import { useStore } from "../../stores/ToolStore";
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -21,30 +21,30 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const tools = [
-  { label: 'Add', tool:Tool.WallAdd },
-  { label: 'Edit', tool:Tool.WallEdit },
-  { label: 'Remove', tool:Tool.WallRemove }
-];
+// const tools = [
+//   { label: 'Add', tool:Tool.WallAdd },
+//   { label: 'Edit', tool:Tool.WallEdit },
+//   { label: 'Remove', tool:Tool.WallRemove }
+// ];
 
 export function WallTools() {
   const { classes } = useStyles();
   const { setTool } = useStore()
 
-  const toolButtons = tools.map((link, _) => (
-    <Button variant="default" className={classes.button}
-      {...link}
-      key={link.label}
-      onClick={() => {
-        setTool(link.tool)
-      }
-      }
-    > {link.label}</Button>
-  ));
+  // const toolButtons = tools.map((link, _) => (
+  //   <Button variant="default" className={classes.button}
+  //     {...link}
+  //     key={link.label}
+  //     onClick={() => {
+  //       setTool(link.tool)
+  //     }
+  //     }
+  //   > {link.label}</Button>
+  // ));
 
   return (
     <Group grow spacing={0}>
-      {toolButtons}
+      {/* {toolButtons} */}
     </Group>
   );
 }

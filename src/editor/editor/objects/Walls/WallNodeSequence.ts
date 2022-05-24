@@ -41,6 +41,16 @@ export class WallNodeSequence extends Container {
         WallNodeSequence.wallNodeId = id;
     }
 
+    public getExteriorWalls(): Wall[] {
+        let exteriorWalls: Wall[] = [];
+        for (let wall of this.walls) {
+            if (wall.isExteriorWall) {
+                exteriorWalls.push(wall)
+            }
+        }
+        return exteriorWalls
+    }
+
     public getWallNodeId() {
         return WallNodeSequence.wallNodeId;
     }
@@ -65,12 +75,11 @@ export class WallNodeSequence extends Container {
         for (let node of nodes) {
             this.addNode(node.x, node.y, node.id);
         }
-        console.log(nodes, nodeLinks)
         for (let [src, dests] of nodeLinks) {
             for (const dest of dests) {
                 console.log("zid intre ",src,dest)
                 this.addWall(src,dest)
-                this.wallNodeLinks.get(src).push(dest);
+                // this.wallNodeLinks.get(src).push(dest);
             }
         }
         console.log(this.wallNodeLinks);
@@ -123,13 +132,18 @@ export class WallNodeSequence extends Container {
 
     }
 
+
+    public getNewNodeId() {
+        WallNodeSequence.wallNodeId += 1;
+        return WallNodeSequence.wallNodeId;
+    }
+
     public addNode(x: number, y: number, id?: number) {
         let nodeId;
         if (id) {
             nodeId = id;
         } else {
-            WallNodeSequence.wallNodeId += 1;
-            nodeId = WallNodeSequence.wallNodeId;
+            nodeId = this.getNewNodeId();
         }
         this.wallNodes.set(nodeId, new WallNode(x, y, nodeId));
         this.wallNodeLinks.set(nodeId,[]);
@@ -158,6 +172,7 @@ export class WallNodeSequence extends Container {
         this.walls.push(wall)
         this.addChild(wall)
         this.drawWalls();
+        return wall;
     }
 
     public removeWall(leftNode: number, rightNode: number) {

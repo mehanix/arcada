@@ -45,13 +45,37 @@ export class Handle extends Graphics {
 
         this.type = handleConfig.type;
         this.target = handleConfig.target;
-
-
+        this.buttonMode = true;
         this.beginFill(this.color)
             .lineStyle(1, this.color)
-            .drawRect(0, 0, this.size, this.size).endFill();
 
-        this.pivot.set(0.5);
+        if (this.type == HandleType.Rotate) {
+            this.drawCircle(0, 0, this.size/1.5).endFill();
+            this.pivot.set(this.size/3, this.size/3);
+
+        } else {
+            this.drawRect(0, 0, this.size, this.size).endFill();
+            this.pivot.set(0.5);
+        }
+
+
+        switch (this.type) {
+            case HandleType.Move:
+                this.cursor = "move";
+                break; 
+            case HandleType.Horizontal:
+                this.cursor = "ew-resize";
+                break;
+            case HandleType.Vertical:
+                this.cursor = "ns-resize";
+                break;
+            case HandleType.FreeTransform:
+                this.cursor = "nwse-resize";
+                break;
+            case HandleType.Rotate:
+                this.cursor = "wait";
+                break;
+        }
         if (handleConfig.pos) {
             this.position.set(handleConfig.pos.x, handleConfig.pos.y);
         }

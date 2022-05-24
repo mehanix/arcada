@@ -38,9 +38,10 @@ export class FloorPlan extends Container {
     public changeFloor(by: number) {
 
         this.removeChild(this.floors[this.currentFloor]);
+        let previousFloor = this.currentFloor;
         this.currentFloor += by;
         if (this.floors[this.currentFloor] == null) {
-            this.floors[this.currentFloor] = new Floor();
+            this.floors[this.currentFloor] = new Floor(null, this.floors[previousFloor]);
         }
         this.addChild(this.floors[this.currentFloor])
     }

@@ -31,7 +31,7 @@ export class Label extends Container {
     }
 
     private toMeter(size:number) {
-        size = size / METER;
+        size = Math.abs(size) / METER;
 
         // truncating to the 2nd decimal
         const sizeLabel = (Math.round(size * 100) / 100).toFixed(2);

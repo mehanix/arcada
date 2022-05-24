@@ -1,6 +1,7 @@
 import { Container, Point } from "pixi.js";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { FloorSerializable } from "../persistence/FloorSerializable";
+import { FloorPlan } from "./FloorPlan";
 import { Furniture } from "./Furniture";
 import { Wall } from "./Walls/Wall";
 import { WallNodeSequence } from "./Walls/WallNodeSequence";
@@ -10,7 +11,7 @@ export class Floor extends Container {
     public furnitureArray: Map<number, Furniture>;
     private wallNodeSequence: WallNodeSequence;
 
-    constructor(floorData?: FloorSerializable) {
+    constructor(floorData?: FloorSerializable, previousFloor?: Floor) {
         super();
 
         this.furnitureArray = new Map<number, Furniture>();
@@ -18,6 +19,7 @@ export class Floor extends Container {
         this.addChild(this.wallNodeSequence);
         if (floorData) {
             let nodeLinks = new Map<number, number[]>(floorData.wallNodeLinks)
+            console.log("nodeLinks", nodeLinks)
             this.wallNodeSequence.load(floorData.wallNodes, nodeLinks);
             for (let fur of floorData.furnitureArray) {
                 let furnitureData: FurnitureData = { //todo. nu e complet aici
@@ -29,10 +31,10 @@ export class Floor extends Container {
                     category: ""
                 };
                 let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
-        
+
                 let object = new Furniture(furnitureData, fur.id, attachedTo)
                 this.furnitureArray.set(fur.id, object);
-        
+
                 if (attachedTo != undefined) {
                     attachedTo.addChild(object)
                 } else {
@@ -44,9 +46,35 @@ export class Floor extends Container {
             }
             return;
         }
+
+        if (previousFloor) {
+            let nodeCloneMap = new Map<number, number>();
+            // first iteration, map previous node ids to new node ids as we're simply cloning them
+            for (let wall of previousFloor.getExteriorWalls()) {
+                [wall.leftNode, wall.rightNode].map((node) => {
+                    let oldId = node.getId();
+                    if (!nodeCloneMap.has(oldId)) {
+                        nodeCloneMap.set(oldId, this.wallNodeSequence.getNewNodeId());
+                        this.addNode(node.x, node.y,nodeCloneMap.get(oldId) )
+                    }
+                })
+            }
+
+            // now copy walls with respect to the node mapping
+           previousFloor.getExteriorWalls().map(wall => {
+               let newLeftId = nodeCloneMap.get(wall.leftNode.getId())
+               let newRightId = nodeCloneMap.get(wall.rightNode.getId())
+
+               let newWall = this.wallNodeSequence.addWall(newLeftId, newRightId);
+               newWall.setIsExterior(true);
+           })
+        }
     }
 
 
+    private getExteriorWalls() {
+        return this.wallNodeSequence.getExteriorWalls();
+    }
 
     public reset() {
         for (let id of this.furnitureArray.keys()) {
@@ -157,8 +185,8 @@ export class Floor extends Container {
         }
     }
 
-    public addNode(x:number, y:number) {
-        return this.wallNodeSequence.addNode(x, y);
+    public addNode(x: number, y: number, id?:number) {
+        return this.wallNodeSequence.addNode(x, y, id);
 
     }
 
@@ -168,7 +196,7 @@ export class Floor extends Container {
         // delete wall between left and right node
         this.removeWall(wall);
         // add node and connect walls to it
-        let newNode = this.wallNodeSequence.addNode(coords.x - coords.x % 10, coords.y - coords.y % 10);
+        let newNode = this.wallNodeSequence.addNode(coords.x, coords.y);
         let newNodeId = newNode.getId()
         this.wallNodeSequence.addWall(leftNode, newNodeId);
         this.wallNodeSequence.addWall(newNodeId, rightNode);

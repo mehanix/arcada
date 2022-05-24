@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Navbar, Tooltip, UnstyledButton, createStyles, Group } from '@mantine/core';
+import { Navbar, Tooltip, UnstyledButton, createStyles, Group, Menu, Divider, Drawer } from '@mantine/core';
 import {
   Icon as TablerIcon,
   Armchair,
@@ -11,12 +11,25 @@ import {
   Ruler2,
   StairsUp,
   StairsDown,
+  Eye,
+  Pencil,
+  Eraser,
+  Trash,
+  Window,
+  Door,
+  Plus,
+  PlayerPause,
+  Help,
+  SquareX,
+  Dimensions,
 } from 'tabler-icons-react';
 
 import { ToolMode, useStore } from "../../stores/ToolStore";
 import { ChangeFloorAction } from '../../editor/editor/actions/ChangeFloorAction';
 import { LoadAction } from '../../editor/editor/actions/LoadAction';
 import { SaveAction } from '../../editor/editor/actions/SaveAction';
+import { Tool } from '../../editor/editor/constants';
+import { FurnitureAddPanel } from '../FurnitureControls/FurnitureAddPanel/FurnitureAddPanel';
 
 
 const useStyles = createStyles((theme) => ({
@@ -47,7 +60,7 @@ const useStyles = createStyles((theme) => ({
 
 interface NavbarLinkProps {
   icon: TablerIcon;
-  label: string;
+  label?: string;
   active?: boolean;
   onClick?(): void;
 }
@@ -63,17 +76,65 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
+
+// const modes = [
+//   { icon: Armchair, label: 'Furniture Mode', mode: ToolMode.FurnitureMode },
+//   { icon: BorderLeft, label: 'Layout Mode', mode: ToolMode.WallMode }
+// ];
+
 const modes = [
-  { icon: Armchair, label: 'Furniture Mode', mode: ToolMode.FurnitureMode },
-  { icon: BorderLeft, label: 'Layout Mode', mode: ToolMode.WallMode }
+  { icon: Eye, label: 'View', tool: Tool.View },
+  // { icon: BorderLeft, label: "Add wall", tool: Tool.WallAdd },
+  // { icon: Armchair, label: 'Add furniture', tool: Tool.FurnitureAdd },
+  // { icon: Window, label: 'Add window', tool: Tool.FurnitureAddWindow },
+  // { icon: Door, label: 'Add door', tool: Tool.FurnitureAddDoor },
+  { icon: Pencil, label: 'Edit', tool: Tool.Edit },
+  { icon: Eraser, label: 'Erase', tool: Tool.Remove },
+  // { icon: Trash, label: 'Clear floor', tool: Tool.Remove },
+
 ];
+
+
+function AddMenu() {
+  const { classes } = useStyles();
+  const { setTool } = useStore()
+  const [drawerOpened, setDrawerOpened] = useState(false);
+
+  let addButton = <UnstyledButton className={classes.link}>
+    <Plus />
+  </UnstyledButton>
+
+  return <>
+    <Drawer
+      opened={drawerOpened}
+      position='right'
+      onClose={() => setDrawerOpened(false)}
+      title="Add furniture"
+      padding="xl"
+      size="lg"
+      overlayOpacity={0}
+
+    >
+      <FurnitureAddPanel />
+    </Drawer>
+    <Menu control={addButton} position='right' gutter={22} trigger="hover" delay={500}>
+      <Menu.Item icon={<Armchair size={18} />} onClick={() => setDrawerOpened(true)}>Add furniture</Menu.Item>
+      <Divider />
+      <Menu.Item icon={<BorderLeft size={18} />} onClick={() => setTool(Tool.WallAdd)}>Draw wall</Menu.Item>
+      <Menu.Item icon={<Window size={18} />} onClick={() => setTool(Tool.FurnitureAddWindow)}>Add window</Menu.Item>
+      <Menu.Item icon={<Door size={18} />} onClick={() => setTool(Tool.FurnitureAddDoor)}>Add door</Menu.Item>
+    </Menu>
+  </>
+
+}
 
 
 export function ToolNavbar() {
   const [active, setActive] = useState(0);
 
-  const { setMode } = useStore()
+  const { setTool, floor} = useStore()
   const fileRef = useRef<HTMLInputElement>();
+  const { classes, cx } = useStyles();
 
   const toolModes = modes.map((link, index) => (
     <NavbarLink
@@ -83,12 +144,11 @@ export function ToolNavbar() {
       onClick={() => {
         setActive(index)
 
-        setMode(link.mode)
+        setTool(link.tool)
       }
       }
     />
   ));
-
 
   const handleChange = async (e: any) => {
 
@@ -104,12 +164,19 @@ export function ToolNavbar() {
 
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
+          <AddMenu />
           {toolModes}
         </Group>
 
       </Navbar.Section>
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
+        <Tooltip label={"Current floor"} position="right" withArrow transitionDuration={0}>
+        <div className={classes.link}>
+            {floor}
+          </div>
+        </Tooltip>
+
           <NavbarLink icon={StairsUp} label="Go to next floor" onClick={() => {
             let action = new ChangeFloorAction(1);
             action.execute();
@@ -118,14 +185,18 @@ export function ToolNavbar() {
             let action = new ChangeFloorAction(-1);
             action.execute();
           }} />
-
+          <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {
+            let action = new ChangeFloorAction(-1);
+            action.execute();
+          }} />
         </Group>
       </Navbar.Section>
       <Navbar.Section grow >
         <Group direction="column" align="center" spacing={0}>
-          <NavbarLink icon={Tag} label="Toggle room labels" />
-          <NavbarLink icon={ArrowBottomSquare} label="Toggle snap to grid" />
-          <NavbarLink icon={Ruler2} label="Toggle room dimensions" />
+          <NavbarLink icon={Ruler2} label="Measure tool" />
+          <NavbarLink icon={ArrowBottomSquare} label="Snap to grid" />
+          <NavbarLink icon={Dimensions} label="Toggle size labels" />
+          <NavbarLink icon={Help} label="Help" />
 
         </Group>
       </Navbar.Section>

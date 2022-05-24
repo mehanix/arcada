@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Application } from "pixi.js";
 import { Main } from "./editor/Main";
 import { IViewportOptions } from 'pixi-viewport';
-import { useStore, ViewMode } from "../stores/ToolStore";
+import { useStore } from "../stores/ToolStore";
 import { createStyles } from "@mantine/core";
 
 const useStyles = createStyles(() => ({
@@ -39,9 +39,10 @@ export function EditorRoot() {
             screenHeight: app.screen.height,
             worldWidth: 2000,
             worldHeight: 2000,
-            interaction: app.renderer.plugins.interaction
+            interaction: app.renderer.plugins.interaction,
+            
         }
-        main = new Main(viewportSettings);
+        main = new Main(viewportSettings, app);
          
 
         // Add app to DOM
@@ -56,5 +57,5 @@ export function EditorRoot() {
         };
     }, []);
 
-    return <div className={state.viewMode == ViewMode.TwoD ? "" : classes.inactive} ref={ref} />;
+    return <div ref={ref} />;
 }

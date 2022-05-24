@@ -16,8 +16,18 @@ export function FurnitureAddPanel() {
     const { categories, currentFurnitureData, getCurrentFurnitureData } = useFurnitureStore();
     const [cards, setCards] = useState([]);
     useEffect(() => {
-        getCategoryData();
+        getCategoryData()
     }, [categories])
+
+    const getCategoryData = () => {
+        const data = [];
+        for (let cat of categories) {
+            data.push({ value: cat._id, label: cat.name })
+        }
+        console.log(data)
+
+        setAvailableCategories(data);
+    }
 
     useEffect(() => {
 
@@ -31,21 +41,12 @@ export function FurnitureAddPanel() {
 
         setCards(currentFurnitureData.map((item) =>
         (
-            <FurnitureItem data={item} ></FurnitureItem>
+            <FurnitureItem data={item} key={item._id}></FurnitureItem>
         )
         ))
 
     }, [currentFurnitureData])
 
-    const getCategoryData = () => {
-        const data = [];
-        for (let cat of categories) {
-            data.push({ value: cat._id, label: cat.name })
-        }
-        console.log(data)
-
-        setAvailableCategories(data);
-    }
 
     return (<>
         <Navbar.Section>

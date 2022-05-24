@@ -6,6 +6,7 @@ import { FurnitureData } from "../../../stores/FurnitureStore"
 interface IFurnitureData {
     data:FurnitureData
 }
+
 function add(item:IFurnitureData) {
     let action = new AddFurnitureAction(item.data);
     action.execute();

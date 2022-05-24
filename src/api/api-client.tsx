@@ -14,3 +14,8 @@ export async function getWindow() {
     return await(await fetch(endpoint + "wall/window")).json()
 
 }
+
+export async function getDoor() {
+    return await(await fetch(endpoint + "wall/door")).json()
+
+}

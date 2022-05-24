@@ -1,5 +1,5 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
-import { Tool, WALL_THICKNESS } from "../../constants";
+import { INTERIOR_WALL_THICKNESS, Tool, WALL_THICKNESS } from "../../constants";
 import { useStore } from "../../../../stores/ToolStore";
 import { AddWallManager } from "../../actions/AddWallManager";
 import { DeleteWallNodeAction } from "../../actions/DeleteWallNodeAction";
@@ -8,25 +8,24 @@ import { FloorPlan } from "../FloorPlan";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 export class WallNode extends Graphics {
 
-    private dragging:boolean;
-    private id:number;
+    private dragging: boolean;
+    private id: number;
 
-    constructor(x:number, y: number, nodeId:number) {
+    constructor(x: number, y: number, nodeId: number) {
         super();
         this.interactive = true;
         this.id = nodeId;
 
-        this.beginFill(0x000000);
-        // this.drawCircle(0,0,WALL_THICKNESS/2)
-        this.drawRect(0,0,WALL_THICKNESS,WALL_THICKNESS)
-        this.pivot.set(WALL_THICKNESS/2, WALL_THICKNESS/2);
-        this.position.set(x,y)
+        //  this.drawCircle(0,0,INTERIOR_WALL_THICKNESS / 2)
+        this.setSize(INTERIOR_WALL_THICKNESS);
+
+        this.position.set(x, y)
         this.endFill();
         this.zIndex = 999;
         this.on("mousedown", this.onMouseDown)
         this.on("mousemove", this.onMouseMove)
-        this.on("mouseup",this.onMouseUp);
-        this.on("mouseupoutside",this.onMouseUp);
+        this.on("mouseup", this.onMouseUp);
+        this.on("mouseupoutside", this.onMouseUp);
 
 
     }
@@ -34,14 +33,21 @@ export class WallNode extends Graphics {
     public getId() {
         return this.id;
     }
-  
-    private onMouseDown(ev:InteractionEvent) {
+
+    public setSize(size: number) {
+        this.clear();
+        this.beginFill(0x000000);
+        this.drawRect(0, 0, size, size)
+        this.pivot.set(size / 2, size / 2)
+
+    }
+    private onMouseDown(ev: InteractionEvent) {
         ev.stopPropagation();
         switch (useStore.getState().activeTool) {
-            case Tool.WallEdit:
+            case Tool.Edit:
                 this.dragging = true;
                 break;
-            case Tool.WallRemove:
+            case Tool.Remove:
                 let action = new DeleteWallNodeAction(this.id);
                 action.execute();
                 break;
@@ -49,7 +55,7 @@ export class WallNode extends Graphics {
                 AddWallManager.Instance.step(this);
                 break;
         }
-    
+
     }
     private onMouseMove(ev: InteractionEvent) {
         if (!this.dragging) {
@@ -57,9 +63,9 @@ export class WallNode extends Graphics {
         }
         let currentPoint = new Point(ev.data.global.x, ev.data.global.y);
 
-        this.x = viewportX(currentPoint.x - currentPoint.x%10)
-        this.y = viewportY(currentPoint.y - currentPoint.y%10);
-        
+        this.x = viewportX(currentPoint.x)
+        this.y = viewportY(currentPoint.y);
+
         FloorPlan.Instance.redrawWalls();
     }
 

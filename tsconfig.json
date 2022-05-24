@@ -22,11 +22,11 @@
     "jsx": "react-jsx",
 
     // Rules for your code
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "noImplicitOverride": true,
+    // "noImplicitAny": true,
+    // "noImplicitReturns": true,
+    // "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noImplicitOverride": true,
 
     // Settings for linking source files
     "experimentalDecorators": true,
