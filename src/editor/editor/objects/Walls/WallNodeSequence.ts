@@ -14,24 +14,7 @@ export class WallNodeSequence extends Container {
         this.walls = [];
         this.wallNodes = new Map<number, WallNode>();
         this.wallNodeLinks = new Map<number, number[]>();
-
-        // this.addNode(50, 50);
-        // this.addNode(750, 50);
-        // this.addNode(750, 750);
-        // this.addNode(50, 750);
-
         console.log(this.wallNodes);
-        // this.addWall(1, 4);
-        // this.addWall(1, 2);
-        // this.addWall(2, 3);
-        // this.addWall(3, 4);
-        // this.wallNodeLinks[1].push(4);
-        // this.wallNodeLinks[1].push(2);
-        // this.wallNodeLinks[2].push(3);
-        // this.wallNodeLinks[3].push(4);
-        // this.wallNodeLinks[5].push(6);
-        // this.wallNodeLinks[6].push(7);
-
         this.drawWalls();
 
         this.on("mousemove", this.drawWalls);
@@ -42,13 +25,7 @@ export class WallNodeSequence extends Container {
     }
 
     public getExteriorWalls(): Wall[] {
-        let exteriorWalls: Wall[] = [];
-        for (let wall of this.walls) {
-            if (wall.isExteriorWall) {
-                exteriorWalls.push(wall)
-            }
-        }
-        return exteriorWalls
+        return this.walls.filter(wall => wall.isExteriorWall)
     }
 
     public getWallNodeId() {
@@ -71,7 +48,6 @@ export class WallNodeSequence extends Container {
     }
 
     public load(nodes: INodeSerializable[], nodeLinks: Map<number, number[]>) {
-        // this.wallNodeLinks = nodeLinks; //deep copy?
         for (let node of nodes) {
             this.addNode(node.x, node.y, node.id);
         }
@@ -79,7 +55,6 @@ export class WallNodeSequence extends Container {
             for (const dest of dests) {
                 console.log("zid intre ",src,dest)
                 this.addWall(src,dest)
-                // this.wallNodeLinks.get(src).push(dest);
             }
         }
         console.log(this.wallNodeLinks);
@@ -196,9 +171,6 @@ export class WallNodeSequence extends Container {
             this.walls.splice(toBeRemoved, 1);
 
         }
-        console.log("tratate 2 left:", this.wallNodeLinks.get(leftNode));
-        console.log("tratate 2 right:", this.wallNodeLinks.get(rightNode));
-
     }
 
     public getWall(leftNodeId:number, rightNodeId:number) {
@@ -221,52 +193,5 @@ export class WallNodeSequence extends Container {
         this.walls.forEach(wall => {
             wall.drawLine();
         })
-        // this.walls.length = 0;
-        // console.log(this.wallNodes)
-        // for (const src in this.wallNodeLinks) {
-        //     for (const dest of this.wallNodeLinks[src]) {
-        //         console.log(src, dest)
-        //         const leftNode = this.wallNodes[parseInt(src)]
-        //         const rightNode = this.wallNodes[dest]
-        //         this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, this.wallNodes[parseInt(src)], this.wallNodes[dest]))
-        //     }
-        // }
-        // for (let wall of this.walls) {
-        //     this.addChild(wall)
-        // }
-
-
-
-        // for (let left=0; left<this.wallNodes.length - 1; left++) {
-        //     let right = left + 1;
-        //     console.log(right,left)
-
-        //     let leftNode = this.wallNodes[left]
-        //     let rightNode = this.wallNodes[right]
-        //     this.walls.push(new Wall(leftNode.x, leftNode.y, rightNode.x, rightNode.y, left, right))
-        // }
-        // for (let wall of this.walls) {
-        //     this.addChild(wall)
-        // }
-        // this.walls.clear();
-        // console.log()
-        // console.log(this.getWallNodesPos())
-        // this.walls.beginFill(0xb5aba1).lineStyle(14,0x1a1a1a).moveTo(this.wallNodes[0].x, this.wallNodes[0].y)
-        // for (let point of this.wallNodes) {
-        //     this.walls.lineTo(point.x, point.y)
-        // }
-        // this.walls.hitArea = this.walls.getBounds();
-        // this.walls.endFill();
     }
-    // private getWallNodesPos() {
-    //     let ans: number[] = [];
-
-    //     for (let node of this.wallNodes) {
-    //         let globals = node.getGlobalPosition();
-    //         ans.push(globals.x);
-    //         ans.push(globals.y)
-    //     }
-    //     return ans;
-
-    // }
 }

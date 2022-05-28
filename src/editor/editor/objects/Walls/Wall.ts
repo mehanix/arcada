@@ -2,7 +2,7 @@ import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { getDoor, getWindow } from "../../../../api/api-client";
 import { euclideanDistance } from "../../../../helpers/EuclideanDistance";
 
-import { useStore } from "../../../../stores/ToolStore";
+import { useStore } from "../../../../stores/EditorStore";
 import { AddFurnitureAction } from "../../actions/AddFurnitureAction";
 import { AddNodeAction } from "../../actions/AddNodeAction";
 import { DeleteWallAction } from "../../actions/DeleteWallAction";
@@ -25,6 +25,7 @@ export class Wall extends Graphics {
     isExteriorWall: boolean;
     constructor(leftNode: WallNode, rightNode: WallNode) {
         super();
+        this.sortableChildren = true;
 
         this.interactive = true;
         this.leftNode = leftNode;
@@ -32,10 +33,11 @@ export class Wall extends Graphics {
 
         this.setLineCoords();
         this.label = new Label(0);
+        
         this.addChild(this.label)
         this.thickness = INTERIOR_WALL_THICKNESS;
         this.pivot.set(0, INTERIOR_WALL_THICKNESS / 2);
-
+        this.zIndex = 100;
         this.isExteriorWall = false;
         this.drawLine();
 
@@ -91,12 +93,13 @@ export class Wall extends Graphics {
         this.leftNode.angle = theta;
         this.rightNode.angle = theta;
 
-        this.label.update(this.length - this.thickness);
+        this.label.update(this.length);
         this.label.position.x = this.width / 2;
         console.log(theta);
         this.label.angle = 360 - theta
 
-        // this.label.position.y = 25;
+        this.label.position.y = 25;
+        this.label.zIndex = 998;
 
     }
 

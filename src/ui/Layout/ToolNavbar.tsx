@@ -4,7 +4,6 @@ import {
   Icon as TablerIcon,
   Armchair,
   BorderLeft,
-  Tag,
   ArrowBottomSquare,
   DeviceFloppy,
   Upload,
@@ -14,22 +13,22 @@ import {
   Eye,
   Pencil,
   Eraser,
-  Trash,
   Window,
   Door,
   Plus,
-  PlayerPause,
   Help,
   SquareX,
   Dimensions,
+  Printer,
 } from 'tabler-icons-react';
 
-import { ToolMode, useStore } from "../../stores/ToolStore";
+import {  useStore } from "../../stores/EditorStore";
 import { ChangeFloorAction } from '../../editor/editor/actions/ChangeFloorAction';
 import { LoadAction } from '../../editor/editor/actions/LoadAction';
 import { SaveAction } from '../../editor/editor/actions/SaveAction';
 import { Tool } from '../../editor/editor/constants';
 import { FurnitureAddPanel } from '../FurnitureControls/FurnitureAddPanel/FurnitureAddPanel';
+import { PrintAction } from '../../editor/editor/actions/PrintAction';
 
 
 const useStyles = createStyles((theme) => ({
@@ -76,22 +75,10 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-
-// const modes = [
-//   { icon: Armchair, label: 'Furniture Mode', mode: ToolMode.FurnitureMode },
-//   { icon: BorderLeft, label: 'Layout Mode', mode: ToolMode.WallMode }
-// ];
-
 const modes = [
   { icon: Eye, label: 'View', tool: Tool.View },
-  // { icon: BorderLeft, label: "Add wall", tool: Tool.WallAdd },
-  // { icon: Armchair, label: 'Add furniture', tool: Tool.FurnitureAdd },
-  // { icon: Window, label: 'Add window', tool: Tool.FurnitureAddWindow },
-  // { icon: Door, label: 'Add door', tool: Tool.FurnitureAddDoor },
   { icon: Pencil, label: 'Edit', tool: Tool.Edit },
   { icon: Eraser, label: 'Erase', tool: Tool.Remove },
-  // { icon: Trash, label: 'Clear floor', tool: Tool.Remove },
-
 ];
 
 
@@ -101,7 +88,7 @@ function AddMenu() {
   const [drawerOpened, setDrawerOpened] = useState(false);
 
   let addButton = <UnstyledButton className={classes.link}>
-    <Plus />
+  <Plus />
   </UnstyledButton>
 
   return <>
@@ -113,7 +100,6 @@ function AddMenu() {
       padding="xl"
       size="lg"
       overlayOpacity={0}
-
     >
       <FurnitureAddPanel />
     </Drawer>
@@ -202,6 +188,10 @@ export function ToolNavbar() {
       </Navbar.Section>
       <Navbar.Section>
         <Group direction="column" align="center" spacing={0}>
+        <NavbarLink icon={Printer} label="Print" onClick={() => {
+            let action = new PrintAction();
+            action.execute();
+          }} />
           <NavbarLink icon={DeviceFloppy} label="Save plan" onClick={() => {
             let action = new SaveAction();
             action.execute();

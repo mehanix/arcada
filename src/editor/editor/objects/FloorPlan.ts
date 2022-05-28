@@ -1,4 +1,4 @@
-import { Container, Point } from "pixi.js";
+import { autoDetectRenderer, Container, IRendererOptionsAuto, Point } from "pixi.js";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Wall } from "./Walls/Wall";
 import { Floor } from "./Floor";
@@ -6,6 +6,7 @@ import { Serializer } from "../persistence/Serializer";
 import saveAs from "file-saver";
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { Action } from "../actions/Action";
+import { Main } from "../Main";
 
 export class FloorPlan extends Container {
 
@@ -17,8 +18,7 @@ export class FloorPlan extends Container {
     public furnitureId = 0;   // TODO repara cand repari backendul  
 
     public windowFurniture: FurnitureData;
-
-    public actions:Action[];
+    public actions: Action[];
 
     public currentFloor = 0;
     private constructor() {
@@ -46,14 +46,25 @@ export class FloorPlan extends Container {
         this.addChild(this.floors[this.currentFloor])
     }
 
+    public print() {
+
+        let opts: IRendererOptionsAuto = {
+            preserveDrawingBuffer: true
+        };
+
+        let renderer = autoDetectRenderer(opts);
+        const image = renderer.plugins.extract.image(this)
+        let popup = window.open();
+        popup.document.body.appendChild(image);
+        popup.focus();
+        popup.print();
+    }
 
     public save() {
 
-        console.log(this.actions)
         let floorPlan = this.serializer.serialize(this.floors, this.furnitureId);
         let blob = new Blob([floorPlan], { type: "text/plain;charset=utf-8" });
         saveAs(blob, "floor_plan.txt")
-
     }
 
     public load(planText: string) {
@@ -80,7 +91,7 @@ export class FloorPlan extends Container {
 
         // remove furniture
         for (let floor of this.floors) {
-            floor.reset(); 
+            floor.reset();
         }
 
         // remove all floors
@@ -129,7 +140,7 @@ export class FloorPlan extends Container {
     public addNodeToWall(wall: Wall, coords: Point) {
         return this.floors[this.currentFloor].addNodeToWall(wall, coords);
     }
-    public addNode(leftId:number, rightId:number) {
+    public addNode(leftId: number, rightId: number) {
         return this.floors[this.currentFloor].addNode(leftId, rightId);
     }
 

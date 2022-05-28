@@ -1,7 +1,7 @@
-import { Graphics, InteractionEvent, Sprite, Texture } from "pixi.js";
+import { Graphics, InteractionEvent, Point, Sprite, Texture } from "pixi.js";
 import { endpoint } from "../../../api/api-client";
 import { FurnitureData } from "../../../stores/FurnitureStore";
-import { useStore } from "../../../stores/ToolStore";
+import { useStore } from "../../../stores/EditorStore";
 import { DeleteFurnitureAction } from "../actions/DeleteFurnitureAction";
 import { EditFurnitureAction } from "../actions/EditFurnitureAction";
 import { INTERIOR_WALL_THICKNESS, METER, Tool } from "../constants";
@@ -42,6 +42,9 @@ export class Furniture extends Sprite {
         this.width = data.width * METER;
         this.height = data.height * METER;
 
+        console.log(this.width,this.height)
+
+        
         this.on('mousedown', this.onMouseDown)
         this.on('mousemove', this.onMouseMove)
 

@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Application } from "pixi.js";
 import { Main } from "./editor/Main";
 import { IViewportOptions } from 'pixi-viewport';
-import { useStore } from "../stores/ToolStore";
+import { useStore } from "../stores/EditorStore";
 import { createStyles } from "@mantine/core";
 
 const useStyles = createStyles(() => ({
@@ -42,7 +42,7 @@ export function EditorRoot() {
             interaction: app.renderer.plugins.interaction,
             
         }
-        main = new Main(viewportSettings, app);
+        main = new Main(viewportSettings);
          
 
         // Add app to DOM

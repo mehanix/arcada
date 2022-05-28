@@ -12,6 +12,7 @@ export class Label extends Container {
         }
         this.update(sizeInPixels);
         this.pivot.set(this.width / 2, this.height / 2);
+        this.zIndex = 1001;
 
     }
 
@@ -23,6 +24,7 @@ export class Label extends Container {
         this.textBkg.height = this.text.height;
         this.addChild(this.textBkg);
         this.addChild(this.text);
+
     }
 
     public updatePos(pos:Point, sizeInPixels:number) {

@@ -1,6 +1,6 @@
 import { Container, Graphics, Point } from "pixi.js";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
-import { useStore } from "../../../../stores/ToolStore";
+import { useStore } from "../../../../stores/EditorStore";
 import { Coord, LabelAxis, LABEL_OFFSET, Tool } from "../../constants";
 import { Furniture } from "../Furniture";
 import { Handle, HandleType } from "./Handle";
@@ -37,7 +37,7 @@ export class TransformLayer extends Container {
         // handles
         this.addHandle(HandleType.Rotate);
         this.addHandle(HandleType.Horizontal);
-        this.addHandle(HandleType.FreeTransform);
+        this.addHandle(HandleType.HorizontalVertical);
         this.addHandle(HandleType.Vertical);
         this.addHandle(HandleType.Move);
 
@@ -59,8 +59,6 @@ export class TransformLayer extends Container {
     }
 
     private computePoints() {
-
-
         [this.points[Coord.NE].x, this.points[Coord.NE].y] = [this.target.width + 5, 5];
         [this.points[Coord.E].x, this.points[Coord.E].y] = [this.target.width, (this.target.height / 2)];
         [this.points[Coord.SE].x, this.points[Coord.SE].y] = [this.target.width, this.target.height];
@@ -86,7 +84,9 @@ export class TransformLayer extends Container {
         this.labels[axis] = new Label();
         this.border.addChild(this.labels[axis]);
     }
+
     public select(t: Furniture) {
+        // guards preventing selection unless edit mode is enabled
         if (useStore.getState().activeTool != Tool.Edit) {
             return;
         }
@@ -94,16 +94,17 @@ export class TransformLayer extends Container {
             this.deselect();
             return;
         }
-        this.target = t;
 
+        // sets target, computes handle coordinates, and draws on screen at right coordinates
+        this.target = t;
         this.computePoints();
-        this.set();
+        this.draw();
 
         this.visible = true;
         this.interactive = true;
     }
 
-    private set() {
+    private draw() {
 
         this.drawBorder();
 
@@ -117,7 +118,7 @@ export class TransformLayer extends Container {
         // deactivate Horizontal handle on x-locked furniture
         this.handles[HandleType.Horizontal].visible = !this.target.xLocked;
         this.handles[HandleType.Rotate].visible = !this.target.xLocked;
-        this.handles[HandleType.FreeTransform].visible = !this.target.xLocked;
+        this.handles[HandleType.HorizontalVertical].visible = !this.target.xLocked;
     
 
         // set labels
@@ -128,8 +129,8 @@ export class TransformLayer extends Container {
     private drawBorder() {
         this.border.clear();
         let globals = this.target.getGlobalPosition();
-        const x = viewportX(globals.x - this.borderOffset);
-        const y = viewportY(globals.y - this.borderOffset);
+        const x = viewportX(globals.x - this.borderOffset, false);
+        const y = viewportY(globals.y - this.borderOffset, false);
         const w = this.target.width + 2 * this.borderOffset;
         const h = this.target.height + 2 * this.borderOffset;
         this.border

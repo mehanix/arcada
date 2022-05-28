@@ -3,7 +3,7 @@ export {};
 // export {};
 
 // import { useEffect, useRef } from "react";
-// import { useStore, ViewMode } from "../stores/ToolStore";
+// import { useStore, ViewMode } from "../stores/EditorStore";
 // import * as THREE from "three";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'

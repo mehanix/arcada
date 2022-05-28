@@ -2,11 +2,12 @@ import { IViewportOptions, PluginManager, Viewport } from "pixi-viewport";
 import { Application, InteractionEvent, Loader, Point, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
-import { useStore } from "../../stores/ToolStore";
+import { useStore } from "../../stores/EditorStore";
 import { AddNodeAction } from "./actions/AddNodeAction";
 import { AddWallManager } from "./actions/AddWallManager";
 import { viewportX, viewportY } from "../../helpers/ViewportCoordinates";
 import { Tool } from "./constants";
+import { Pointer } from "./Pointer";
 // import { FurnitureData } from "../../stores/FurnitureStore";
 export class Main extends Viewport {
 
@@ -17,11 +18,10 @@ export class Main extends Viewport {
     transformLayer: TransformLayer;
     addWallManager:AddWallManager;
     bkgPattern: TilingSprite;
-
-    constructor(options: IViewportOptions, app:Application) {
+    public pointer:Pointer;
+    constructor(options: IViewportOptions) {
         super(options);
 
-        Main.app = app;
         // connect the events
         Loader.shared.onComplete.once(this.setup, this);
         // Start loading!
@@ -34,7 +34,7 @@ export class Main extends Viewport {
         Main.viewportPluginManager = this.plugins;
         this.drag().clamp({direction: 'all'})
         .wheel().clampZoom({minScale: 1.0, maxScale:6.0})
-        this.bkgPattern = TilingSprite.from("./background-pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
+        this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
         this.addChild(this.bkgPattern);
 
         this.floorPlan = FloorPlan.Instance;
@@ -45,13 +45,16 @@ export class Main extends Viewport {
 
         this.addWallManager = AddWallManager.Instance;
         this.addChild(this.addWallManager.preview)
-
+        
+        this.pointer = new Pointer();
+        this.addChild(this.pointer);
         this.on("mousedown", this.checkTools)
         this.on("mousemove", this.updatePreview)
 
     }
     private updatePreview(ev:InteractionEvent) {
         this.addWallManager.updatePreview(ev);
+        this.pointer.update(ev);
     }
     private checkTools(ev:InteractionEvent) {
         ev.stopPropagation()

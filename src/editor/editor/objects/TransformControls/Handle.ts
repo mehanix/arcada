@@ -6,7 +6,7 @@ import { TransformLayer } from "./TransformLayer";
 export enum HandleType {
     Horizontal,
     Vertical,
-    FreeTransform,
+    HorizontalVertical,
     Rotate,
     Move
 }
@@ -31,6 +31,7 @@ export class Handle extends Graphics {
     private targetStartPoint: Point;
     private startRotaton: number;
     private startScale:Point;
+    targetStartCenterPoint: Point;
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
@@ -69,7 +70,7 @@ export class Handle extends Graphics {
             case HandleType.Vertical:
                 this.cursor = "ns-resize";
                 break;
-            case HandleType.FreeTransform:
+            case HandleType.HorizontalVertical:
                 this.cursor = "nwse-resize";
                 break;
             case HandleType.Rotate:
@@ -92,6 +93,7 @@ export class Handle extends Graphics {
         }
         this.mouseStartPoint = new Point(ev.data.global.x, ev.data.global.y); // unde se afla target la mousedown
         this.targetStartPoint = this.target.getGlobalPosition();
+        this.targetStartCenterPoint = new Point( this.targetStartPoint.x + this.target.width / 2, this. targetStartPoint.y  + this.target.height / 2)
         this.startRotaton = this.target.rotation;
         this.startScale = new Point(this.target.scale.x, this.target.scale.y)
         TransformLayer.dragging = true;
@@ -109,25 +111,38 @@ export class Handle extends Graphics {
 
     private onMouseMove(ev: InteractionEvent) {
 
-        // update scale 
-        let globalPos = this.target.getGlobalPosition();
         if (!this.active || !TransformLayer.dragging) {
             return;
         }
-        let mouseEndPoint = new Point(ev.data.global.x, ev.data.global.y); // unde i mouseul acum
-        let startDistance = this.getDistance(this.mouseStartPoint, globalPos)
-        let endDistance = this.getDistance(mouseEndPoint, globalPos);
+        // unde se afla mouse-ul acum
+        let mouseEndPoint = new Point(ev.data.global.x, ev.data.global.y); 
+        // distanta de la obiect la punctul de start (unde a dat click utilizatorul)
+        let startDistance = this.getDistance(this.mouseStartPoint, this.targetStartCenterPoint)
+        // distanta de la obiect la pozitia noua a mouse-ului
+        let endDistance = this.getDistance(mouseEndPoint, this.targetStartCenterPoint);
+        // raportul dintre cele doua distante:  
+        // raport > 1 -> se mareste obiectul
+        // raport < 1 -> se micsoreaza obiectul
         let sizeFactor = endDistance / startDistance;
+        console.log(startDistance, endDistance, sizeFactor)
         switch (this.type) {
             case HandleType.Rotate:
-                let relativeStart = new Point(this.mouseStartPoint.x - this.target.x, this.mouseStartPoint.y - this.target.y)
-                let relativeEnd = new Point( mouseEndPoint.x - this.target.x, mouseEndPoint.y - this.target.y)
+                
+                let relativeStart = new Point(this.mouseStartPoint.x - this.targetStartPoint.x, this.mouseStartPoint.y - this.targetStartPoint.y)
+                let relativeEnd = new Point( mouseEndPoint.x - this.targetStartPoint.x, mouseEndPoint.y - this.targetStartPoint.y)
 
                 let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
                 let startAngle = Math.atan2(relativeStart.y, relativeStart.x)
                 let deltaAngle = endAngle - startAngle;
+                
+                let r = Math.sqrt(this.target.width*this.target.width + this.target.height*this.target.height)/2
                 this.target.rotation = this.startRotaton + deltaAngle;
                 
+                let sin = Math.sin(deltaAngle);
+                let cos = 1 - Math.cos(deltaAngle);
+                this.target.x = this.targetStartPoint.x - cos*r
+                this.target.y =  this.targetStartPoint.y + sin*r 
+
                 break;
             case HandleType.Horizontal:
                 this.target.scale.x = this.startScale.x * sizeFactor;
@@ -135,27 +150,17 @@ export class Handle extends Graphics {
             case HandleType.Vertical:
                 this.target.scale.y = this.startScale.y * sizeFactor;
                 break;
-            case HandleType.FreeTransform:
+            case HandleType.HorizontalVertical:
                 this.target.scale.x = this.startScale.x * sizeFactor;
                 this.target.scale.y = this.startScale.y * sizeFactor;
                 break;
             case HandleType.Move:
-                // distanta dintre mouse si punct start
-                // let deltaX = currentPoint.x - this.mouseStartPoint.x;
-                // let deltaY = currentPoint.y - this.mouseStartPoint.y;
-
-                // move delta: distanta intre click original si move
-                let delta = new Point(this.mouseStartPoint.x - mouseEndPoint.x, this.mouseStartPoint.y - mouseEndPoint.y)
-                this.target.position.x = viewportX(this.targetStartPoint.x - delta.x);
+                // move delta: distanta intre click original si click in urma mutarii
+                let delta = new Point( mouseEndPoint.x - this.mouseStartPoint.x, mouseEndPoint.y - this.mouseStartPoint.y)
+                this.target.position.x = viewportX(this.targetStartPoint.x + delta.x);
                 if (!this.target.xLocked) {
-                    this.target.position.y = viewportY(this.targetStartPoint.y - delta.y);
+                    this.target.position.y = viewportY(this.targetStartPoint.y + delta.y);
                 }
-
-
-                // // distanta dintre punct start si colt stanga sus
-                // let mpl = this.toLocal(mouseEndPoint, this.target);
-                // this.target.x = mpl.x - this.target.width / 2
-                // this.target.y = mpl.y - this.target.height / 2
                 break;
         }
     }
