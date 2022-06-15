@@ -4,6 +4,7 @@ import { Main } from "./editor/Main";
 import { IViewportOptions } from 'pixi-viewport';
 import { useStore } from "../stores/EditorStore";
 import { createStyles } from "@mantine/core";
+import { METER } from "./editor/constants";
 
 const useStyles = createStyles(() => ({
     inactive:{
@@ -37,8 +38,8 @@ export function EditorRoot() {
         const viewportSettings: IViewportOptions = {
             screenWidth: app.screen.width,
             screenHeight: app.screen.height,
-            worldWidth: 2000,
-            worldHeight: 2000,
+            worldWidth: 25 * METER,
+            worldHeight: 25 * METER,
             interaction: app.renderer.plugins.interaction,
             
         }
@@ -52,7 +53,7 @@ export function EditorRoot() {
         app.stage.addChild(main)
 
         return () => {
-            // On unload completely destroy the application and all of it's children
+            // On unload completely destroy the application and all of its children
             app.destroy(true, true);
         };
     }, []);

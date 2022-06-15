@@ -1,4 +1,4 @@
-import { Container, Point, Sprite, Text, TextStyle, Texture } from "pixi.js";
+import { Container, InteractionEvent, Point, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import { METER } from "../../constants";
 
 export class Label extends Container {
@@ -14,8 +14,13 @@ export class Label extends Container {
         this.pivot.set(this.width / 2, this.height / 2);
         this.zIndex = 1001;
 
+        this.on("toggleLabel", this.toggleLabel);
+        this.toggleLabel({});
     }
 
+    private toggleLabel(ev:any) {
+        console.log("wow~!", ev)
+    }
     public update(sizeInPixels:number) {
         this.removeChildren();
 

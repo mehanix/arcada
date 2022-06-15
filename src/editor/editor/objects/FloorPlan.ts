@@ -7,16 +7,16 @@ import saveAs from "file-saver";
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { Action } from "../actions/Action";
 import { Main } from "../Main";
+import { useStore } from "../../../stores/EditorStore";
 
 export class FloorPlan extends Container {
 
     private static instance: FloorPlan;
 
     private floors: Floor[];
-
+    private visibleLabels: boolean = true;
     private serializer: Serializer;
-    public furnitureId = 0;   // TODO repara cand repari backendul  
-
+    public furnitureId = 0;   // TODO uuid?
     public windowFurniture: FurnitureData;
     public actions: Action[];
 
@@ -28,21 +28,34 @@ export class FloorPlan extends Container {
         this.floors.push(new Floor());
         this.addChild(this.floors[0]);
         this.serializer = new Serializer();
-
     }
     public static get Instance() {
         return this.instance || (this.instance = new this());
     }
+    
+    public get CurrentFloor() {
+        return this.currentFloor;
+    }
+    
+    public set CurrentFloor(floor:number) {
+        this.currentFloor = floor;
+        useStore.setState({floor:this.currentFloor})
+    }
 
+    public toggleLabels() {
+        this.visibleLabels = !this.visibleLabels;
+        this.floors[this.currentFloor].setLabelVisibility(this.visibleLabels);
+    }
 
     public changeFloor(by: number) {
 
         this.removeChild(this.floors[this.currentFloor]);
         let previousFloor = this.currentFloor;
-        this.currentFloor += by;
+        this.CurrentFloor += by;
         if (this.floors[this.currentFloor] == null) {
             this.floors[this.currentFloor] = new Floor(null, this.floors[previousFloor]);
         }
+        this.floors[this.currentFloor].setLabelVisibility(this.visibleLabels);
         this.addChild(this.floors[this.currentFloor])
     }
 
@@ -68,10 +81,7 @@ export class FloorPlan extends Container {
     }
 
     public load(planText: string) {
-        console.log("text:", planText);
         let plan: FloorPlanSerializable = JSON.parse(planText)
-        console.log(plan)
-        this.currentFloor = 0;
         this.reset();
         for (let floorData of plan.floors) {
             let floor = new Floor(floorData);
@@ -148,4 +158,7 @@ export class FloorPlan extends Container {
         return this.floors[this.currentFloor].getWallNodeSequence()
     }
 
+    public getFurniture() {
+        return this.floors[this.currentFloor].getFurniture();
+    }
 }

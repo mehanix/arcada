@@ -10,7 +10,6 @@ export class Floor extends Container {
 
     public furnitureArray: Map<number, Furniture>;
     private wallNodeSequence: WallNodeSequence;
-
     constructor(floorData?: FloorSerializable, previousFloor?: Floor) {
         super();
 
@@ -21,19 +20,15 @@ export class Floor extends Container {
         this.sortableChildren = true;
         if (floorData) {
             let nodeLinks = new Map<number, number[]>(floorData.wallNodeLinks)
-            console.log("nodeLinks", nodeLinks)
+
             this.wallNodeSequence.load(floorData.wallNodes, nodeLinks);
-            for (let fur of floorData.furnitureArray) {
-                let furnitureData: FurnitureData = { //todo. nu e complet aici
-                    _id: "",
-                    name: "",
+            for (let fur of floorData.furnitureArray) { 
+                let furnitureData: FurnitureData = {
                     width: fur.width,
                     height: fur.height,
-                    imagePath: fur.texturePath,
-                    category: ""
+                    imagePath: fur.texturePath
                 };
                 let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
-
                 let object = new Furniture(furnitureData, fur.id, attachedTo)
                 this.furnitureArray.set(fur.id, object);
 
@@ -44,7 +39,6 @@ export class Floor extends Container {
                 }
                 object.position.set(fur.x, fur.y)
                 object.rotation = fur.rotation;
-                // this.loadFurniture(furniture);
             }
             return;
         }
@@ -72,7 +66,15 @@ export class Floor extends Container {
            })
         }
     }
-
+    
+    public setLabelVisibility(value = true) {        
+        for (let wall of this.wallNodeSequence.getWalls()) {
+            wall.label.visible = value;
+        }
+    }
+    public getFurniture() {
+        return this.furnitureArray
+    }
 
     private getExteriorWalls() {
         return this.wallNodeSequence.getExteriorWalls();
@@ -119,7 +121,6 @@ export class Floor extends Container {
         for (let node of wallNodes.values()) {
             plan.wallNodes.push(node.serialize());
         }
-
         // wall node links
         plan.wallNodeLinks = Array.from(this.wallNodeSequence.getWallNodeLinks().entries());
         // furniture
@@ -129,11 +130,6 @@ export class Floor extends Container {
 
         }
         plan.furnitureArray = serializedFurniture;
-
-        // plan.furnitureId = furnitureId;
-        // plan.wallNodeId = wallNodeSequence.getWallNodeId();
-
-        console.log("pre save:", plan)
         return plan;
     }
     public setFurniturePosition(id: number, x: number, y: number, angle?: number) {

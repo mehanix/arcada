@@ -8,12 +8,12 @@ export interface Category {
 }
 
 export interface FurnitureData {
-    _id: string,
-    name: string,
+    _id?: string,
+    name?: string,
     width: number,
     height: number,
     imagePath: string,
-    category: string
+    category?: string
 }
 
 export interface FurnitureStore {

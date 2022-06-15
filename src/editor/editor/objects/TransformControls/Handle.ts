@@ -105,6 +105,12 @@ export class Handle extends Graphics {
     private onMouseUp(ev: InteractionEvent) {
         TransformLayer.dragging = false;
         this.active = false;
+        if(this.type == HandleType.Rotate) {
+            let pos = this.target.position;
+            this.target.anchor.set(0,0);
+             this.target.position.set(this.target.position.x - this.target.width / 2, this.target.position.y - this.target.height/2);
+        }
+
         ev.stopPropagation();
     }
 
@@ -124,6 +130,7 @@ export class Handle extends Graphics {
         // raport > 1 -> se mareste obiectul
         // raport < 1 -> se micsoreaza obiectul
         let sizeFactor = endDistance / startDistance;
+        let startCenterAngle = this.target.centerAngle;
         console.log(startDistance, endDistance, sizeFactor)
         switch (this.type) {
             case HandleType.Rotate:
@@ -134,15 +141,9 @@ export class Handle extends Graphics {
                 let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
                 let startAngle = Math.atan2(relativeStart.y, relativeStart.x)
                 let deltaAngle = endAngle - startAngle;
-                
-                let r = Math.sqrt(this.target.width*this.target.width + this.target.height*this.target.height)/2
+                this.target.anchor.set(0.5,0.5)
+                this.target.position.set(this.targetStartCenterPoint.x, this.targetStartCenterPoint.y);
                 this.target.rotation = this.startRotaton + deltaAngle;
-                
-                let sin = Math.sin(deltaAngle);
-                let cos = 1 - Math.cos(deltaAngle);
-                this.target.x = this.targetStartPoint.x - cos*r
-                this.target.y =  this.targetStartPoint.y + sin*r 
-
                 break;
             case HandleType.Horizontal:
                 this.target.scale.x = this.startScale.x * sizeFactor;

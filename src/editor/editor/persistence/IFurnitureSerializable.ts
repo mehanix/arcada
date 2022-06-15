@@ -1,4 +1,4 @@
-export interface IFurnitureSerializable{
+export interface IFurnitureSerializable {
     id:number,
     texturePath:string,
     width:number,

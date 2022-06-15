@@ -19,6 +19,7 @@ export class Furniture extends Sprite {
     public xLocked: boolean;
     public resourcePath: string;
     private orientation: number;
+    public centerAngle:number;
     constructor(data: FurnitureData, id: number, attachedTo?: Graphics, attachedToLeft?: number, attachedToRight?: number) {
 
         let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
@@ -43,6 +44,7 @@ export class Furniture extends Sprite {
         this.height = data.height * METER;
 
         console.log(this.width,this.height)
+        this.centerAngle = Math.atan2(-this.height, this.width)
 
         
         this.on('mousedown', this.onMouseDown)
@@ -130,8 +132,6 @@ export class Furniture extends Sprite {
             attachedToLeft: this.attachedToLeft,
             attachedToRight: this.attachedToRight
         }
-
-
         return res;
     }
 }

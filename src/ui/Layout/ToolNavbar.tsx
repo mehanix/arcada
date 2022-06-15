@@ -29,6 +29,7 @@ import { SaveAction } from '../../editor/editor/actions/SaveAction';
 import { Tool } from '../../editor/editor/constants';
 import { FurnitureAddPanel } from '../FurnitureControls/FurnitureAddPanel/FurnitureAddPanel';
 import { PrintAction } from '../../editor/editor/actions/PrintAction';
+import { ToggleLabelAction } from '../../editor/editor/actions/ToggleLabelAction';
 
 
 const useStyles = createStyles((theme) => ({
@@ -87,6 +88,8 @@ function AddMenu() {
   const { setTool } = useStore()
   const [drawerOpened, setDrawerOpened] = useState(false);
 
+  const [modalOpened, setModalOpened] = useState(false);
+
   let addButton = <UnstyledButton className={classes.link}>
   <Plus />
   </UnstyledButton>
@@ -119,6 +122,8 @@ export function ToolNavbar() {
   const [active, setActive] = useState(0);
 
   const { setTool, floor} = useStore()
+  const {setSnap, snap} = useStore()
+
   const fileRef = useRef<HTMLInputElement>();
   const { classes, cx } = useStyles();
 
@@ -171,7 +176,7 @@ export function ToolNavbar() {
             let action = new ChangeFloorAction(-1);
             action.execute();
           }} />
-          <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {
+          <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {  
             let action = new ChangeFloorAction(-1);
             action.execute();
           }} />
@@ -180,8 +185,13 @@ export function ToolNavbar() {
       <Navbar.Section grow >
         <Group direction="column" align="center" spacing={0}>
           <NavbarLink icon={Ruler2} label="Measure tool" />
-          <NavbarLink icon={ArrowBottomSquare} label="Snap to grid" />
-          <NavbarLink icon={Dimensions} label="Toggle size labels" />
+          <NavbarLink icon={ArrowBottomSquare} label="Snap to grid"  onClick={() => {
+            setSnap(!snap);
+          }}/>
+          <NavbarLink icon={Dimensions} label="Toggle size labels" onClick={() => {
+            let action = new ToggleLabelAction();
+            action.execute();
+          }}/>
           <NavbarLink icon={Help} label="Help" />
 
         </Group>
