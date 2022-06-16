@@ -168,7 +168,9 @@ export function ToolNavbar() {
       </Navbar.Section>
       <Navbar.Section grow >
         <Group direction="column" align="center" spacing={0}>
-          <NavbarLink icon={Ruler2} label="Measure tool" />
+          <NavbarLink icon={Ruler2} label="Measure tool" onClick={() => {
+            setTool(Tool.Measure);
+          }}/>
           <NavbarLink icon={ArrowBottomSquare} label="Snap to grid"  onClick={() => {
             setSnap(!snap);
           }}/>

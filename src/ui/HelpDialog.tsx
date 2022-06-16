@@ -100,6 +100,18 @@ export function HelpDialog() {
       </Group>
     </>
   }
+    helpBody[Tool.Measure] = {
+    title: "Add Door",
+    body: <>
+      <Image src={helpAddDoor}></Image>
+      <Group noWrap={true}>
+        <Click /> <p>Click on wall to add door</p>
+      </Group>
+      <Group noWrap={true}>
+        <LayoutAlignMiddle /> <p>Middle click to change door orientation</p>
+      </Group>
+    </>
+  }
   return (
     <>
       <Group position="center">

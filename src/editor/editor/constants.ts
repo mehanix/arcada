@@ -38,6 +38,7 @@ export enum Tool {
     FurnitureAdd,
     Edit,
     Remove,
+    Measure,
     FurnitureAddWindow,
     FurnitureAddDoor,
     View

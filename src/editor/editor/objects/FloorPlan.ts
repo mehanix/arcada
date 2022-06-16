@@ -94,8 +94,16 @@ export class FloorPlan extends Container {
 
     }
 
-
-
+    // removes current floor
+    public removeFloor() {
+        if (this.floors.length < 2) {
+            return;
+        }
+        let oldCurrentFloor = this.currentFloor;
+        this.changeFloor(-1);
+        this.floors[oldCurrentFloor].reset();
+        this.floors.splice(oldCurrentFloor,1);
+    }
     // cleans up everything. prepare for new load. TODO Feature multiple floors
     private reset() {
 
