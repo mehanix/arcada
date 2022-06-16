@@ -30,6 +30,8 @@ import { Tool } from '../../editor/editor/constants';
 import { FurnitureAddPanel } from '../FurnitureControls/FurnitureAddPanel/FurnitureAddPanel';
 import { PrintAction } from '../../editor/editor/actions/PrintAction';
 import { ToggleLabelAction } from '../../editor/editor/actions/ToggleLabelAction';
+import { NavbarLink } from '../NavbarLink';
+import { HelpDialog } from '../HelpDialog';
 
 
 const useStyles = createStyles((theme) => ({
@@ -57,24 +59,6 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
-
-interface NavbarLinkProps {
-  icon: TablerIcon;
-  label?: string;
-  active?: boolean;
-  onClick?(): void;
-}
-
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
-  const { classes, cx } = useStyles();
-  return (
-    <Tooltip label={label} position="right" withArrow transitionDuration={0}>
-      <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
-        <Icon />
-      </UnstyledButton>
-    </Tooltip>
-  );
-}
 
 const modes = [
   { icon: Eye, label: 'View', tool: Tool.View },
@@ -192,8 +176,7 @@ export function ToolNavbar() {
             let action = new ToggleLabelAction();
             action.execute();
           }}/>
-          <NavbarLink icon={Help} label="Help" />
-
+          <HelpDialog />
         </Group>
       </Navbar.Section>
       <Navbar.Section>

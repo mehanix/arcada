@@ -105,27 +105,21 @@ export class Handle extends Graphics {
     private onMouseUp(ev: InteractionEvent) {
         TransformLayer.dragging = false;
         this.active = false;
-        if(this.type == HandleType.Rotate) {
-            let pos = this.target.position;
-            this.target.anchor.set(0,0);
-             this.target.position.set(this.target.position.x - this.target.width / 2, this.target.position.y - this.target.height/2);
-        }
-
         ev.stopPropagation();
     }
 
 
     private onMouseMove(ev: InteractionEvent) {
 
-        if (!this.active || !TransformLayer.dragging) {
+        if (!this.active || !TransformLayer.dragging) { 
             return;
         }
         // unde se afla mouse-ul acum
         let mouseEndPoint = new Point(ev.data.global.x, ev.data.global.y); 
         // distanta de la obiect la punctul de start (unde a dat click utilizatorul)
-        let startDistance = this.getDistance(this.mouseStartPoint, this.targetStartCenterPoint)
+        let startDistance = this.getDistance(this.mouseStartPoint, this.targetStartPoint)
         // distanta de la obiect la pozitia noua a mouse-ului
-        let endDistance = this.getDistance(mouseEndPoint, this.targetStartCenterPoint);
+        let endDistance = this.getDistance(mouseEndPoint, this.targetStartPoint);
         // raportul dintre cele doua distante:  
         // raport > 1 -> se mareste obiectul
         // raport < 1 -> se micsoreaza obiectul
@@ -141,8 +135,6 @@ export class Handle extends Graphics {
                 let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
                 let startAngle = Math.atan2(relativeStart.y, relativeStart.x)
                 let deltaAngle = endAngle - startAngle;
-                this.target.anchor.set(0.5,0.5)
-                this.target.position.set(this.targetStartCenterPoint.x, this.targetStartCenterPoint.y);
                 this.target.rotation = this.startRotaton + deltaAngle;
                 break;
             case HandleType.Horizontal:

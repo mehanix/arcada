@@ -43,7 +43,7 @@ export class AddWallManager {
             .lineTo(newX, newY);
 
         let length = euclideanDistance(this.previousNode.x, newX, this.previousNode.y, newY);
-        this.sizeLabel.update(length - INTERIOR_WALL_THICKNESS);
+        this.sizeLabel.update(length);
         this.sizeLabel.position.x = Math.abs(newX + this.previousNode.x) / 2
         this.sizeLabel.position.y = Math.abs(newY + this.previousNode.y) / 2
         this.sizeLabel.visible = true;
