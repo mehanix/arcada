@@ -7,13 +7,10 @@ import { ToolNavbar } from './ToolNavbar';
 export function PageLayout() {
 
     return (<>
-            <WelcomeModal/>
-        <Grid grow gutter={0}>
-            <ToolNavbar></ToolNavbar>
-            <Grid.Col span={9}>
-                <EditorRoot />
-            </Grid.Col>
-        </Grid>
+        <WelcomeModal />
+        <ToolNavbar></ToolNavbar>
+
+        <EditorRoot />
         </>
     );
 }

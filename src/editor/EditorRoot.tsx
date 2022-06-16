@@ -27,7 +27,7 @@ export function EditorRoot() {
             autoDensity: true,
             backgroundColor: 0xebebeb,
             antialias: true,
-            resizeTo: ref.current.parentElement
+            resizeTo: window
         });
 
     

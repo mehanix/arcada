@@ -134,7 +134,7 @@ export function ToolNavbar() {
 
   };
 
-  return (
+  return (<div style={{position:'absolute'}}>
     <Navbar height={window.innerHeight} width={{ base: 70 }} p="md">
 
       <Navbar.Section grow>
@@ -203,5 +203,6 @@ export function ToolNavbar() {
         </Group>
       </Navbar.Section>
     </Navbar>
+    </div>
   );
 }

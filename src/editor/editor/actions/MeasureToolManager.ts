@@ -18,6 +18,8 @@ export class Preview {
 
     public set(value:Point){
         this.startPoint = value;
+        this.preview.clear();
+        this.sizeLabel.visible = false;
     }
 
     public updatePreview(ev:InteractionEvent) {

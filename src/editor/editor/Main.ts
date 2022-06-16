@@ -15,12 +15,12 @@ export class Main extends Viewport {
 
     private floorPlan: FloorPlan;
     public static viewportPluginManager: PluginManager;
-    public static app:Application;
+    public static app: Application;
     transformLayer: TransformLayer;
-    addWallManager:AddWallManager;
+    addWallManager: AddWallManager;
     bkgPattern: TilingSprite;
-    public pointer:Pointer;
-    public preview:Preview;
+    public pointer: Pointer;
+    public preview: Preview;
     constructor(options: IViewportOptions) {
         super(options);
 
@@ -35,8 +35,8 @@ export class Main extends Viewport {
 
     private setup() {
         Main.viewportPluginManager = this.plugins;
-        this.drag().clamp({direction: 'all'})
-        .wheel().clampZoom({minScale: 1.0, maxScale:6.0})
+        this.drag().clamp({ direction: 'all' })
+            .wheel().clampZoom({ minScale: 1.0, maxScale: 6.0 })
         this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
         this.addChild(this.bkgPattern);
 
@@ -48,7 +48,7 @@ export class Main extends Viewport {
 
         this.addWallManager = AddWallManager.Instance;
         this.addChild(this.addWallManager.preview.getReference())
-        
+
         this.pointer = new Pointer();
         this.addChild(this.pointer);
         this.on("mousedown", this.checkTools)
@@ -56,19 +56,20 @@ export class Main extends Viewport {
         this.on("mouseup", this.updateEnd)
 
     }
-    private updatePreview(ev:InteractionEvent) {
+    private updatePreview(ev: InteractionEvent) {
         this.addWallManager.updatePreview(ev);
         this.preview.updatePreview(ev);
         this.pointer.update(ev);
     }
-    private updateEnd(ev:InteractionEvent) {
+    private updateEnd(ev: InteractionEvent) {
         switch (useStore.getState().activeTool) {
             case Tool.Measure:
                 this.preview.set(undefined);
+                this.pause = false;
                 break;
         }
     }
-    private checkTools(ev:InteractionEvent) {
+    private checkTools(ev: InteractionEvent) {
         ev.stopPropagation()
         let point;
         switch (useStore.getState().activeTool) {
