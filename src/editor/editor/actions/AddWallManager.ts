@@ -1,7 +1,8 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { euclideanDistance } from "../../../helpers/EuclideanDistance";
 import { viewportX, viewportY } from "../../../helpers/ViewportCoordinates";
-import { INTERIOR_WALL_THICKNESS, WALL_THICKNESS } from "../constants";
+import { INTERIOR_WALL_THICKNESS, METER, WALL_THICKNESS } from "../constants";
+import { FloorPlan } from "../objects/FloorPlan";
 import { Label } from "../objects/TransformControls/Label";
 import { TransformLayer } from "../objects/TransformControls/TransformLayer";
 import { WallNode } from "../objects/Walls/WallNode";
@@ -23,6 +24,23 @@ export class AddWallManager {
         this.preview = new Preview();
 
 
+    }
+
+    // checks if step is valid
+    public checkStep(coords:Point) {
+        if (this.previousNode == undefined) {
+            for (let [id,node] of FloorPlan.Instance.getWallNodeSeq().getWallNodes()) {
+                if (euclideanDistance(coords.x, node.x, coords.y, node.y) < 0.3 * METER) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (euclideanDistance(coords.x, this.previousNode.x, coords.y, this.previousNode.y) < 0.3 * METER) {
+            return false;
+        }
+        return true;
     }
     public step(node: WallNode) {
         // first click. set first node

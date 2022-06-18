@@ -32,6 +32,7 @@ import { PrintAction } from '../../editor/editor/actions/PrintAction';
 import { ToggleLabelAction } from '../../editor/editor/actions/ToggleLabelAction';
 import { NavbarLink } from '../NavbarLink';
 import { HelpDialog } from '../HelpDialog';
+import { DeleteFloorAction } from '../../editor/editor/actions/DeleteFloorAction';
 
 
 const useStyles = createStyles((theme) => ({
@@ -134,8 +135,9 @@ export function ToolNavbar() {
 
   };
 
+  
   return (<div style={{position:'absolute'}}>
-    <Navbar height={window.innerHeight} width={{ base: 70 }} p="md">
+    <Navbar height="100vh" width={{ base: 70 }} p="md">
 
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
@@ -161,7 +163,7 @@ export function ToolNavbar() {
             action.execute();
           }} />
           <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {  
-            let action = new ChangeFloorAction(-1);
+            let action = new DeleteFloorAction();
             action.execute();
           }} />
         </Group>

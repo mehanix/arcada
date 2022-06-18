@@ -5,12 +5,12 @@ import { NavbarLink } from './NavbarLink';
 import { ArrowNarrowRight, ArrowRight, Click, Edit, Eye, GitFork, GitPullRequest, Help, Icon, LayoutAlignMiddle, Multiplier2x, Trash, Vector, ZoomIn } from 'tabler-icons-react';
 import { Tool } from '../editor/editor/constants';
 import { Image } from '@mantine/core';
-import helpAddWall from '../gifs/add-wall.gif'
-import helpDelete from '../gifs/delete.gif'
-import helpEditFurniture from '../gifs/edit-furniture.gif'
-import helpEditWall from '../gifs/edit-walls.gif'
-import helpAddWindow from '../gifs/add-window.gif'
-import helpAddDoor from '../gifs/add-door.gif'
+import helpAddWall from '../res/add-wall.gif'
+import helpDelete from '../res/delete.gif'
+import helpEditFurniture from '../res/edit-furniture.gif'
+import helpEditWall from '../res/edit-walls.gif'
+import helpAddWindow from '../res/add-window.gif'
+import helpAddDoor from '../res/add-door.gif'
 
 interface IHelpBody {
   title: string,

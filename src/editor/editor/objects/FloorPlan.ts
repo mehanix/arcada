@@ -32,14 +32,14 @@ export class FloorPlan extends Container {
     public static get Instance() {
         return this.instance || (this.instance = new this());
     }
-    
+
     public get CurrentFloor() {
         return this.currentFloor;
     }
-    
-    public set CurrentFloor(floor:number) {
+
+    public set CurrentFloor(floor: number) {
         this.currentFloor = floor;
-        useStore.setState({floor:this.currentFloor})
+        useStore.setState({ floor: this.currentFloor })
     }
 
     public toggleLabels() {
@@ -91,7 +91,6 @@ export class FloorPlan extends Container {
         this.furnitureId = plan.furnitureId;
         this.floors[0].getWallNodeSequence().setId(plan.wallNodeId);
         this.addChild(this.floors[this.currentFloor])
-
     }
 
     // removes current floor
@@ -102,8 +101,11 @@ export class FloorPlan extends Container {
         let oldCurrentFloor = this.currentFloor;
         this.changeFloor(-1);
         this.floors[oldCurrentFloor].reset();
-        this.floors.splice(oldCurrentFloor,1);
+        this.floors.splice(oldCurrentFloor, 1);
+        this.changeFloor(1);
+        console.log(this.floors)
     }
+
     // cleans up everything. prepare for new load. TODO Feature multiple floors
     private reset() {
 
@@ -144,8 +146,7 @@ export class FloorPlan extends Container {
     public redrawWalls() {
         this.floors[this.currentFloor].redrawWalls();
     }
-
-
+    
     public removeWallNode(nodeId: number) {
 
         this.floors[this.currentFloor].removeWallNode(nodeId)

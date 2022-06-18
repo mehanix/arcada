@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Modal, Button, Group, useMantineTheme, Center, Image, Menu, createStyles } from '@mantine/core';
 import { Database, Plus } from 'tabler-icons-react';
 import { LoadAction } from '../editor/editor/actions/LoadAction';
-
+import ArcadaLogo from '../res/logo.png'
 export function WelcomeModal() {
   const [opened, setOpened] = useState(false);
   const fileRef = useRef<HTMLInputElement>();
-
+  const image = <Image src={ArcadaLogo}/>
   const useStyles = createStyles(() => ({
     padded: {
       padding: '4px'
@@ -32,6 +32,7 @@ export function WelcomeModal() {
   useEffect(() => {
     setOpened(true);
   }, [])
+
   return (
     <>
       <Modal className={classes.padded}
@@ -46,7 +47,7 @@ export function WelcomeModal() {
 
       >
         <Center className={classes.padded}>
-          <Image src={"./logo.png"} />
+          {image}
 
         </Center>
         <Center className={classes.padded}>

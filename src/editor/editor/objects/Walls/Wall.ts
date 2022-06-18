@@ -93,7 +93,7 @@ export class Wall extends Graphics {
         this.leftNode.angle = theta;
         this.rightNode.angle = theta;
 
-        this.label.update(this.length);
+        this.label.update(this.length - WALL_THICKNESS);
         this.label.position.x = this.width / 2;
         console.log(theta);
         this.label.angle = 360 - theta

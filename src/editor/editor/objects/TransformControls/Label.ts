@@ -1,5 +1,5 @@
 import { Container, InteractionEvent, Point, Sprite, Text, TextStyle, Texture } from "pixi.js";
-import { METER } from "../../constants";
+import { METER, WALL_THICKNESS } from "../../constants";
 
 export class Label extends Container {
     text:Sprite;
@@ -41,7 +41,7 @@ export class Label extends Container {
         size = Math.abs(size) / METER;
 
         // truncating to the 2nd decimal
-        const sizeLabel = (Math.round(size * 100) / 100).toFixed(2);
+        const sizeLabel = (Math.round((size) * 100) / 100).toFixed(2)
 
         return sizeLabel + "m"
     }    

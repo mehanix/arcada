@@ -1,5 +1,7 @@
 import { Container, Point } from "pixi.js";
+import { euclideanDistance } from "../../../helpers/EuclideanDistance";
 import { FurnitureData } from "../../../stores/FurnitureStore";
+import { METER } from "../constants";
 import { FloorSerializable } from "../persistence/FloorSerializable";
 import { FloorPlan } from "./FloorPlan";
 import { Furniture } from "./Furniture";
@@ -22,7 +24,7 @@ export class Floor extends Container {
             let nodeLinks = new Map<number, number[]>(floorData.wallNodeLinks)
 
             this.wallNodeSequence.load(floorData.wallNodes, nodeLinks);
-            for (let fur of floorData.furnitureArray) { 
+            for (let fur of floorData.furnitureArray) {
                 let furnitureData: FurnitureData = {
                     width: fur.width,
                     height: fur.height,
@@ -51,23 +53,23 @@ export class Floor extends Container {
                     let oldId = node.getId();
                     if (!nodeCloneMap.has(oldId)) {
                         nodeCloneMap.set(oldId, this.wallNodeSequence.getNewNodeId());
-                        this.addNode(node.x, node.y,nodeCloneMap.get(oldId) )
+                        this.addNode(node.x, node.y, nodeCloneMap.get(oldId))
                     }
                 })
             }
 
             // now copy walls with respect to the node mapping
-           previousFloor.getExteriorWalls().map(wall => {
-               let newLeftId = nodeCloneMap.get(wall.leftNode.getId())
-               let newRightId = nodeCloneMap.get(wall.rightNode.getId())
+            previousFloor.getExteriorWalls().map(wall => {
+                let newLeftId = nodeCloneMap.get(wall.leftNode.getId())
+                let newRightId = nodeCloneMap.get(wall.rightNode.getId())
 
-               let newWall = this.wallNodeSequence.addWall(newLeftId, newRightId);
-               newWall.setIsExterior(true);
-           })
+                let newWall = this.wallNodeSequence.addWall(newLeftId, newRightId);
+                newWall.setIsExterior(true);
+            })
         }
     }
-    
-    public setLabelVisibility(value = true) {        
+
+    public setLabelVisibility(value = true) {
         for (let wall of this.wallNodeSequence.getWalls()) {
             wall.label.visible = value;
         }
@@ -183,7 +185,7 @@ export class Floor extends Container {
         }
     }
 
-    public addNode(x: number, y: number, id?:number) {
+    public addNode(x: number, y: number, id?: number) {
         return this.wallNodeSequence.addNode(x, y, id);
 
     }
@@ -191,15 +193,32 @@ export class Floor extends Container {
     public addNodeToWall(wall: Wall, coords: Point) {
         let leftNode = wall.leftNode.getId();
         let rightNode = wall.rightNode.getId();
+        // ecuatia dreptei, obtine y echivalent lui x
+        coords.y = this.getCorrespondingY(coords.x, wall.leftNode.position, wall.rightNode.position)
+
+        console.log(wall.leftNode.position, wall.rightNode.position, coords);
+        // prevent misclicks
+        if (Math.abs(euclideanDistance(coords.x, wall.leftNode.x, coords.y, wall.leftNode.y)) < 0.2 * METER) {
+            return;
+        }
+        if (Math.abs(euclideanDistance(coords.x, wall.rightNode.x, coords.y, wall.rightNode.y)) < 0.2 * METER) {
+            return;
+        }
         // delete wall between left and right node
         this.removeWall(wall);
         // add node and connect walls to it
+
+
         let newNode = this.wallNodeSequence.addNode(coords.x, coords.y);
         let newNodeId = newNode.getId()
         this.wallNodeSequence.addWall(leftNode, newNodeId);
         this.wallNodeSequence.addWall(newNodeId, rightNode);
 
         return newNode;
+    }
+
+    private getCorrespondingY(x: number, a: Point, b: Point) {
+        return ((x - a.x) * (b.y - a.y)) / (b.x - a.x) + a.y;
     }
 
 }

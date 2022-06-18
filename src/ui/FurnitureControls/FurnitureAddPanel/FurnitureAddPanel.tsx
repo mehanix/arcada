@@ -43,10 +43,13 @@ export function FurnitureAddPanel() {
                 return { value: cat._id, label: cat.name };
             })} />
         </Navbar.Section>
-        <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
-            <SimpleGrid style={{ padding: 5 }} cols={2}>
-                {cards}
-            </SimpleGrid>
+        <Navbar.Section style={{ height:"100%"}}grow mx="-xs" px="xs">
+            <ScrollArea style={{ width: "320", height:"90%"}}>
+                <SimpleGrid style={{ padding: 5 }} cols={2}>
+                    {cards}
+                </SimpleGrid>
+            </ScrollArea>
+
         </Navbar.Section>
     </>)
 }

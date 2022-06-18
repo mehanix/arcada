@@ -9,7 +9,7 @@ import { viewportX, viewportY } from "../../helpers/ViewportCoordinates";
 import { Tool } from "./constants";
 import { Pointer } from "./Pointer";
 import { Preview } from "./actions/MeasureToolManager";
-// import { FurnitureData } from "../../stores/FurnitureStore";
+
 export class Main extends Viewport {
 
 
@@ -67,6 +67,12 @@ export class Main extends Viewport {
                 this.preview.set(undefined);
                 this.pause = false;
                 break;
+            case Tool.WallAdd:
+                this.pause = false;
+                break;
+            case Tool.Edit:
+                this.pause = false;
+                break;
         }
     }
     private checkTools(ev: InteractionEvent) {
@@ -74,9 +80,13 @@ export class Main extends Viewport {
         let point;
         switch (useStore.getState().activeTool) {
             case Tool.WallAdd:
+                this.pause = true;
                 point = new Point(viewportX(ev.data.global.x), viewportY(ev.data.global.y));
                 let action = new AddNodeAction(undefined, point)
                 action.execute();
+                break;
+            case Tool.Edit:
+                this.pause = true;
                 break;
             case Tool.Measure:
                 this.pause = true;
