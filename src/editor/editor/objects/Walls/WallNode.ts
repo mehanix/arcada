@@ -6,6 +6,7 @@ import { DeleteWallNodeAction } from "../../actions/DeleteWallNodeAction";
 import { INodeSerializable } from "../../persistence/INodeSerializable";
 import { FloorPlan } from "../FloorPlan";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
+import { isMobile } from "react-device-detect";
 export class WallNode extends Graphics {
 
     private dragging: boolean;
@@ -17,15 +18,21 @@ export class WallNode extends Graphics {
         this.id = nodeId;
 
         //  this.drawCircle(0,0,INTERIOR_WALL_THICKNESS / 2)
-        this.setSize(INTERIOR_WALL_THICKNESS);
+        if(isMobile) {
+            this.setSize(INTERIOR_WALL_THICKNESS*2);
+
+        } else {
+            this.setSize(INTERIOR_WALL_THICKNESS);
+
+        }
 
         this.position.set(x, y)
         this.endFill();
         this.zIndex = 999;
-        this.on("mousedown", this.onMouseDown)
-        this.on("mousemove", this.onMouseMove)
-        this.on("mouseup", this.onMouseUp);
-        this.on("mouseupoutside", this.onMouseUp);
+        this.on("pointerdown", this.onMouseDown)
+        this.on("pointermove", this.onMouseMove)
+        this.on("pointerup", this.onMouseUp);
+        this.on("pointerupoutside", this.onMouseUp);
 
 
     }

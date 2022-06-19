@@ -1,4 +1,5 @@
 import {Graphics, InteractionEvent, Point } from "pixi.js";
+import { isMobile } from "react-device-detect";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
@@ -50,6 +51,9 @@ export class Handle extends Graphics {
         this.beginFill(this.color)
             .lineStyle(1, this.color)
 
+        if (isMobile) {
+            this.size = this.size*2.5;
+        }
         if (this.type == HandleType.Rotate) {
             this.drawCircle(0, 0, this.size/1.5).endFill();
             this.pivot.set(this.size/3, this.size/3);
@@ -81,10 +85,10 @@ export class Handle extends Graphics {
             this.position.set(handleConfig.pos.x, handleConfig.pos.y);
         }
 
-        this.on("mousedown", this.onMouseDown)
-        this.on("mouseup", this.onMouseUp)
-        this.on("mouseupoutside", this.onMouseUp)
-        this.on("mousemove", this.onMouseMove)
+        this.on("pointerdown", this.onMouseDown)
+        this.on("pointerup", this.onMouseUp)
+        this.on("pointerupoutside", this.onMouseUp)
+        this.on("pointermove", this.onMouseMove)
     }
 
     private onMouseDown(ev: InteractionEvent) {

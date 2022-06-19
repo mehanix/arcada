@@ -1,5 +1,5 @@
 
-export const endpoint = process.env.REACT_APP_SERVICE_URI ? process.env.REACT_APP_SERVICE_URI : 'http://localhost:4133/';
+export const endpoint = process.env.REACT_APP_SERVICE_URI ? process.env.REACT_APP_SERVICE_URI : 'http://192.168.0.171:4133/';
 
 
 export function getCategoriesRequest() {

@@ -48,11 +48,8 @@ export class TransformLayer extends Container {
         this.addLabel(LabelAxis.Horizontal);
         this.addLabel(LabelAxis.Vertical);
 
-        this.on("mousedown", this.onMouseDown)
     }
 
-    private onMouseDown() {
-    }
 
     public static get Instance() {
         return this.instance || (this.instance = new this()); // TODO obfuscate

@@ -1,5 +1,5 @@
 import { IViewportOptions, PluginManager, Viewport } from "pixi-viewport";
-import { Application, InteractionEvent, Loader, Point, TilingSprite } from "pixi.js";
+import { Application, InteractionEvent, isMobile, Loader, Point, TilingSprite } from "pixi.js";
 import { FloorPlan } from "./objects/FloorPlan";
 import { TransformLayer } from "./objects/TransformControls/TransformLayer";
 import { useStore } from "../../stores/EditorStore";
@@ -36,6 +36,7 @@ export class Main extends Viewport {
     private setup() {
         Main.viewportPluginManager = this.plugins;
         this.drag().clamp({ direction: 'all' })
+            .pinch()
             .wheel().clampZoom({ minScale: 1.0, maxScale: 6.0 })
         this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
         this.addChild(this.bkgPattern);
@@ -51,9 +52,9 @@ export class Main extends Viewport {
 
         this.pointer = new Pointer();
         this.addChild(this.pointer);
-        this.on("mousedown", this.checkTools)
-        this.on("mousemove", this.updatePreview)
-        this.on("mouseup", this.updateEnd)
+        this.on("pointerdown", this.checkTools)
+        this.on("pointermove", this.updatePreview)
+        this.on("pointerup", this.updateEnd)
 
     }
     private updatePreview(ev: InteractionEvent) {
@@ -68,7 +69,9 @@ export class Main extends Viewport {
                 this.pause = false;
                 break;
             case Tool.WallAdd:
+                if (!isMobile) {
                 this.pause = false;
+                }
                 break;
             case Tool.Edit:
                 this.pause = false;
@@ -86,7 +89,9 @@ export class Main extends Viewport {
                 action.execute();
                 break;
             case Tool.Edit:
-                this.pause = true;
+                if (!isMobile) {
+                    this.pause = true;
+                }
                 break;
             case Tool.Measure:
                 this.pause = true;

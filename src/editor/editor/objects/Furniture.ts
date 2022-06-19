@@ -19,7 +19,7 @@ export class Furniture extends Sprite {
     public xLocked: boolean;
     public resourcePath: string;
     private orientation: number;
-    public centerAngle:number;
+    public centerAngle: number;
     constructor(data: FurnitureData, id: number, attachedTo?: Graphics, attachedToLeft?: number, attachedToRight?: number, orientation = 0) {
 
         let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
@@ -43,12 +43,13 @@ export class Furniture extends Sprite {
         this.width = data.width * METER;
         this.height = data.height * METER;
         this.setOrientation(orientation);
-        console.log(this.width,this.height)
+        console.log(this.width, this.height)
         this.centerAngle = Math.atan2(-this.height, this.width)
 
-        
-        this.on('mousedown', this.onMouseDown)
-        this.on('mousemove', this.onMouseMove)
+
+        this.on('pointerdown', this.onMouseDown)
+        this.on('pointermove', this.onMouseMove)
+        this.on('rightdown', this.onRightDown)
 
     }
 
@@ -61,14 +62,14 @@ export class Furniture extends Sprite {
         switch (this.orientation) {
             case 0:
                 this.anchor.x = 1;
-                this.scale.x = -1*this.scale.x;
+                this.scale.x = -1 * this.scale.x;
                 this.anchor.y = 0;
-                this.scale.y = 1*this.scale.y;
+                this.scale.y = 1 * this.scale.y;
                 this.orientation += 1;
                 break;
             case 1:
                 this.anchor.y = 1;
-                this.scale.y = -1*this.scale.y;
+                this.scale.y = -1 * this.scale.y;
                 this.orientation += 1;
                 if (this.resourcePath == "door") {
                     this.position.y -= (this.width - INTERIOR_WALL_THICKNESS);
@@ -92,20 +93,27 @@ export class Furniture extends Sprite {
         }
     }
 
+    private onRightDown(ev: InteractionEvent) {
+        ev.stopPropagation();
+        this.switchOrientation();
+
+        return;
+
+    }
     private setOrientation(number) {
         console.log("orietnation", number)
         if (number > 0) {
             console.log("0")
             this.anchor.x = 1;
-            this.scale.x = -1*this.scale.x;
+            this.scale.x = -1 * this.scale.x;
             this.anchor.y = 0;
-            this.scale.y = 1*this.scale.y;
+            this.scale.y = 1 * this.scale.y;
         }
 
         if (number > 1) {
             console.log("1")
             this.anchor.y = 1;
-            this.scale.y = -1*this.scale.y;
+            this.scale.y = -1 * this.scale.y;
             if (this.resourcePath == "door") {
                 this.position.y -= (this.width - INTERIOR_WALL_THICKNESS);
             }
@@ -131,12 +139,6 @@ export class Furniture extends Sprite {
     }
     private onMouseDown(ev: InteractionEvent) {
 
-        if (ev.data.button == 1) {
-            ev.stopPropagation();
-            this.switchOrientation();
-            
-            return;
-        }
         switch (useStore.getState().activeTool) {
             case Tool.Edit: {
                 const action = new EditFurnitureAction(this);

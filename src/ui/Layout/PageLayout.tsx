@@ -8,20 +8,20 @@ import ArcadaLogo from '../../res/logo.png'
 
 export function PageLayout() {
 
-    if (isMobile) {
-        return <>
-            <Modal
-                opened={true}
-                withCloseButton={false}
-                onClose={() => (false)}
-            >
-                <Center>
-                    <Image src={ArcadaLogo}/>
-                </Center>
-                We're sorry, but Arcada is currently only intended for desktops.
-            </Modal>
-        </>
-    }
+    // if (isMobile) {
+    //     return <>
+    //         <Modal
+    //             opened={true}
+    //             withCloseButton={false}
+    //             onClose={() => (false)}
+    //         >
+    //             <Center>
+    //                 <Image src={ArcadaLogo}/>
+    //             </Center>
+    //             We're sorry, but Arcada is currently only intended for desktops.
+    //         </Modal>
+    //     </>
+    // }
 
     return (<>
 

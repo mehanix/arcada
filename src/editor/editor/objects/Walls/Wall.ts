@@ -42,7 +42,7 @@ export class Wall extends Graphics {
         this.drawLine();
 
 
-        this.on("mousedown", this.onMouseDown)
+        this.on("pointertap", this.onMouseDown)
     }
 
     public setIsExterior(value: boolean) {
