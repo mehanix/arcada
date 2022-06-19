@@ -3,10 +3,8 @@ import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Wall } from "./Walls/Wall";
 import { Floor } from "./Floor";
 import { Serializer } from "../persistence/Serializer";
-import saveAs from "file-saver";
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { Action } from "../actions/Action";
-import { Main } from "../Main";
 import { useStore } from "../../../stores/EditorStore";
 
 export class FloorPlan extends Container {
@@ -76,8 +74,7 @@ export class FloorPlan extends Container {
     public save() {
 
         let floorPlan = this.serializer.serialize(this.floors, this.furnitureId);
-        let blob = new Blob([floorPlan], { type: "text/plain;charset=utf-8" });
-        saveAs(blob, "floor_plan.txt")
+        return floorPlan;
     }
 
     public load(planText: string) {

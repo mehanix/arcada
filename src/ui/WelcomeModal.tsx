@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Modal, Button, Group, useMantineTheme, Center, Image, Menu, createStyles } from '@mantine/core';
-import { Database, Plus } from 'tabler-icons-react';
+import { Database, Plus, RotateClockwise } from 'tabler-icons-react';
 import { LoadAction } from '../editor/editor/actions/LoadAction';
 import ArcadaLogo from '../res/logo.png'
+import { FloorPlan } from '../editor/editor/objects/FloorPlan';
 export function WelcomeModal() {
   const [opened, setOpened] = useState(false);
   const fileRef = useRef<HTMLInputElement>();
@@ -70,7 +71,15 @@ export function WelcomeModal() {
             Load from disk
           </Button>
         </Center>
-
+        <Center className={classes.padded}>
+          <Button 
+            onClick={() => { 
+            FloorPlan.Instance.load(localStorage.getItem('autosave'));
+            setOpened(false) 
+            }} leftIcon={<RotateClockwise />} variant="white">
+            Load from local save
+          </Button>
+        </Center>
       </Modal>
 
     </>

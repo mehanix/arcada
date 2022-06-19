@@ -31,7 +31,7 @@ export class Floor extends Container {
                     imagePath: fur.texturePath
                 };
                 let attachedTo = this.wallNodeSequence.getWall(fur.attachedToLeft, fur.attachedToRight)
-                let object = new Furniture(furnitureData, fur.id, attachedTo)
+                let object = new Furniture(furnitureData, fur.id, attachedTo, fur.attachedToLeft, fur.attachedToRight, fur.orientation)
                 this.furnitureArray.set(fur.id, object);
 
                 if (attachedTo != undefined) {

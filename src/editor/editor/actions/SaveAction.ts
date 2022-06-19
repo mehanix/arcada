@@ -1,3 +1,4 @@
+import saveAs from "file-saver";
 import { FloorPlan } from "../objects/FloorPlan";
 import { Action } from "./Action";
 
@@ -10,6 +11,9 @@ export class SaveAction implements Action {
     }
 
     public execute() {
-        this.receiver.save();
+        let data = this.receiver.save();
+        let blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "floor_plan.txt")
+
     }
 }

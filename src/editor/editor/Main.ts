@@ -97,3 +97,17 @@ export class Main extends Viewport {
     }
 
 }
+
+
+let autosave = () => {
+    let data = FloorPlan.Instance.save();
+    localStorage.setItem('autosave', data);
+}
+// setInterval(autosave, 60000)
+
+document.onkeydown = (e) => {
+    e.preventDefault();
+    if (e.code == "KeyS" && e.ctrlKey) {
+        autosave();
+    }
+};       
