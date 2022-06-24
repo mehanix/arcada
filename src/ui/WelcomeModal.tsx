@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Modal, Button, Group, useMantineTheme, Center, Image, Menu, createStyles } from '@mantine/core';
+import { Modal, Button, Group, useMantineTheme, Center, Image, Menu, createStyles, Stack } from '@mantine/core';
 import { Database, Plus, RotateClockwise } from 'tabler-icons-react';
 import { LoadAction } from '../editor/editor/actions/LoadAction';
 import ArcadaLogo from '../res/logo.png'
@@ -7,7 +7,7 @@ import { FloorPlan } from '../editor/editor/objects/FloorPlan';
 export function WelcomeModal() {
   const [opened, setOpened] = useState(false);
   const fileRef = useRef<HTMLInputElement>();
-  const image = <Image src={ArcadaLogo}/>
+  const image = <Image src={ArcadaLogo} />
   const useStyles = createStyles(() => ({
     padded: {
       padding: '4px'
@@ -47,17 +47,11 @@ export function WelcomeModal() {
         onClose={() => setOpened(false)}
 
       >
-        <Center className={classes.padded}>
+        <Stack spacing="xs">
           {image}
-
-        </Center>
-        <Center className={classes.padded}>
           <Button onClick={() => { setOpened(false) }} leftIcon={<Plus />} variant="white">
             New plan
           </Button>
-        </Center>
-
-        <Center className={classes.padded}>
           <input
             ref={fileRef}
             onChange={loadFromDisk}
@@ -70,16 +64,15 @@ export function WelcomeModal() {
           }} leftIcon={<Database />} variant="white">
             Load from disk
           </Button>
-        </Center>
-        <Center className={classes.padded}>
-          <Button 
-            onClick={() => { 
-            FloorPlan.Instance.load(localStorage.getItem('autosave'));
-            setOpened(false) 
+          <Button
+            onClick={() => {
+              FloorPlan.Instance.load(localStorage.getItem('autosave'));
+              setOpened(false)
             }} leftIcon={<RotateClockwise />} variant="white">
             Load from local save
           </Button>
-        </Center>
+        </Stack>
+
       </Modal>
 
     </>

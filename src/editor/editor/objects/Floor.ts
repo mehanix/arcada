@@ -1,5 +1,6 @@
 import { Container, Point } from "pixi.js";
 import { euclideanDistance } from "../../../helpers/EuclideanDistance";
+import { getCorrespondingY } from "../../../helpers/Slope";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { METER } from "../constants";
 import { FloorSerializable } from "../persistence/FloorSerializable";
@@ -169,7 +170,6 @@ export class Floor extends Container {
 
     public removeWallNode(nodeId: number) {
 
-        console.log("remove wall node", nodeId, "from ", this.wallNodeSequence)
         if (this.wallNodeSequence.contains(nodeId)) {
             this.wallNodeSequence.remove(nodeId);
         }
@@ -194,9 +194,10 @@ export class Floor extends Container {
         let leftNode = wall.leftNode.getId();
         let rightNode = wall.rightNode.getId();
         // ecuatia dreptei, obtine y echivalent lui x
-        coords.y = this.getCorrespondingY(coords.x, wall.leftNode.position, wall.rightNode.position)
+        if (this.angle == 90) {
+            coords.y = getCorrespondingY(coords.x, wall.leftNode.position, wall.rightNode.position)
+        }
 
-        console.log(wall.leftNode.position, wall.rightNode.position, coords);
         // prevent misclicks
         if (Math.abs(euclideanDistance(coords.x, wall.leftNode.x, coords.y, wall.leftNode.y)) < 0.2 * METER) {
             return;
@@ -217,8 +218,6 @@ export class Floor extends Container {
         return newNode;
     }
 
-    private getCorrespondingY(x: number, a: Point, b: Point) {
-        return ((x - a.x) * (b.y - a.y)) / (b.x - a.x) + a.y;
-    }
+
 
 }

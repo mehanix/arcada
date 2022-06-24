@@ -1,6 +1,8 @@
 import { Graphics, InteractionEvent, Point } from "pixi.js";
 import { getDoor, getWindow } from "../../../../api/api-client";
 import { euclideanDistance } from "../../../../helpers/EuclideanDistance";
+import { getCorrespondingY } from "../../../../helpers/Slope";
+import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 
 import { useStore } from "../../../../stores/EditorStore";
 import { AddFurnitureAction } from "../../actions/AddFurnitureAction";
@@ -23,6 +25,12 @@ export class Wall extends Graphics {
     y2: number;
     thickness: number;
     isExteriorWall: boolean;
+
+    dragging:boolean;
+    mouseStartPoint:Point;
+    startLeftNode:Point;
+    startRightNode:Point;
+
     constructor(leftNode: WallNode, rightNode: WallNode) {
         super();
         this.sortableChildren = true;
@@ -30,7 +38,10 @@ export class Wall extends Graphics {
         this.interactive = true;
         this.leftNode = leftNode;
         this.rightNode = rightNode;
-
+        this.dragging = false;
+        this.mouseStartPoint = new Point();
+        this.startLeftNode = new Point();
+        this.startRightNode = new Point();
         this.setLineCoords();
         this.label = new Label(0);
         
@@ -39,10 +50,15 @@ export class Wall extends Graphics {
         this.pivot.set(0, INTERIOR_WALL_THICKNESS / 2);
         this.zIndex = 100;
         this.isExteriorWall = false;
-        this.drawLine();
+        // this.drawLine();
 
 
-        this.on("pointertap", this.onMouseDown)
+        this.on("pointerdown", this.onMouseDown)
+        this.on("rightdown", this.onRightDown)
+        this.on("pointermove", this.onMouseMove)
+        this.on("pointerup", this.onMouseUp)
+        this.on("pointerupoutside", this.onMouseUp);
+
     }
 
     public setIsExterior(value: boolean) {
@@ -83,7 +99,7 @@ export class Wall extends Graphics {
         let theta = Math.atan2((this.y2 - this.y1), (this.x2 - this.x1)); // aflu unghiul sa pot roti
         theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
         if (theta < 0) theta = 360 + theta; // range [0, 360)
-
+        console.log(theta)
         this.length = euclideanDistance(this.x1, this.x2, this.y1, this.y2)
 
         this.beginFill().drawRect(0, 0, this.length, this.thickness).endFill()
@@ -95,7 +111,6 @@ export class Wall extends Graphics {
 
         this.label.update(this.length - WALL_THICKNESS);
         this.label.position.x = this.width / 2;
-        console.log(theta);
         this.label.angle = 360 - theta
 
         this.label.position.y = 25;
@@ -103,13 +118,46 @@ export class Wall extends Graphics {
 
     }
 
+    private onRightDown(ev: InteractionEvent) {
+        ev.stopPropagation(); 
+        this.setIsExterior(!this.isExteriorWall);
+        return
+    }
+
+
+    private onMouseMove(ev: InteractionEvent) {
+        if (!this.dragging) {
+            return;
+        }
+        let currentPoint = ev.data.global;
+        let delta = new Point(currentPoint.x - this.mouseStartPoint.x, currentPoint.y - this.mouseStartPoint.y);
+        // let currentPoint = ev.data.global; // unde am dat click
+        // let originalPoint = this.transform.position; // unde se afla obiectul acum
+        // let y = getCorrespondingY(currentPoint.x, this.leftNode.position, this.rightNode.position)
+        // let delta = new Point();
+        // // if (this.angle % 90 < 45) {
+        // //     currentPoint.x -= this.localClickPoint.x;
+        // //     currentPoint.y -= this.localClickPoint.y;
+
+        // // } else {
+        // //     currentPoint.x -= this.localClickPoint.y;
+        // //     currentPoint.y -= this.localClickPoint.x;
+        // // }
+
+        // delta = new Point(currentPoint.x - originalPoint.x , currentPoint.y - originalPoint.y);
+
+        this.leftNode.setPosition(this.startLeftNode.x + delta.x, this.startLeftNode.y + delta.y);
+        this.rightNode.setPosition(this.startRightNode.x + delta.x, this.startRightNode.y + delta.y);
+    }
+
+    private onMouseUp(ev:InteractionEvent) {
+        this.dragging = false;
+        return;
+    }
+
     private onMouseDown(ev: InteractionEvent) {
         ev.stopPropagation();
-        console.log(ev.data.button)
-        if (ev.data.button === 1) {
-            this.setIsExterior(!this.isExteriorWall);
-            return
-        }
+
         let coords = new Point(ev.data.global.x, ev.data.global.y)
         let localCoords = ev.data.getLocalPosition(this)
 
@@ -127,7 +175,6 @@ export class Wall extends Graphics {
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
             getWindow().then(res => {
-                console.log(res[0], this, new Point(localCoords.x, 0))
                 let action = new AddFurnitureAction(res[0], this, new Point(localCoords.x, 0), this.leftNode.getId(), this.rightNode.getId());
                 action.execute();
             })
@@ -136,11 +183,22 @@ export class Wall extends Graphics {
 
         if (state.activeTool == Tool.FurnitureAddDoor) {
             getDoor().then(res => {
-                console.log(res[0], this, new Point(localCoords.x, 0))
                 let action = new AddFurnitureAction(res[0], this, new Point(localCoords.x, 0), this.leftNode.getId(), this.rightNode.getId());
                 action.execute();
             })
+        }
 
+        if (state.activeTool == Tool.Edit && !this.dragging) {
+            this.dragging = true;
+            this.mouseStartPoint.x = ev.data.global.x;
+            this.mouseStartPoint.y = ev.data.global.y;
+            this.startLeftNode.x = this.leftNode.position.x;
+            this.startLeftNode.y = this.leftNode.position.y;
+
+            this.startRightNode.x = this.rightNode.position.x;
+            this.startRightNode.y = this.rightNode.position.y;
+
+            return;
         }
 
     }

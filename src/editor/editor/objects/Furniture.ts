@@ -25,7 +25,6 @@ export class Furniture extends Sprite {
         let texture = Texture.from(`${endpoint}2d/${data.imagePath}`);
         super(texture);
         this.resourcePath = data.imagePath;
-        console.log(this.resourcePath)
         this.id = id;
         this.orientation = 0;
         if (attachedTo) {
@@ -43,7 +42,6 @@ export class Furniture extends Sprite {
         this.width = data.width * METER;
         this.height = data.height * METER;
         this.setOrientation(orientation);
-        console.log(this.width, this.height)
         this.centerAngle = Math.atan2(-this.height, this.width)
 
 
@@ -101,9 +99,7 @@ export class Furniture extends Sprite {
 
     }
     private setOrientation(number) {
-        console.log("orietnation", number)
         if (number > 0) {
-            console.log("0")
             this.anchor.x = 1;
             this.scale.x = -1 * this.scale.x;
             this.anchor.y = 0;
@@ -111,7 +107,6 @@ export class Furniture extends Sprite {
         }
 
         if (number > 1) {
-            console.log("1")
             this.anchor.y = 1;
             this.scale.y = -1 * this.scale.y;
             if (this.resourcePath == "door") {
@@ -120,12 +115,10 @@ export class Furniture extends Sprite {
         }
 
         if (number > 2) {
-            console.log("2")
             this.anchor.x = 0;
             this.scale.x = -this.scale.x;
         }
         if (number > 3) {
-            console.log("3")
             this.anchor.x = 0;
             this.scale.x = Math.abs(this.scale.x);
             this.anchor.y = 0;
@@ -135,7 +128,6 @@ export class Furniture extends Sprite {
             }
         }
         this.orientation = number;
-        console.log("final:", this.anchor.x, this.anchor.y, this.scale.x, this.scale.y)
     }
     private onMouseDown(ev: InteractionEvent) {
 

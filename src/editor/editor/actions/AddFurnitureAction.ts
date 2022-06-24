@@ -14,7 +14,6 @@ export class AddFurnitureAction implements Action{
     private receiver:FloorPlan;
 
     constructor(obj: FurnitureData, attachedTo?: Wall, coords?: Point, attachedToLeft?:number, attachedToRight?:number) {
-        console.log(obj, attachedTo, coords);
         this.obj = obj;
         this.attachedTo = attachedTo;
         this.coords = coords;

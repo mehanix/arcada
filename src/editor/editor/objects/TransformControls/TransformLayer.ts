@@ -106,7 +106,6 @@ export class TransformLayer extends Container {
         this.drawBorder();
 
         for (let i = 0; i < this.handles.length; i++) {
-            console.log(this.points[i])
             this.handles[i].setTarget(this.target)
 
             this.handles[i].update(this.points[i])

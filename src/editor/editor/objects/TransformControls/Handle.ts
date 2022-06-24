@@ -129,7 +129,6 @@ export class Handle extends Graphics {
         // raport < 1 -> se micsoreaza obiectul
         let sizeFactor = endDistance / startDistance;
         let startCenterAngle = this.target.centerAngle;
-        console.log(startDistance, endDistance, sizeFactor)
         switch (this.type) {
             case HandleType.Rotate:
                 

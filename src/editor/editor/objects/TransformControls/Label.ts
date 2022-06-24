@@ -19,7 +19,6 @@ export class Label extends Container {
     }
 
     private toggleLabel(ev:any) {
-        console.log("wow~!", ev)
     }
     public update(sizeInPixels:number) {
         this.removeChildren();

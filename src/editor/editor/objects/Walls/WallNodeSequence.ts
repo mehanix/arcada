@@ -14,7 +14,6 @@ export class WallNodeSequence extends Container {
         this.walls = [];
         this.wallNodes = new Map<number, WallNode>();
         this.wallNodeLinks = new Map<number, number[]>();
-        console.log(this.wallNodes);
         this.drawWalls();
 
         this.on("mousemove", this.drawWalls);
@@ -53,11 +52,9 @@ export class WallNodeSequence extends Container {
         }
         for (let [src, dests] of nodeLinks) {
             for (const dest of dests) {
-                console.log("zid intre ",src,dest)
                 this.addWall(src,dest)
             }
         }
-        console.log(this.wallNodeLinks);
     }   
 
     // drop everything
@@ -188,8 +185,6 @@ export class WallNodeSequence extends Container {
         return null;
     }
     public drawWalls() {
-        console.log("redraw")
-        console.log(this.walls)
         this.walls.forEach(wall => {
             wall.drawLine();
         })

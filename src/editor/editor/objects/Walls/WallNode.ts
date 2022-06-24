@@ -76,6 +76,12 @@ export class WallNode extends Graphics {
         FloorPlan.Instance.redrawWalls();
     }
 
+    public setPosition(x, y) {
+        this.x = viewportX(x);
+        this.y = viewportY(y)
+        FloorPlan.Instance.redrawWalls();
+    }
+
     private onMouseUp() {
         this.dragging = false;
     }
