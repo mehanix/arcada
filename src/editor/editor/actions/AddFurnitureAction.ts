@@ -1,4 +1,4 @@
-import { Point } from "pixi.js";
+import { Point } from "../../../helpers/Point";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { FloorPlan } from "../objects/FloorPlan";
 import { Wall } from "../objects/Walls/Wall";

@@ -1,5 +1,6 @@
-import { Graphics, InteractionEvent, Point } from "pixi.js";
+import { Graphics, InteractionEvent } from "pixi.js";
 import { euclideanDistance } from "../../../helpers/EuclideanDistance";
+import { Point } from "../../../helpers/Point";
 import { viewportX, viewportY } from "../../../helpers/ViewportCoordinates";
 import { WALL_THICKNESS } from "../constants";
 import { Label } from "../objects/TransformControls/Label";

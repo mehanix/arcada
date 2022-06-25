@@ -1,5 +1,6 @@
-import { Container, Point } from "pixi.js";
+import { Container } from "pixi.js";
 import { euclideanDistance } from "../../../helpers/EuclideanDistance";
+import { Point } from "../../../helpers/Point";
 import { getCorrespondingY } from "../../../helpers/Slope";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { METER } from "../constants";
@@ -194,7 +195,7 @@ export class Floor extends Container {
         let leftNode = wall.leftNode.getId();
         let rightNode = wall.rightNode.getId();
         // ecuatia dreptei, obtine y echivalent lui x
-        if (this.angle == 90) {
+        if (wall.angle != 90) {
             coords.y = getCorrespondingY(coords.x, wall.leftNode.position, wall.rightNode.position)
         }
 

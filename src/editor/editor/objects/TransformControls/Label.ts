@@ -1,8 +1,9 @@
-import { Container, InteractionEvent, Point, Sprite, Text, TextStyle, Texture } from "pixi.js";
+import { Container, InteractionEvent, Sprite, Text, TextStyle, Texture } from "pixi.js";
+import { Point } from "../../../../helpers/Point";
 import { METER, WALL_THICKNESS } from "../../constants";
 
 export class Label extends Container {
-    text:Sprite;
+    text:Text;
     textStyle:TextStyle = new TextStyle({fontFamily : 'Arial', fontSize: 16, fill : 0x000000, align : 'center'});
     textBkg :Sprite = new Sprite(Texture.WHITE); 
     constructor(sizeInPixels?: number) {
@@ -10,7 +11,11 @@ export class Label extends Container {
         if (!sizeInPixels) {
             sizeInPixels = 0;
         }
+        this.text = new Text("", this.textStyle);
         this.update(sizeInPixels);
+
+        this.addChild(this.textBkg);
+        this.addChild(this.text);
         this.pivot.set(this.width / 2, this.height / 2);
         this.zIndex = 1001;
 
@@ -21,13 +26,11 @@ export class Label extends Container {
     private toggleLabel(ev:any) {
     }
     public update(sizeInPixels:number) {
-        this.removeChildren();
 
-        this.text = new Text(this.toMeter(sizeInPixels), this.textStyle);
+        this.text.text = this.toMeter(sizeInPixels);
         this.textBkg.width = this.text.width;
         this.textBkg.height = this.text.height;
-        this.addChild(this.textBkg);
-        this.addChild(this.text);
+
 
     }
 

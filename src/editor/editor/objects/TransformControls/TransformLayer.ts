@@ -1,4 +1,5 @@
-import { Container, Graphics, Point } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
+import { Point } from "../../../../helpers/Point";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { useStore } from "../../../../stores/EditorStore";
 import { Coord, LabelAxis, LABEL_OFFSET, Tool } from "../../constants";
@@ -42,7 +43,10 @@ export class TransformLayer extends Container {
         this.addHandle(HandleType.Move);
 
         for (let i = 0; i < 7; i++) {
-            this.points[i] = new Point();
+            this.points[i] = {
+                x:0,
+                y:0
+            }
         }
 
         this.addLabel(LabelAxis.Horizontal);
@@ -72,7 +76,7 @@ export class TransformLayer extends Container {
 
 
     private addHandle(type: HandleType) {
-        let handle = new Handle({ type: type, target: null, pos: new Point(0, 0) });
+        let handle = new Handle({ type: type, target: null, pos: {x:0, y:0} });
         this.border.addChild(handle);
         this.handles.push(handle);
     }

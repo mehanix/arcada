@@ -1,6 +1,7 @@
-import { Graphics, InteractionEvent, Point } from "pixi.js";
+import { Graphics, InteractionEvent } from "pixi.js";
 import { getDoor, getWindow } from "../../../../api/api-client";
 import { euclideanDistance } from "../../../../helpers/EuclideanDistance";
+import { Point } from "../../../../helpers/Point";
 import { getCorrespondingY } from "../../../../helpers/Slope";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 
@@ -26,10 +27,10 @@ export class Wall extends Graphics {
     thickness: number;
     isExteriorWall: boolean;
 
-    dragging:boolean;
-    mouseStartPoint:Point;
-    startLeftNode:Point;
-    startRightNode:Point;
+    dragging: boolean;
+    mouseStartPoint: Point;
+    startLeftNode: Point;
+    startRightNode: Point;
 
     constructor(leftNode: WallNode, rightNode: WallNode) {
         super();
@@ -39,12 +40,12 @@ export class Wall extends Graphics {
         this.leftNode = leftNode;
         this.rightNode = rightNode;
         this.dragging = false;
-        this.mouseStartPoint = new Point();
-        this.startLeftNode = new Point();
-        this.startRightNode = new Point();
+        this.mouseStartPoint = {x:0, y:0}
+        this.startLeftNode = {x:0, y:0}
+        this.startRightNode = {x:0, y:0}
         this.setLineCoords();
         this.label = new Label(0);
-        
+
         this.addChild(this.label)
         this.thickness = INTERIOR_WALL_THICKNESS;
         this.pivot.set(0, INTERIOR_WALL_THICKNESS / 2);
@@ -119,7 +120,7 @@ export class Wall extends Graphics {
     }
 
     private onRightDown(ev: InteractionEvent) {
-        ev.stopPropagation(); 
+        ev.stopPropagation();
         this.setIsExterior(!this.isExteriorWall);
         return
     }
@@ -130,27 +131,16 @@ export class Wall extends Graphics {
             return;
         }
         let currentPoint = ev.data.global;
-        let delta = new Point(currentPoint.x - this.mouseStartPoint.x, currentPoint.y - this.mouseStartPoint.y);
-        // let currentPoint = ev.data.global; // unde am dat click
-        // let originalPoint = this.transform.position; // unde se afla obiectul acum
-        // let y = getCorrespondingY(currentPoint.x, this.leftNode.position, this.rightNode.position)
-        // let delta = new Point();
-        // // if (this.angle % 90 < 45) {
-        // //     currentPoint.x -= this.localClickPoint.x;
-        // //     currentPoint.y -= this.localClickPoint.y;
-
-        // // } else {
-        // //     currentPoint.x -= this.localClickPoint.y;
-        // //     currentPoint.y -= this.localClickPoint.x;
-        // // }
-
-        // delta = new Point(currentPoint.x - originalPoint.x , currentPoint.y - originalPoint.y);
+        let delta = {
+            x: currentPoint.x - this.mouseStartPoint.x,
+            y: currentPoint.y - this.mouseStartPoint.y
+        }
 
         this.leftNode.setPosition(this.startLeftNode.x + delta.x, this.startLeftNode.y + delta.y);
         this.rightNode.setPosition(this.startRightNode.x + delta.x, this.startRightNode.y + delta.y);
     }
 
-    private onMouseUp(ev:InteractionEvent) {
+    private onMouseUp(ev: InteractionEvent) {
         this.dragging = false;
         return;
     }
@@ -158,7 +148,7 @@ export class Wall extends Graphics {
     private onMouseDown(ev: InteractionEvent) {
         ev.stopPropagation();
 
-        let coords = new Point(ev.data.global.x, ev.data.global.y)
+        let coords = {x:ev.data.global.x, y:ev.data.global.y}
         let localCoords = ev.data.getLocalPosition(this)
 
         const state = useStore.getState()
@@ -175,7 +165,7 @@ export class Wall extends Graphics {
         }
         if (state.activeTool == Tool.FurnitureAddWindow) {
             getWindow().then(res => {
-                let action = new AddFurnitureAction(res[0], this, new Point(localCoords.x, 0), this.leftNode.getId(), this.rightNode.getId());
+                let action = new AddFurnitureAction(res[0], this, {x:localCoords.x, y:0}, this.leftNode.getId(), this.rightNode.getId());
                 action.execute();
             })
 
@@ -183,15 +173,15 @@ export class Wall extends Graphics {
 
         if (state.activeTool == Tool.FurnitureAddDoor) {
             getDoor().then(res => {
-                let action = new AddFurnitureAction(res[0], this, new Point(localCoords.x, 0), this.leftNode.getId(), this.rightNode.getId());
+                let action = new AddFurnitureAction(res[0], this, {x:localCoords.x, y:0}, this.leftNode.getId(), this.rightNode.getId());
                 action.execute();
             })
         }
 
         if (state.activeTool == Tool.Edit && !this.dragging) {
             this.dragging = true;
-            this.mouseStartPoint.x = ev.data.global.x;
-            this.mouseStartPoint.y = ev.data.global.y;
+            this.mouseStartPoint.x = viewportX(ev.data.global.x);
+            this.mouseStartPoint.y = viewportY(ev.data.global.y);
             this.startLeftNode.x = this.leftNode.position.x;
             this.startLeftNode.y = this.leftNode.position.y;
 

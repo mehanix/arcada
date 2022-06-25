@@ -68,7 +68,7 @@ export class WallNode extends Graphics {
         if (!this.dragging) {
             return;
         }
-        let currentPoint = new Point(ev.data.global.x, ev.data.global.y);
+        let currentPoint = {x:ev.data.global.x, y:ev.data.global.y};
 
         this.x = viewportX(currentPoint.x)
         this.y = viewportY(currentPoint.y);

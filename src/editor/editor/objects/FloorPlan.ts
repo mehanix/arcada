@@ -1,4 +1,4 @@
-import { autoDetectRenderer, Container, IRendererOptionsAuto, Point } from "pixi.js";
+import { autoDetectRenderer, Container, IRendererOptionsAuto } from "pixi.js";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { Wall } from "./Walls/Wall";
 import { Floor } from "./Floor";
@@ -6,6 +6,7 @@ import { Serializer } from "../persistence/Serializer";
 import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { Action } from "../actions/Action";
 import { useStore } from "../../../stores/EditorStore";
+import { Point } from "../../../helpers/Point";
 
 export class FloorPlan extends Container {
 

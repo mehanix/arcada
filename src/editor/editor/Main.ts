@@ -80,11 +80,12 @@ export class Main extends Viewport {
     }
     private checkTools(ev: InteractionEvent) {
         ev.stopPropagation()
-        let point;
+        let point = {x:0, y:0}
         switch (useStore.getState().activeTool) {
             case Tool.WallAdd:
                 this.pause = true;
-                point = new Point(viewportX(ev.data.global.x), viewportY(ev.data.global.y));
+                point.x = viewportX(ev.data.global.x)
+                point.y = viewportY(ev.data.global.y);
                 let action = new AddNodeAction(undefined, point)
                 action.execute();
                 break;
@@ -95,7 +96,8 @@ export class Main extends Viewport {
                 break;
             case Tool.Measure:
                 this.pause = true;
-                point = new Point(viewportX(ev.data.global.x), viewportY(ev.data.global.y));
+                point.x = viewportX(ev.data.global.x)
+                point.y = viewportY(ev.data.global.y);
                 this.preview.set(point);
                 break;
         }
