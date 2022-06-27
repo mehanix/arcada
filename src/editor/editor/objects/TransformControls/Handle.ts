@@ -26,7 +26,7 @@ export class Handle extends Graphics {
     private type: HandleType;
     private target: Furniture;
     private color: number = 0x000;
-    private size: number = 7;
+    private size: number = 10;
 
     private active: boolean = false;
     private mouseStartPoint: Point;

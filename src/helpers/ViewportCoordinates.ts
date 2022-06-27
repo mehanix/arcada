@@ -21,5 +21,10 @@ export function viewportY(y:number, customSnap?) {
 }
 
 export function snap(val) {
-    return val - val%10
+    let rest = val%10;
+    let cat = val - rest;
+    if (rest < 5) {
+        return cat;
+    }
+    return cat + 10;
 }

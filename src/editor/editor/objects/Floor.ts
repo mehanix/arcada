@@ -3,6 +3,7 @@ import { euclideanDistance } from "../../../helpers/EuclideanDistance";
 import { Point } from "../../../helpers/Point";
 import { getCorrespondingY } from "../../../helpers/Slope";
 import { FurnitureData } from "../../../stores/FurnitureStore";
+import { main } from "../../EditorRoot";
 import { METER } from "../constants";
 import { FloorSerializable } from "../persistence/FloorSerializable";
 import { FloorPlan } from "./FloorPlan";
@@ -112,7 +113,7 @@ export class Floor extends Container {
             object.position.set(coords.x, coords.y)
         } else {
             this.addChild(object)
-            object.position.set(150, 150)
+            object.position.set(main.corner.x + 150, main.corner.y+150)
         }
 
 

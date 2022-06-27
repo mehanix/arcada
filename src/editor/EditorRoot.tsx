@@ -38,8 +38,8 @@ export function EditorRoot() {
         const viewportSettings: IViewportOptions = {
             screenWidth: app.screen.width,
             screenHeight: app.screen.height,
-            worldWidth: 25 * METER,
-            worldHeight: 25 * METER,
+            worldWidth: 50 * METER,
+            worldHeight: 50 * METER,
             interaction: app.renderer.plugins.interaction,
             
         }

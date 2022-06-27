@@ -30,15 +30,16 @@ export class Main extends Viewport {
         Loader.shared.load();
         this.preview = new Preview();
         this.addChild(this.preview.getReference());
-
+        this.cursor = "none";
     }
 
     private setup() {
         Main.viewportPluginManager = this.plugins;
-        this.drag().clamp({ direction: 'all' })
+        this.drag({mouseButtons: 'right'}).clamp({ direction: 'all' })
             .pinch()
             .wheel().clampZoom({ minScale: 1.0, maxScale: 6.0 })
         this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
+        this.center = new Point(this.worldWidth/2, this.worldHeight/2)
         this.addChild(this.bkgPattern);
 
         this.floorPlan = FloorPlan.Instance;

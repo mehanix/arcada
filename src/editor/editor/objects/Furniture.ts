@@ -27,6 +27,7 @@ export class Furniture extends Sprite {
         this.resourcePath = data.imagePath;
         this.id = id;
         this.orientation = 0;
+        this.cursor = "pointer";
         if (attachedTo) {
             this.isAttached = true;
             this.parent = attachedTo;
