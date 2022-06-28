@@ -1,3 +1,4 @@
+import { showNotification } from "@mantine/notifications";
 import { Container } from "pixi.js";
 import { INodeSerializable } from "../../persistence/INodeSerializable";
 import { Wall } from "./Wall";
@@ -98,7 +99,11 @@ export class WallNodeSequence extends Container {
             // this.wallNodeLinks[id].length = 0;
 
         } else {
-            console.log("cannot remove node with walls attached");
+            showNotification({
+                title: 'Not permitted',
+                color: 'red',
+                message: 'Cannot delete node with walls attached. Please remove walls first.',
+              })
         }
 
 

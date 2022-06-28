@@ -30,7 +30,7 @@ export function HelpDialog() {
     title: "View Mode",
     body: <>
       <Group>
-        <Click /> <p>Click and drag to move around the map </p>
+        <Click /> <p>Right click and drag to move around the map </p>
       </Group>
       <Group>
         <ZoomIn /> <p>Use scroll wheel to zoom in or out</p>

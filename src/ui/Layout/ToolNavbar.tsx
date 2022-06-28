@@ -20,9 +20,15 @@ import {
   SquareX,
   Dimensions,
   Printer,
+  Shape,
+  Shape3,
+  BrandWindows,
+  Table,
+  TableOff,
+  Tag,
 } from 'tabler-icons-react';
-
-import {  useStore } from "../../stores/EditorStore";
+import { cleanNotifications, showNotification } from '@mantine/notifications';
+import { useStore } from "../../stores/EditorStore";
 import { ChangeFloorAction } from '../../editor/editor/actions/ChangeFloorAction';
 import { LoadAction } from '../../editor/editor/actions/LoadAction';
 import { SaveAction } from '../../editor/editor/actions/SaveAction';
@@ -68,7 +74,7 @@ const modes = [
 ];
 
 
-function AddMenu() {
+function AddMenu({ setter }) {
   const { classes } = useStyles();
   const { setTool } = useStore()
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -76,7 +82,7 @@ function AddMenu() {
   const [modalOpened, setModalOpened] = useState(false);
 
   let addButton = <UnstyledButton className={classes.link}>
-  <Plus />
+    <Plus />
   </UnstyledButton>
 
   return <>
@@ -92,11 +98,45 @@ function AddMenu() {
       <FurnitureAddPanel />
     </Drawer>
     <Menu control={addButton} position='right' gutter={22} trigger="hover" delay={500}>
-      <Menu.Item icon={<Armchair size={18} />} onClick={() => setDrawerOpened(true)}>Add furniture</Menu.Item>
+      <Menu.Item icon={<Armchair size={18} />} onClick={() => {
+        setDrawerOpened(true)
+        setter(-1)
+      }}>Add furniture</Menu.Item>
       <Divider />
-      <Menu.Item icon={<BorderLeft size={18} />} onClick={() => setTool(Tool.WallAdd)}>Draw wall</Menu.Item>
-      <Menu.Item icon={<Window size={18} />} onClick={() => setTool(Tool.FurnitureAddWindow)}>Add window</Menu.Item>
-      <Menu.Item icon={<Door size={18} />} onClick={() => setTool(Tool.FurnitureAddDoor)}>Add door</Menu.Item>
+      <Menu.Item icon={<BorderLeft size={18} />} onClick={() => {
+        setter(-1)
+        setTool(Tool.WallAdd)
+        cleanNotifications();
+        showNotification({
+          title: '✏️ Wall drawing mode',
+          message: 'Click to draw walls. Double click on wall node to end sequence.',
+          color: 'blue',
+        })
+      }}>Draw wall</Menu.Item>
+      <Menu.Item icon={<Window size={18} />} onClick={() => {
+        setTool(Tool.FurnitureAddWindow)
+        setter(-1)
+        cleanNotifications();
+
+        showNotification({
+          title: '🪟 Add window',
+          message: 'Click on wall to add window',
+          color: 'blue',
+
+        })
+      }}>Add window</Menu.Item>
+      <Menu.Item icon={<Door size={18} />} onClick={() => {
+        setTool(Tool.FurnitureAddDoor)
+        setter(-1)
+        cleanNotifications();
+
+        showNotification({
+          title: '🚪 Add door',
+          message: 'Click on wall to add door. Right click to change orientation',
+          color: 'blue',
+
+        })
+      }}>Add door</Menu.Item>
     </Menu>
   </>
 
@@ -106,8 +146,8 @@ function AddMenu() {
 export function ToolNavbar() {
   const [active, setActive] = useState(0);
 
-  const { setTool, floor} = useStore()
-  const {setSnap, snap} = useStore()
+  const { setTool, floor } = useStore()
+  const { setSnap, snap } = useStore()
 
   const fileRef = useRef<HTMLInputElement>();
   const { classes, cx } = useStyles();
@@ -135,24 +175,27 @@ export function ToolNavbar() {
 
   };
 
-  
-  return (<div style={{position:'absolute'}}>
+  const setterAction = (val) => {
+    setActive(val)
+  }
+
+  return (<div style={{ position: 'absolute' }}>
     <Navbar height="100vh" width={{ base: 70 }} p="md">
 
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
-          <AddMenu />
+          <AddMenu setter={setterAction} />
           {toolModes}
         </Group>
 
       </Navbar.Section>
       <Navbar.Section grow>
         <Group direction="column" align="center" spacing={0}>
-        <Tooltip label={"Current floor"} position="right" withArrow transitionDuration={0}>
-        <div className={classes.link}>
-            {floor}
-          </div>
-        </Tooltip>
+          <Tooltip label={"Current floor"} position="right" withArrow transitionDuration={0}>
+            <div className={classes.link}>
+              {floor}
+            </div>
+          </Tooltip>
 
           <NavbarLink icon={StairsUp} label="Go to next floor" onClick={() => {
             let action = new ChangeFloorAction(1);
@@ -162,7 +205,7 @@ export function ToolNavbar() {
             let action = new ChangeFloorAction(-1);
             action.execute();
           }} />
-          <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {  
+          <NavbarLink icon={SquareX} label="Delete floor" onClick={() => {
             let action = new DeleteFloorAction();
             action.execute();
           }} />
@@ -172,20 +215,35 @@ export function ToolNavbar() {
         <Group direction="column" align="center" spacing={0}>
           <NavbarLink icon={Ruler2} label="Measure tool" onClick={() => {
             setTool(Tool.Measure);
-          }}/>
-          <NavbarLink icon={ArrowBottomSquare} label="Snap to grid"  onClick={() => {
+            cleanNotifications();
+            showNotification({
+              title: '📐 Measure tool',
+              message: "Click and drag to measure areas",
+            })
+          }} />
+          <NavbarLink icon={ArrowBottomSquare} label="Snap to grid" onClick={() => {
             setSnap(!snap);
-          }}/>
+            cleanNotifications();
+            showNotification({
+              message: 'Snap to grid now ' + (snap ? "On" : "Off"),
+              icon: (snap ? <Table /> : <TableOff />)
+            })
+          }} />
           <NavbarLink icon={Dimensions} label="Toggle size labels" onClick={() => {
             let action = new ToggleLabelAction();
             action.execute();
-          }}/>
+            cleanNotifications();
+            showNotification({
+              message: 'Toggled size labels',
+              icon: <Tag />
+            })
+          }} />
           <HelpDialog />
         </Group>
       </Navbar.Section>
       <Navbar.Section>
         <Group direction="column" align="center" spacing={0}>
-        <NavbarLink icon={Printer} label="Print" onClick={() => {
+          <NavbarLink icon={Printer} label="Print" onClick={() => {
             let action = new PrintAction();
             action.execute();
           }} />
@@ -205,6 +263,6 @@ export function ToolNavbar() {
         </Group>
       </Navbar.Section>
     </Navbar>
-    </div>
+  </div>
   );
 }

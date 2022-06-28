@@ -7,6 +7,7 @@ import { FloorPlanSerializable } from "../persistence/FloorPlanSerializable";
 import { Action } from "../actions/Action";
 import { useStore } from "../../../stores/EditorStore";
 import { Point } from "../../../helpers/Point";
+import { showNotification } from "@mantine/notifications";
 
 export class FloorPlan extends Container {
 
@@ -94,6 +95,11 @@ export class FloorPlan extends Container {
     // removes current floor
     public removeFloor() {
         if (this.floors.length < 2) {
+            showNotification({
+                title:"Floor removal not permitted",
+                message:"This floor is the only floor in the plan. You cannot have a plan with no floors. Create a new floor before deleting.",
+                color:'red'
+            })
             return;
         }
         let oldCurrentFloor = this.currentFloor;

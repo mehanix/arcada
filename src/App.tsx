@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import './App.css';
 import { PageLayout } from './ui/Layout/PageLayout';
 import {useFurnitureStore} from './stores/FurnitureStore'
+import { NotificationsProvider } from '@mantine/notifications';
 
 function App() {
   const {getCategories} = useFurnitureStore();
@@ -11,7 +12,9 @@ function App() {
   },[])
   return (
     <>
-      <PageLayout />
+          <NotificationsProvider>
+          <PageLayout />
+          </NotificationsProvider>
     </>
   );
 }

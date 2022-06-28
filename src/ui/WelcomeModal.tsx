@@ -4,6 +4,7 @@ import { Database, Plus, RotateClockwise } from 'tabler-icons-react';
 import { LoadAction } from '../editor/editor/actions/LoadAction';
 import ArcadaLogo from '../res/logo.png'
 import { FloorPlan } from '../editor/editor/objects/FloorPlan';
+import { showNotification } from '@mantine/notifications';
 export function WelcomeModal() {
   const [opened, setOpened] = useState(false);
   const fileRef = useRef<HTMLInputElement>();
@@ -34,6 +35,10 @@ export function WelcomeModal() {
     setOpened(true);
   }, [])
 
+  const notification = {
+    title: "Welcome to Arcada! 🎉",
+    message: "⚒️ Use the tools on the right to create your floor plan. For detailed instructions, press the Help button on the left."
+  }
   return (
     <>
       <Modal className={classes.padded}
@@ -44,12 +49,17 @@ export function WelcomeModal() {
         overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
         overlayOpacity={0.55}
         centered
-        onClose={() => setOpened(false)}
+        onClose={() => {
+          setOpened(false)
+          showNotification(notification)
+        }}
 
       >
         <Stack spacing="xs">
           {image}
-          <Button onClick={() => { setOpened(false) }} leftIcon={<Plus />} variant="white">
+          <Button onClick={() => {
+            setOpened(false); showNotification(notification)
+          }} leftIcon={<Plus />} variant="white">
             New plan
           </Button>
           <input
