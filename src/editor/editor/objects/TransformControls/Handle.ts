@@ -35,6 +35,7 @@ export class Handle extends Graphics {
     private startRotaton: number;
     private startScale: Point;
     private targetStartCenterPoint: Point;
+    localCoords: { x: number; y: number; };
     constructor(handleConfig: IHandleConfig) {
         super();
         this.interactive = true;
@@ -47,13 +48,13 @@ export class Handle extends Graphics {
 
         }
 
-        this.mouseStartPoint = {x:0, y:0};
-        this.targetStartPoint = {x:0, y:0};
+        this.mouseStartPoint = { x: 0, y: 0 };
+        this.targetStartPoint = { x: 0, y: 0 };
 
-        this.startScale = {x:0, y:0};
-        this.targetStartCenterPoint = {x:0, y:0};
-
-        this.mouseEndPoint = {x:0, y:0};
+        this.startScale = { x: 0, y: 0 };
+        this.targetStartCenterPoint = { x: 0, y: 0 };
+        this.localCoords = {x:0, y:0};
+        this.mouseEndPoint = { x: 0, y: 0 };
 
         this.type = handleConfig.type;
         this.target = handleConfig.target;
@@ -110,6 +111,7 @@ export class Handle extends Graphics {
         this.targetStartPoint = this.target.getGlobalPosition();
         this.targetStartCenterPoint.x = this.targetStartPoint.x + this.target.width / 2;
         this.targetStartCenterPoint.y = this.targetStartPoint.y + this.target.height / 2
+        let localCoords = ev.data.getLocalPosition(this.target)
         this.startRotaton = this.target.rotation;
         this.startScale.x = this.target.scale.x;
         this.startScale.y = this.target.scale.y;
@@ -151,8 +153,8 @@ export class Handle extends Graphics {
                     y: this.mouseStartPoint.y - this.targetStartPoint.y
                 }
                 let relativeEnd = {
-                    x:this.mouseEndPoint.x - this.targetStartPoint.x,
-                    y:this.mouseEndPoint.y - this.targetStartPoint.y
+                    x: this.mouseEndPoint.x - this.targetStartPoint.x,
+                    y: this.mouseEndPoint.y - this.targetStartPoint.y
                 }
 
                 let endAngle = Math.atan2(relativeEnd.y, relativeEnd.x);
@@ -173,13 +175,18 @@ export class Handle extends Graphics {
             case HandleType.Move:
                 // move delta: distanta intre click original si click in urma mutarii
                 let delta = {
-                    x:this.mouseEndPoint.x - this.mouseStartPoint.x, 
-                    y:this.mouseEndPoint.y - this.mouseStartPoint.y
+                    x: this.mouseEndPoint.x - this.mouseStartPoint.x,
+                    y: this.mouseEndPoint.y - this.mouseStartPoint.y
                 }
-                this.target.position.x = viewportX(this.targetStartPoint.x + delta.x);
                 if (!this.target.xLocked) {
-                    this.target.position.y = viewportY(this.targetStartPoint.y + delta.y);
+                    this.target.position.x = viewportX(this.targetStartPoint.x) + delta.x;
+                    this.target.position.y = viewportY(this.targetStartPoint.y) + delta.y;
+                } else {
+                    this.target.position.x = this.localCoords.x + delta.x
+                    // this.target.position.x = viewportX(this.targetStartPoint.x) + delta.x;
+
                 }
+
                 break;
         }
     }
