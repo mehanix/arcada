@@ -38,6 +38,9 @@ export class Furniture extends Sprite {
             this.xLocked = false;
             this.isAttached = false;
         }
+        if (data.zIndex) {
+            this.zIndex = data.zIndex;
+        }
         this.interactive = true;
         // this.dragging = false;
         this.width = data.width * METER;
@@ -71,7 +74,7 @@ export class Furniture extends Sprite {
                 this.scale.y = -1 * this.scale.y;
                 this.orientation += 1;
                 if (this.resourcePath == "door") {
-                    this.position.y -= (this.width - INTERIOR_WALL_THICKNESS);
+                    this.position.y -= (this.height - INTERIOR_WALL_THICKNESS);
                 }
                 break;
             case 2:
@@ -86,7 +89,7 @@ export class Furniture extends Sprite {
                 this.scale.y = Math.abs(this.scale.y);
                 this.orientation = 0;
                 if (this.resourcePath == "door") {
-                    this.position.y += (this.width - INTERIOR_WALL_THICKNESS);
+                    this.position.y += (this.height - INTERIOR_WALL_THICKNESS);
                 }
                 break;
         }
@@ -132,6 +135,10 @@ export class Furniture extends Sprite {
     }
     private onMouseDown(ev: InteractionEvent) {
 
+        if(ev.data.button == 1) {
+            this.zIndex++;
+            console.log(this.zIndex)
+        }
         switch (useStore.getState().activeTool) {
             case Tool.Edit: {
                 const action = new EditFurnitureAction(this);
@@ -159,6 +166,7 @@ export class Furniture extends Sprite {
             y: this.y,
             height: this.height / METER,
             width: this.width / METER,
+            zIndex:this.zIndex,
             id: this.id,
             texturePath: this.resourcePath,
             rotation: this.rotation,

@@ -116,9 +116,22 @@ export class TransformLayer extends Container {
         }
 
         // deactivate Horizontal handle on x-locked furniture
-        this.handles[HandleType.Horizontal].visible = !this.target.xLocked;
-        this.handles[HandleType.Rotate].visible = !this.target.xLocked;
-        this.handles[HandleType.HorizontalVertical].visible = !this.target.xLocked;
+        if (this.target.resourcePath == "door") {
+            this.handles[HandleType.Rotate].visible = false;
+            this.handles[HandleType.Vertical].visible = true;
+            this.handles[HandleType.Horizontal].visible = true;
+            this.handles[HandleType.HorizontalVertical].visible = true;
+            
+        } else if (this.target.resourcePath == "window") {
+            this.handles[HandleType.Horizontal].visible = false;
+            this.handles[HandleType.Rotate].visible = false;
+            this.handles[HandleType.HorizontalVertical].visible = false;
+        } else {
+            this.handles[HandleType.Rotate].visible = true;
+            this.handles[HandleType.Vertical].visible = true;
+            this.handles[HandleType.Horizontal].visible = true;
+            this.handles[HandleType.HorizontalVertical].visible = true;
+        }
     
 
         // set labels

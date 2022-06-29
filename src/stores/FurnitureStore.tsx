@@ -13,7 +13,8 @@ export interface FurnitureData {
     width: number,
     height: number,
     imagePath: string,
-    category?: string
+    category?: string,
+    zIndex?: number
 }
 
 export interface FurnitureStore {

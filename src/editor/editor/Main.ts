@@ -9,6 +9,8 @@ import { viewportX, viewportY } from "../../helpers/ViewportCoordinates";
 import { Tool } from "./constants";
 import { Pointer } from "./Pointer";
 import { Preview } from "./actions/MeasureToolManager";
+import { showNotification } from "@mantine/notifications";
+import { DeviceFloppy } from "tabler-icons-react";
 
 export class Main extends Viewport {
 
@@ -35,11 +37,11 @@ export class Main extends Viewport {
 
     private setup() {
         Main.viewportPluginManager = this.plugins;
-        this.drag({mouseButtons: 'right'}).clamp({ direction: 'all' })
+        this.drag({ mouseButtons: 'right' }).clamp({ direction: 'all' })
             .pinch()
             .wheel().clampZoom({ minScale: 1.0, maxScale: 6.0 })
         this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
-        this.center = new Point(this.worldWidth/2, this.worldHeight/2)
+        this.center = new Point(this.worldWidth / 2, this.worldHeight / 2)
         this.addChild(this.bkgPattern);
 
         this.floorPlan = FloorPlan.Instance;
@@ -71,7 +73,7 @@ export class Main extends Viewport {
                 break;
             case Tool.WallAdd:
                 if (!isMobile) {
-                this.pause = false;
+                    this.pause = false;
                 }
                 break;
             case Tool.Edit:
@@ -81,7 +83,7 @@ export class Main extends Viewport {
     }
     private checkTools(ev: InteractionEvent) {
         ev.stopPropagation()
-        let point = {x:0, y:0}
+        let point = { x: 0, y: 0 }
         switch (useStore.getState().activeTool) {
             case Tool.WallAdd:
                 this.pause = true;
@@ -107,15 +109,20 @@ export class Main extends Viewport {
 }
 
 
-let autosave = () => {
+let save = () => {
     let data = FloorPlan.Instance.save();
     localStorage.setItem('autosave', data);
 }
 // setInterval(autosave, 60000)
 
 document.onkeydown = (e) => {
-    e.preventDefault();
     if (e.code == "KeyS" && e.ctrlKey) {
-        autosave();
+        e.preventDefault();
+        save();
+        showNotification({
+            "message":"Saved to Local Storage!",
+            "color":"green",
+            "icon":DeviceFloppy
+        })
     }
 };       

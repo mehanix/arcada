@@ -7,7 +7,7 @@ export interface IFurnitureSerializable {
     x:number,
     y:number,
     orientation:number,
-    
+    zIndex:number,
     attachedToLeft?:number,
     attachedToRight?:number
 }
