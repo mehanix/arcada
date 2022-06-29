@@ -107,7 +107,6 @@ export class FloorPlan extends Container {
         this.floors[oldCurrentFloor].reset();
         this.floors.splice(oldCurrentFloor, 1);
         this.changeFloor(1);
-        console.log(this.floors)
     }
 
     // cleans up everything. prepare for new load. TODO Feature multiple floors

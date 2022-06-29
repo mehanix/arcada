@@ -100,7 +100,6 @@ export class Wall extends Graphics {
         let theta = Math.atan2((this.y2 - this.y1), (this.x2 - this.x1)); // aflu unghiul sa pot roti
         theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
         if (theta < 0) theta = 360 + theta; // range [0, 360)
-        console.log(theta)
         this.length = euclideanDistance(this.x1, this.x2, this.y1, this.y2)
 
         this.beginFill().drawRect(0, 0, this.length, this.thickness).endFill()
@@ -148,7 +147,7 @@ export class Wall extends Graphics {
     private onMouseDown(ev: InteractionEvent) {
         ev.stopPropagation();
 
-        let coords = {x:ev.data.global.x, y:ev.data.global.y}
+        let coords = {x:viewportX(ev.data.global.x), y:viewportY(ev.data.global.y)}
         let localCoords = ev.data.getLocalPosition(this)
 
         const state = useStore.getState()

@@ -24,6 +24,7 @@ export class AddNodeAction implements Action {
 
     public execute() {
         let node:WallNode;
+
         if (useStore.getState().snap == true) {
             this.coords.x = snap(this.coords.x)
             this.coords.y = snap(this.coords.y)
