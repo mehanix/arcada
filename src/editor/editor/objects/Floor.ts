@@ -4,7 +4,7 @@ import { Point } from "../../../helpers/Point";
 import { getCorrespondingY } from "../../../helpers/Slope";
 import { FurnitureData } from "../../../stores/FurnitureStore";
 import { main } from "../../EditorRoot";
-import { METER } from "../constants";
+import { METER, WALL_THICKNESS } from "../constants";
 import { FloorSerializable } from "../persistence/FloorSerializable";
 import { FloorPlan } from "./FloorPlan";
 import { Furniture } from "./Furniture";
@@ -210,6 +210,7 @@ export class Floor extends Container {
         if (Math.abs(euclideanDistance(coords.x, wall.rightNode.x, coords.y, wall.rightNode.y)) < 0.2 * METER) {
             return;
         }
+        
         // delete wall between left and right node
         this.removeWall(wall);
         // add node and connect walls to it

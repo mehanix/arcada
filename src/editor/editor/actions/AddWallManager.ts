@@ -70,7 +70,7 @@ export class AddWallManager {
     }
 
     public updatePreview(ev:InteractionEvent) {
-        this.preview.updatePreview(ev);
+        this.preview.updatePreview(ev, true);
 
     }
     public unset() {

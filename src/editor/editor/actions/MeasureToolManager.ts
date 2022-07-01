@@ -2,7 +2,7 @@ import { Graphics, InteractionEvent } from "pixi.js";
 import { euclideanDistance } from "../../../helpers/EuclideanDistance";
 import { Point } from "../../../helpers/Point";
 import { viewportX, viewportY } from "../../../helpers/ViewportCoordinates";
-import { WALL_THICKNESS } from "../constants";
+import { Tool, WALL_THICKNESS } from "../constants";
 import { Label } from "../objects/TransformControls/Label";
 
 export class Preview {
@@ -24,7 +24,7 @@ export class Preview {
         this.sizeLabel.visible = false;
     }
 
-    public updatePreview(ev:InteractionEvent) {
+    public updatePreview(ev:InteractionEvent, isWall = false) {
         if (this.startPoint === undefined) {
             return;
         }
@@ -37,6 +37,9 @@ export class Preview {
             .lineTo(newX, newY);
 
         let length = euclideanDistance(this.startPoint.x, newX, this.startPoint.y, newY);
+        if (isWall) {
+            length-=20;
+        }
         this.sizeLabel.update(length);
         this.sizeLabel.position.x = Math.abs(newX + this.startPoint.x) / 2
         this.sizeLabel.position.y = Math.abs(newY + this.startPoint.y) / 2
