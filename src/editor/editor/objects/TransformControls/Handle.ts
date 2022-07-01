@@ -182,12 +182,13 @@ export class Handle extends Graphics {
                     this.target.position.x = viewportX(this.targetStartPoint.x+ delta.x) 
                     this.target.position.y = viewportY(this.targetStartPoint.y + delta.y)
                 } else {
-                    if (this.localCoords.x + delta.x >= this.target.parent.width - this.target.width) {
+                    let amount = (delta.x + delta.y)*0.8;
+                    if (this.localCoords.x + amount >= this.target.parent.width - this.target.width) {
                         this.target.position.x = this.target.parent.width - this.target.width
-                    } else if (this.localCoords.x + delta.x <=0 ){
+                    } else if (this.localCoords.x + amount <=0 ){
                         this.target.position.x = 0;
                     } else {
-                        this.target.position.x = this.localCoords.x + delta.x
+                        this.target.position.x = this.localCoords.x + amount;
 
                     }
                     // this.target.position.x = viewportX(this.targetStartPoint.x) + delta.x;

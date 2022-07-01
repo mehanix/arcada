@@ -37,7 +37,7 @@ export class Preview {
             .lineTo(newX, newY);
 
         let length = euclideanDistance(this.startPoint.x, newX, this.startPoint.y, newY);
-        this.sizeLabel.update(length - WALL_THICKNESS);
+        this.sizeLabel.update(length);
         this.sizeLabel.position.x = Math.abs(newX + this.startPoint.x) / 2
         this.sizeLabel.position.y = Math.abs(newY + this.startPoint.y) / 2
         this.sizeLabel.visible = true;

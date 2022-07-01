@@ -39,6 +39,7 @@ import { ToggleLabelAction } from '../../editor/editor/actions/ToggleLabelAction
 import { NavbarLink } from '../NavbarLink';
 import { HelpDialog } from '../HelpDialog';
 import { DeleteFloorAction } from '../../editor/editor/actions/DeleteFloorAction';
+import { useFurnitureStore } from '../../stores/FurnitureStore';
 
 
 const useStyles = createStyles((theme) => ({
@@ -80,6 +81,7 @@ function AddMenu({ setter }) {
   const [drawerOpened, setDrawerOpened] = useState(false);
 
   const [modalOpened, setModalOpened] = useState(false);
+  const {getCategories} = useFurnitureStore();
 
   let addButton = <UnstyledButton className={classes.link}>
     <Plus />
@@ -89,7 +91,7 @@ function AddMenu({ setter }) {
     <Drawer
       opened={drawerOpened}
       position='right'
-      onClose={() => setDrawerOpened(false)}
+      onClose={() => {getCategories(); setDrawerOpened(false)}}
       title="Add furniture"
       padding="xl"
       size="lg"
@@ -225,7 +227,7 @@ export function ToolNavbar() {
             setSnap(!snap);
             cleanNotifications();
             showNotification({
-              message: 'Snap to grid now ' + (snap ? "On" : "Off"),
+              message: 'Snap to grid now ' + (snap ? "Off" : "On"),
               icon: (snap ? <Table /> : <TableOff />)
             })
           }} />

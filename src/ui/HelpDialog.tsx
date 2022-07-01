@@ -11,7 +11,7 @@ import helpEditFurniture from '../res/edit-furniture.gif'
 import helpEditWall from '../res/edit-walls.gif'
 import helpAddWindow from '../res/add-window.gif'
 import helpAddDoor from '../res/add-door.gif'
-
+import helpMeasure from '../res/measure-tool.gif'
 interface IHelpBody {
   title: string,
   body: ReactNode
@@ -101,14 +101,11 @@ export function HelpDialog() {
     </>
   }
     helpBody[Tool.Measure] = {
-    title: "Add Door",
+    title: "Measure tool",
     body: <>
-      <Image src={helpAddDoor}></Image>
+      <Image src={helpMeasure}></Image>
       <Group noWrap={true}>
-        <Click /> <p>Click on wall to add door</p>
-      </Group>
-      <Group noWrap={true}>
-        <LayoutAlignMiddle /> <p>Middle click to change door orientation</p>
+        <Click /> <p>Click and drag to measure distances</p>
       </Group>
     </>
   }

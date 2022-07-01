@@ -37,7 +37,7 @@ export function WelcomeModal() {
 
   const notification = {
     title: "Welcome to Arcada! 🎉",
-    message: "⚒️ Use the tools on the right to create your floor plan. For detailed instructions, press the Help button on the left."
+    message: "⚒️ Use the tools on the left to create your floor plan. For detailed instructions, press the Help button on the left."
   }
   return (
     <>

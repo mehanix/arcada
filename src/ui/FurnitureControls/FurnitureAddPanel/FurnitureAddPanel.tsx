@@ -2,6 +2,7 @@ import { createStyles, Navbar, ScrollArea, Select, SimpleGrid } from "@mantine/c
 import { useEffect, useState } from "react";
 import { FurnitureItem } from "./FurnitureItem";
 import { useFurnitureStore } from "../../../stores/FurnitureStore";
+import { showNotification } from "@mantine/notifications";
 const useStyles = createStyles((theme) => ({
     mb: {
         marginTop: theme.spacing.xs,
@@ -20,6 +21,7 @@ export function FurnitureAddPanel() {
     useEffect(() => {
         if (category) {
             getCurrentFurnitureData(category)
+ 
         }
     }, [category])
 
@@ -34,7 +36,14 @@ export function FurnitureAddPanel() {
 
     // on first load, select default category
     useEffect(() => {
-        setCategory(categories[0]._id)
+        if(categories && categories[0] && categories[0]._id) {
+            setCategory(categories[0]._id)
+        } else {
+            showNotification({
+                "message":"Check your internet connection",
+                "color":"green"
+            })
+        }
     }, [categories])
 
     return (<>

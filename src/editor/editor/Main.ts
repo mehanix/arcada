@@ -83,6 +83,9 @@ export class Main extends Viewport {
     }
     private checkTools(ev: InteractionEvent) {
         ev.stopPropagation()
+        if (ev.data.button == 2 || ev.data.button == 2) {
+            return;
+        }
         let point = { x: 0, y: 0 }
         switch (useStore.getState().activeTool) {
             case Tool.WallAdd:
@@ -93,9 +96,9 @@ export class Main extends Viewport {
                 action.execute();
                 break;
             case Tool.Edit:
-                if (!isMobile) {
-                    this.pause = true;
-                }
+                // if (!isMobile) {
+                //     this.pause = true;
+                // }
                 break;
             case Tool.Measure:
                 this.pause = true;

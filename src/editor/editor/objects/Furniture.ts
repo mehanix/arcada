@@ -135,6 +135,7 @@ export class Furniture extends Sprite {
     }
     private onMouseDown(ev: InteractionEvent) {
 
+        ev.stopPropagation();
         if(ev.data.button == 1) {
             this.zIndex++;
             console.log(this.zIndex)
