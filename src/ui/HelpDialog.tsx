@@ -21,7 +21,7 @@ interface IHelpBody {
 
 
 export function HelpDialog() {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(true);
 
   const { activeTool } = useStore();
   let helpBody: IHelpBody[] = [];
