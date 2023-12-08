@@ -73,8 +73,6 @@ Launch the back-end using `node app.js`.
 
 ## Demo
 
-The backend is currently down so you'll get errors when trying the live demo (I ran out of DigitalOcean credits).
-
 If you want to run the app for yourself the easiest way to to is to use the following [docker-compose setup](https://github.com/perguth/arcada-setup). Have fun!
 
 [![Demo - arcada.nicoleta.cc](https://img.shields.io/badge/Demo_available-arcada.nicoleta.cc-blue?style=for-the-badge)](https://arcada.nicoleta.cc)
