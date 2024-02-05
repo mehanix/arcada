@@ -59,7 +59,7 @@ Client built using React, Pixi.js, Zustand, with Mantine as the component librar
 Server-side powered by Express.js, using MongoDB with Mongoose as ODM. 
 
 [![server - source code](https://img.shields.io/badge/server-source_code-blue?style=for-the-badge)](https://github.com/mehanix/arcada-backend)
-[![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](/docs/ "Go to project documentation")
+[![view - (New!) Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](https://github.com/mehanix/arcada/blob/4ab6e5d267bd901d2c8b962a782df3f422358d86/docs/Docs%20-%20Bachelor's%20thesis.pdf "Go to project documentation")
 
 ## Quick setup
 
