@@ -9,11 +9,11 @@ Even had to redesign a room, a floor, or your entire house, and you spent hours 
 As the vast majority of floor planner apps are available as part of a paid service, or too complicated to use for my needs, I decided to write my own. 
 Enter Arcada, an open-source floor planner app.
 
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) 
-![Pixi.JS](https://img.shields.io/badge/Pixi.JS-EF2D5E?style=for-the-badge)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-
+![React](https://img.shields.io/badge/react-%2320232a.svg?logo=react&logoColor=%2361DAFB) 
+![Pixi.JS](https://img.shields.io/badge/Pixi.JS-EF2D5E)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3de5b28f-5cc8-4fbf-a6d8-6b89a941ebf4/deploy-status)](https://app.netlify.com/projects/mellow-cobbler-3a9fb9/deploys)
 ## Features
 ### 👷‍♀️ Add walls
 
