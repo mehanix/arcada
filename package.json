@@ -20,18 +20,18 @@
     "react": "^18.0.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.0.0",
-    "react-scripts": "5.0.0",
-    "tabler-icons-react": "^1.43.0",
-    "three": "^0.140.0",
-    "typescript": "^4.6.3",
-    "web-vitals": "^2.1.4",
-    "zustand": "^3.7.2"
+    "tabler-icons-react": "^1.56.0",
+    "three": "^0.165.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.0.8",
+    "vite-plugin-svgr": "4.2.0",
+    "web-vitals": "^4.0.1",
+    "zustand": "^4.5.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +52,7 @@
     ]
   },
   "devDependencies": {
-    "@types/three": "^0.139.0"
+    "@types/three": "^0.165.0",
+    "@vitejs/plugin-react": "^4.3.0"
   }
 }
