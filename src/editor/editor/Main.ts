@@ -43,6 +43,9 @@ export class Main extends Viewport {
         this.bkgPattern = TilingSprite.from("./pattern.svg", { width: this.worldWidth ?? 0, height: this.worldHeight ?? 0 });
         this.center = new Point(this.worldWidth / 2, this.worldHeight / 2)
         this.addChild(this.bkgPattern);
+        
+        this.pointer = new Pointer();
+        this.addChild(this.pointer);
 
         this.floorPlan = FloorPlan.Instance;
         this.addChild(this.floorPlan);
@@ -53,11 +56,10 @@ export class Main extends Viewport {
         this.addWallManager = AddWallManager.Instance;
         this.addChild(this.addWallManager.preview.getReference())
 
-        this.pointer = new Pointer();
-        this.addChild(this.pointer);
         this.on("pointerdown", this.checkTools)
         this.on("pointermove", this.updatePreview)
         this.on("pointerup", this.updateEnd)
+        this.on("zoomed", this.updateZoomCSSVar)
 
     }
     private updatePreview(ev: InteractionEvent) {
@@ -108,7 +110,9 @@ export class Main extends Viewport {
                 break;
         }
     }
-
+    private updateZoomCSSVar() {
+       document.documentElement.style.setProperty('--viewport-zoom', this.scale.x.toString());
+    }
 }
 
 

@@ -4,6 +4,8 @@ import { Point } from "../../../../helpers/Point";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
+import { WALL_THICKNESS } from "../../constants";
+import { Wall } from "../Walls/Wall";
 
 export enum HandleType {
     Horizontal,
@@ -191,10 +193,10 @@ export class Handle extends Graphics {
                   //end of wall
                   else if (
                     this.localCoords.x + amount >=
-                    this.target.parent.length - this.target.width - WALL_THICKNESS * 0.5 //parent wall length
+                    (this.target.parent as Wall).length - this.target.width - WALL_THICKNESS * 0.5 //parent wall length
                   ) {
                     this.target.position.x =
-                      this.target.parent.length -
+                      (this.target.parent as Wall).length -
                       this.target.width -
                       WALL_THICKNESS * 0.5;
                   }

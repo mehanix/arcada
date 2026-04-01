@@ -1,0 +1,10 @@
+:root {
+  --viewport-zoom: 1;
+}
+
+/* Disable canvas cursor unless edit mode is active */
+#root:has(#edit-tool-mode-button:not([data-active="true"])) {
+  canvas {
+    cursor: unset !important;
+  }
+}
