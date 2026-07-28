@@ -158,6 +158,8 @@ export function ToolNavbar() {
     <NavbarLink
       {...link}
       key={link.label}
+      id={`${link.label.toLocaleLowerCase()}-tool-mode-button`}
+      data-active={index === active}
       active={index === active}
       onClick={() => {
         setActive(index)

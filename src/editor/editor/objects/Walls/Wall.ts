@@ -2,7 +2,7 @@ import { Graphics, InteractionEvent } from "pixi.js";
 import { getDoor, getWindow } from "../../../../api/api-client";
 import { euclideanDistance } from "../../../../helpers/EuclideanDistance";
 import { Point } from "../../../../helpers/Point";
-import { getCorrespondingY } from "../../../../helpers/Slope";
+import { FloorPlan } from "../FloorPlan";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 
 import { useStore } from "../../../../stores/EditorStore";
@@ -192,4 +192,34 @@ export class Wall extends Graphics {
 
     }
 
+    public updateWallLength(size) {
+      const currentLength = Math.sqrt(Math.pow(this.x2 - this.x1, 2) + Math.pow(this.y2 - this.y1, 2)); // current wall length
+      
+      const angleInRadians = Math.atan2(this.y2 - this.y1, this.x2 - this.x1); // angle of the wall
+
+      const deltaX = ((size - currentLength) / 2) * Math.cos(angleInRadians);
+      const deltaY = ((size - currentLength) / 2) * Math.sin(angleInRadians);
+
+      // new endpoint coordinates
+      const newX1 = this.x1 - deltaX;
+      const newY1 = this.y1 - deltaY;
+      const newX2 = this.x2 + deltaX;
+      const newY2 = this.y2 + deltaY;
+
+      if (this.leftNode.x <= this.rightNode.x) {
+        // left node is on the left side
+        this.leftNode.x = newX1;
+        this.leftNode.y = newY1;
+        this.rightNode.x = newX2;
+        this.rightNode.y = newY2;
+      } else {
+        // left node is on the right side
+        this.leftNode.x = newX2;
+        this.leftNode.y = newY2;
+        this.rightNode.x = newX1;
+        this.rightNode.y = newY1;
+      }
+
+      FloorPlan.Instance.redrawWalls(); // redraw resized walls
+    }
 }

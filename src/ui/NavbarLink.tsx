@@ -1,6 +1,5 @@
 import { Icon as TablerIcon } from 'tabler-icons-react';
-import { useRef, useState } from 'react';
-import { createStyles, Tooltip, UnstyledButton } from '@mantine/core';
+import { createStyles, Tooltip, UnstyledButton, UnstyledButtonProps } from '@mantine/core';
 
 
 const useStyles = createStyles((theme) => ({
@@ -29,18 +28,18 @@ const useStyles = createStyles((theme) => ({
     },
   }));
 
-interface NavbarLinkProps {
+interface NavbarLinkProps extends UnstyledButtonProps<'button'> {
     icon: TablerIcon;
     label?: string;
     active?: boolean;
     onClick?(): void;
   }
 
-export function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+export function NavbarLink({ icon: Icon, label, active, onClick, ...rest }: NavbarLinkProps) {
     const { classes, cx } = useStyles();
     return (
       <Tooltip label={label} position="right" withArrow transitionDuration={0}>
-        <UnstyledButton onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
+        <UnstyledButton {...rest} onClick={onClick} className={cx(classes.link, { [classes.active]: active })}>
           <Icon />
         </UnstyledButton>
       </Tooltip>
