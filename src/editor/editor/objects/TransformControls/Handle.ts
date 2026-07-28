@@ -4,6 +4,7 @@ import { Point } from "../../../../helpers/Point";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
+import { WALL_THICKNESS } from "../../constants";
 
 export enum HandleType {
     Horizontal,
