@@ -11,6 +11,7 @@ import { Pointer } from "./Pointer";
 import { Preview } from "./actions/MeasureToolManager";
 import { showNotification } from "@mantine/notifications";
 import { DeviceFloppy } from "tabler-icons-react";
+import { HistoryManager } from "./actions/HistoryManager";
 
 export class Main extends Viewport {
 
@@ -61,6 +62,8 @@ export class Main extends Viewport {
         this.on("pointerup", this.updateEnd)
         this.on("zoomed", this.updateZoomCSSVar)
 
+        // Records a baseline snapshot and starts capturing changes for undo/redo.
+        HistoryManager.Instance.init();
     }
     private updatePreview(ev: InteractionEvent) {
         this.addWallManager.updatePreview(ev);
@@ -132,4 +135,14 @@ document.onkeydown = (e) => {
             "icon":DeviceFloppy
         })
     }
-};       
+    // Undo: Ctrl+Z
+    if (e.code == "KeyZ" && e.ctrlKey && !e.shiftKey) {
+        e.preventDefault();
+        HistoryManager.Instance.undo();
+    }
+    // Redo: Ctrl+Y or Ctrl+Shift+Z
+    if ((e.code == "KeyY" && e.ctrlKey) || (e.code == "KeyZ" && e.ctrlKey && e.shiftKey)) {
+        e.preventDefault();
+        HistoryManager.Instance.redo();
+    }
+};

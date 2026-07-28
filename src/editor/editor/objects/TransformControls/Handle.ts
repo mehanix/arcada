@@ -2,6 +2,7 @@ import { Graphics, InteractionEvent } from "pixi.js";
 import { isMobile } from "react-device-detect";
 import { Point } from "../../../../helpers/Point";
 import { viewportX, viewportY } from "../../../../helpers/ViewportCoordinates";
+import { Wall } from "../Walls/Wall";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
 import { WALL_THICKNESS } from "../../constants";
