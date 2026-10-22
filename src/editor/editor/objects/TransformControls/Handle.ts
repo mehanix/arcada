@@ -6,6 +6,7 @@ import { Wall } from "../Walls/Wall";
 import { Furniture } from "../Furniture";
 import { TransformLayer } from "./TransformLayer";
 import { WALL_THICKNESS } from "../../constants";
+import { Wall } from "../Walls/Wall";
 
 export enum HandleType {
     Horizontal,
