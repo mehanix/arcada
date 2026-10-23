@@ -76,7 +76,16 @@ export function WelcomeModal() {
           </Button>
           <Button
             onClick={() => {
-              FloorPlan.Instance.load(localStorage.getItem('autosave'));
+              const savedPlan = localStorage.getItem('autosave');
+              if (!savedPlan) {
+                showNotification({
+                  title: 'No saved plan found',
+                  message: 'Create a new plan or load one from disk to get started.',
+                  color: 'yellow',
+                });
+                return;
+              }
+              FloorPlan.Instance.load(savedPlan);
               setOpened(false)
             }} leftIcon={<RotateClockwise />} variant="white">
             Load from local save
