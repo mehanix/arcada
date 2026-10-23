@@ -30,17 +30,13 @@ export function EditorRoot() {
             resizeTo: window
         });
 
-    
-        app.view.oncontextmenu = (e) => {
-            e.preventDefault();
-        }
-
         const viewportSettings: IViewportOptions = {
             screenWidth: app.screen.width,
             screenHeight: app.screen.height,
             worldWidth: 50 * METER,
             worldHeight: 50 * METER,
             interaction: app.renderer.plugins.interaction,
+            disableOnContextMenu: true,
             
         }
         main = new Main(viewportSettings);
